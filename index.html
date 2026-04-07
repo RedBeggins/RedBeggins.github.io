@@ -841,7 +841,7 @@
   <!-- Ventana: Visor de Fotos (se genera dinámicamente) -->
   <div class="window" id="win-photo-viewer" style="width:640px; height:480px; top:80px; left:160px;" onmousedown="bringToFront(this)">
     <div class="title-bar">
-      <div class="title-bar-text" id="photo-viewer-title" data-i18n="photo_viewer">Visor de Fotos</div>
+      <div class="title-bar-text" id="photo-viewer-title"><span data-i18n="photo_viewer">Visor de Fotos</span></div>
       <div class="title-bar-controls">
         <button aria-label="Minimize" onclick="minimizeWindow('win-photo-viewer')"></button>
         <button aria-label="Maximize" onclick="maximizeWindow('win-photo-viewer')"></button>
@@ -854,7 +854,7 @@
       </div>
     </div>
     <div class="status-bar">
-      <div class="status-bar-field" id="photo-viewer-status" data-i18n="ready">Listo</div>
+      <div class="status-bar-field" id="photo-viewer-status"><span data-i18n="ready">Listo</span></div>
     </div>
   </div>
 
@@ -890,14 +890,14 @@
         </div>
         <div class="winamp-display-right">
           <div class="winamp-track-wrapper">
-            <div class="winamp-title-text" id="winamp-track-title" data-i18n="winamp_no_track">1. WINAMP - SIN PISTA</div>
+            <div class="winamp-title-text" id="winamp-track-title"><span data-i18n="winamp_no_track">1. WINAMP - SIN PISTA</span></div>
           </div>
           <div class="winamp-info-row">
-            <span class="winamp-info-box" id="winamp-kbps"></span> kbps
-            <span class="winamp-info-box" id="winamp-khz">44</span> kHz
+            <span class="winamp-info-box" id="winamp-kbps"></span> <span data-i18n="kbps">kbps</span>
+            <span class="winamp-info-box" id="winamp-khz">44</span> <span data-i18n="khz">kHz</span>
             <div class="winamp-channels">
-              <span class="mono">mono</span>
-              <span class="stereo active">stereo</span>
+              <span class="mono" data-i18n="mono">mono</span>
+              <span class="stereo active" data-i18n="stereo">stereo</span>
             </div>
           </div>
         </div>
@@ -914,33 +914,33 @@
       <div class="winamp-controls-row">
         <div class="winamp-controls">
           <!-- Anterior -->
-          <button onclick="prevTrack()" title="Anterior">
+          <button onclick="prevTrack()" title="Anterior" data-i18n-title="prev">
             <svg viewBox="0 0 10 10"><path d="M8,1 L5,5 L8,9 Z M5,1 L2,5 L5,9 Z M2,1 L2,9 Z" stroke="#333" stroke-width="1.5" stroke-linejoin="round"/></svg>
           </button>
           <!-- Play -->
-          <button onclick="audioPlayer.play().then(() => { isPlaying = true; startVisualizer(); }).catch(()=>{})" title="Play">
+          <button onclick="audioPlayer.play().then(() => { isPlaying = true; startVisualizer(); }).catch(()=>{})" title="Play" data-i18n-title="play">
             <svg viewBox="0 0 10 10"><path d="M2,1 L8,5 L2,9 Z" stroke="#333" stroke-width="1.5" stroke-linejoin="round"/></svg>
           </button>
           <!-- Pause -->
-          <button onclick="audioPlayer.pause(); isPlaying = false; stopVisualizer();" title="Pausa">
+          <button onclick="audioPlayer.pause(); isPlaying = false; stopVisualizer();" title="Pausa" data-i18n-title="pause">
             <svg viewBox="0 0 10 10"><rect x="2" y="1" width="2" height="8"/><rect x="6" y="1" width="2" height="8"/></svg>
           </button>
           <!-- Stop -->
-          <button onclick="stopAudio()" title="Stop">
+          <button onclick="stopAudio()" title="Stop" data-i18n-title="stop">
             <svg viewBox="0 0 10 10"><rect x="2" y="2" width="6" height="6"/></svg>
           </button>
           <!-- Siguiente -->
-          <button onclick="nextTrack()" title="Siguiente">
+          <button onclick="nextTrack()" title="Siguiente" data-i18n-title="next">
             <svg viewBox="0 0 10 10"><path d="M2,1 L5,5 L2,9 Z M5,1 L8,5 L5,9 Z M8,1 L8,9 Z" stroke="#333" stroke-width="1.5" stroke-linejoin="round"/></svg>
           </button>
           <!-- Eject / Abrir -->
-          <button onclick="loadAudioFile()" title="Abrir archivo" style="margin-left:4px; width:22px;">
+          <button onclick="loadAudioFile()" title="Abrir archivo" data-i18n-title="open_file" style="margin-left:4px; width:22px;">
             <svg viewBox="0 0 10 10"><path d="M1,7 L5,2 L9,7 Z M1,8 L9,8 Z" stroke="#333" stroke-width="1.5" stroke-linejoin="round"/></svg>
           </button>
         </div>
 
         <div class="winamp-toggles">
-          <div class="w-toggle">VOL</div>
+          <div class="w-toggle" data-i18n="winamp_vol">VOL</div>
           <div class="winamp-volume">
             <input type="range" min="0" max="100" value="80" id="winamp-volume" oninput="setVolume(this.value)" />
           </div>
@@ -1006,7 +1006,7 @@
   <!-- Ventana: Sobre Mí -->
   <div class="window" id="win-about" style="width:440px; height:350px; top:90px; left:180px;" onmousedown="bringToFront(this)">
     <div class="title-bar">
-      <div class="title-bar-text">Sobre Mi — Bloc de notas</div>
+      <div class="title-bar-text" data-i18n="window_about">Sobre Mi — Bloc de notas</div>
       <div class="title-bar-controls">
         <button aria-label="Minimize" onclick="minimizeWindow('win-about')"></button>
         <button aria-label="Maximize" onclick="maximizeWindow('win-about')"></button>
@@ -1014,7 +1014,7 @@
       </div>
     </div>
     <div class="window-body about-body" style="background: #fff;">
-      <h3>Hola! Soy RedBeggins</h3>
+      <h3 data-i18n="hello">Hola! Soy RedBeggins</h3>
       <p data-i18n="about_me_text">Productor musical y desarrollador web apasionado por la tecnología retro, el diseño y la creación de experiencias únicas.</p>
 
       <h3 data-i18n="skills">Habilidades</h3>
@@ -1167,8 +1167,8 @@
       address.value = currentPath.join("\\");
 
       if (!myComputerFS) {
-        status.textContent = "Loading...";
-        grid.innerHTML = "<div style='padding:8px; font-size:11px;'>Loading files...</div>";
+        status.innerHTML = `<span data-i18n="loading">` + translate('loading') + `</span>`;
+        grid.innerHTML = `<div style='padding:8px; font-size:11px;' data-i18n='loading_files'>` + translate('loading') + `</div>`;
         return;
       }
 
@@ -1177,7 +1177,7 @@
 
       const keys = Object.keys(dir);
       
-      status.textContent = keys.length + " object(s)";
+      status.innerHTML = keys.length + ' <span data-i18n="objects">' + translate('objects') + '</span>';
 
       keys.forEach(key => {
         const item = dir[key];
@@ -1486,7 +1486,7 @@
        ============================================ */
     function openPhotoViewer(title, imgSrc) {
       const viewer = document.getElementById('win-photo-viewer');
-      document.getElementById('photo-viewer-title').textContent = translate('photo_viewer') + ' — ' + title;
+      document.getElementById('photo-viewer-title').innerHTML = '<span data-i18n="photo_viewer">' + translate('photo_viewer') + '</span> — ' + title;
       document.getElementById('photo-viewer-img').src = imgSrc;
       document.getElementById('photo-viewer-status').textContent = title;
 
@@ -1741,7 +1741,23 @@
         address: 'Address:',
         back: 'Back',
         objects: 'object(s)',
-        loading: 'Loading...'
+        loading: 'Loading...',
+        loading_files: 'Loading files...',
+        winamp_no_track: '1. WINAMP - NO TRACK',
+        winamp_vol: 'VOL',
+        kbps: 'kbps',
+        khz: 'kHz',
+        mono: 'mono',
+        stereo: 'stereo',
+        hello: 'Hi! I am RedBeggins',
+        prev: 'Previous',
+        play: 'Play',
+        pause: 'Pause',
+        stop: 'Stop',
+        next: 'Next',
+        open_file: 'Open file',
+        ready: 'Ready',
+        photo_viewer: 'Photo Viewer'
       },
       es: {
         start_btn: 'Inicio',
@@ -1759,7 +1775,23 @@
         address: 'Dirección:',
         back: 'Atrás',
         objects: 'objeto(s)',
-        loading: 'Cargando...'
+        loading: 'Cargando...',
+        loading_files: 'Cargando archivos...',
+        winamp_no_track: '1. WINAMP - SIN PISTA',
+        winamp_vol: 'VOL',
+        kbps: 'kbps',
+        khz: 'kHz',
+        mono: 'mono',
+        stereo: 'stereo',
+        hello: '¡Hola! Soy RedBeggins',
+        prev: 'Anterior',
+        play: 'Play',
+        pause: 'Pausa',
+        stop: 'Stop',
+        next: 'Siguiente',
+        open_file: 'Abrir archivo',
+        ready: 'Listo',
+        photo_viewer: 'Visor de Fotos'
       }
     };
 
@@ -1781,6 +1813,14 @@
              el.textContent = dict[key];
         }
       });
+
+      document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (dict[key]) {
+             el.title = dict[key];
+        }
+      });
+
       // also update the document language tag
       document.documentElement.lang = lang;
     }
