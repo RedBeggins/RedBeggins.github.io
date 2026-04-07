@@ -687,6 +687,9 @@
     /* ============================================
        WELCOME WINDOW
        ============================================ */
+    .welcome-window {
+      resize: none;
+    }
     .welcome-window .window-body {
       margin: 0;
       padding: 0;
@@ -781,10 +784,10 @@
       align-self: stretch;
       margin-right: 8px;
     }
-    .wt-blue { background: #0000a0; }
-    .wt-red { background: #d00000; }
-    .wt-green { background: #00a000; }
-    .wt-yellow { background: #d0d000; }
+    .wt-blue { background: #009cff; }
+    .wt-red { background: #ff3100; }
+    .wt-green { background: #6bce38; }
+    .wt-yellow { background: #ffce00; }
     .welcome-content-area {
       flex: 1;
       padding: 20px;
@@ -1155,12 +1158,10 @@
   </div>
 
   <!-- Ventana: Welcome -->
-  <div class="window welcome-window" id="win-welcome" style="width:600px; height:420px; top:calc(50% - 210px); left:calc(50% - 300px); z-index:9999;" onmousedown="bringToFront(this)">
+  <div class="window welcome-window" id="win-welcome" style="width:740px; height:520px; top:calc(50% - 260px); left:calc(50% - 370px); z-index:9999;" onmousedown="bringToFront(this)">
     <div class="title-bar">
       <div class="title-bar-text" data-i18n="welcome_title">Welcome</div>
       <div class="title-bar-controls">
-        <button aria-label="Minimize" onclick="minimizeWindow('win-welcome')"></button>
-        <button aria-label="Maximize" onclick="maximizeWindow('win-welcome')"></button>
         <button aria-label="Close" onclick="closeWindow('win-welcome')"></button>
       </div>
     </div>
