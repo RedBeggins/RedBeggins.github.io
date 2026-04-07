@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RedBeggins — Windows 98 Portfolio</title>
+  <title data-i18n="page_title">RedBeggins — Windows 98 Portfolio</title>
 
   <!-- 98.css — Librería CSS para estética Windows 98 -->
   <link rel="stylesheet" href="https://unpkg.com/98.css" />
@@ -823,7 +823,7 @@
         </svg>
         Back
       </button>
-      <label style="line-height:22px;">Address:</label>
+      <label style="line-height:22px;" data-i18n="address">Address:</label>
       <input type="text" id="mycomputer-address" value="/MyPC" readonly style="flex:1; margin-left:4px;" />
     </div>
 
@@ -834,14 +834,14 @@
     </div>
 
     <div class="status-bar">
-      <div class="status-bar-field" id="mycomputer-status">0 objects</div>
+      <div class="status-bar-field" id="mycomputer-status">0 <span data-i18n="objects">objects</span></div>
     </div>
   </div>
 
   <!-- Ventana: Visor de Fotos (se genera dinámicamente) -->
   <div class="window" id="win-photo-viewer" style="width:640px; height:480px; top:80px; left:160px;" onmousedown="bringToFront(this)">
     <div class="title-bar">
-      <div class="title-bar-text" id="photo-viewer-title">Visor de Fotos</div>
+      <div class="title-bar-text" id="photo-viewer-title" data-i18n="photo_viewer">Visor de Fotos</div>
       <div class="title-bar-controls">
         <button aria-label="Minimize" onclick="minimizeWindow('win-photo-viewer')"></button>
         <button aria-label="Maximize" onclick="maximizeWindow('win-photo-viewer')"></button>
@@ -854,7 +854,7 @@
       </div>
     </div>
     <div class="status-bar">
-      <div class="status-bar-field" id="photo-viewer-status">Listo</div>
+      <div class="status-bar-field" id="photo-viewer-status" data-i18n="ready">Listo</div>
     </div>
   </div>
 
@@ -890,7 +890,7 @@
         </div>
         <div class="winamp-display-right">
           <div class="winamp-track-wrapper">
-            <div class="winamp-title-text" id="winamp-track-title">1. WINAMP - SIN PISTA</div>
+            <div class="winamp-title-text" id="winamp-track-title" data-i18n="winamp_no_track">1. WINAMP - SIN PISTA</div>
           </div>
           <div class="winamp-info-row">
             <span class="winamp-info-box" id="winamp-kbps"></span> kbps
@@ -953,7 +953,7 @@
   <!-- Ventana: Productor -->
   <div class="window" id="win-productor" style="width:420px; height:340px; top:70px; left:200px;" onmousedown="bringToFront(this)">
     <div class="title-bar">
-      <div class="title-bar-text">Productor</div>
+      <div class="title-bar-text" data-i18n="productor">Productor</div>
       <div class="title-bar-controls">
         <button aria-label="Minimize" onclick="minimizeWindow('win-productor')"></button>
         <button aria-label="Maximize" onclick="maximizeWindow('win-productor')"></button>
@@ -962,7 +962,7 @@
     </div>
 
     <div class="address-bar">
-      <label>Dirección:</label>
+      <label data-i18n="address">Dirección:</label>
       <input type="text" value="C:\Usuarios\RedBeggins\Productor" readonly />
     </div>
 
@@ -999,7 +999,7 @@
     </div>
 
     <div class="status-bar">
-      <div class="status-bar-field">7 objetos</div>
+      <div class="status-bar-field">7 objects</div>
     </div>
   </div>
 
@@ -1015,19 +1015,19 @@
     </div>
     <div class="window-body about-body" style="background: #fff;">
       <h3>Hola! Soy RedBeggins</h3>
-      <p>Productor musical y desarrollador web apasionado por la tecnología retro, el diseño y la creación de experiencias únicas.</p>
+      <p data-i18n="about_me_text">Productor musical y desarrollador web apasionado por la tecnología retro, el diseño y la creación de experiencias únicas.</p>
 
-      <h3>Habilidades</h3>
+      <h3 data-i18n="skills">Habilidades</h3>
       <ul>
         <li>HTML5, CSS3, JavaScript</li>
-        <li>Producción Musical (FL Studio, Ableton)</li>
-        <li>Diseño UI/UX</li>
+        <li><span data-i18n="music_prod">Producción Musical</span> (FL Studio, Ableton)</li>
+        <li data-i18n="design">Diseño UI/UX</li>
         <li>Git & GitHub</li>
       </ul>
 
-      <h3>Contacto</h3>
-      <p>¿Quieres colaborar? Encuentra mis redes en la carpeta <strong>Productor</strong> del escritorio.</p>
-      <p style="margin-top: 12px; color: #888; font-size: 11px;">— Escrito desde Windows 98 —</p>
+      <h3 data-i18n="contact">Contacto</h3>
+      <p><span data-i18n="collab">¿Quieres colaborar? Encuentra mis redes en la carpeta Productor del escritorio.</span></p>
+      <p style="margin-top: 12px; color: #888; font-size: 11px;" data-i18n="written_from">— Escrito desde Windows 98 —</p>
     </div>
   </div>
 
@@ -1200,7 +1200,7 @@
         } else if (item.type === "text") {
           svgIcon = `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block"><rect x="6" y="4" width="16" height="24" fill="#FFFFFF" stroke="#808080"/><line x1="10" y1="10" x2="18" y2="10" stroke="#000" stroke-width="1"/><line x1="10" y1="14" x2="18" y2="14" stroke="#000" stroke-width="1"/><line x1="10" y1="18" x2="18" y2="18" stroke="#000" stroke-width="1"/><line x1="10" y1="22" x2="14" y2="22" stroke="#000" stroke-width="1"/><polygon points="22,4 28,10 22,10" fill="#C0C0C0"/></svg>`;
           el.ondblclick = () => {
-            alert("Contenido del archivo:\\n" + item.content);
+            alert(translate('file_content') + item.content);
           };
         }
 
@@ -1257,7 +1257,7 @@
           })
           .catch(err => {
             console.error('Error fetching files.json:', err);
-            myComputerFS = { "Error": { type: "text", content: "Missing files.json file on the server (404). Asegurate de hacer push de la carpeta /data." } };
+            myComputerFS = { "Error": { type: "text", content: translate('err_files') } };
             renderMyComputer();
           });
       }
@@ -1486,7 +1486,7 @@
        ============================================ */
     function openPhotoViewer(title, imgSrc) {
       const viewer = document.getElementById('win-photo-viewer');
-      document.getElementById('photo-viewer-title').textContent = 'Visor de Fotos — ' + title;
+      document.getElementById('photo-viewer-title').textContent = translate('photo_viewer') + ' — ' + title;
       document.getElementById('photo-viewer-img').src = imgSrc;
       document.getElementById('photo-viewer-status').textContent = title;
 
@@ -1662,7 +1662,7 @@
         }).catch(() => {});
       } else {
         // Mostrar dialogo para cargar archivo real si no hay path
-        alert('Para reproducir "' + trackName + '", carga un archivo .mp3 usando el boton [Abrir] en Winamp.');
+        alert(translate('alert_mp3').replace('{track}', trackName));
       }
     }
 
@@ -1761,6 +1761,14 @@
         objects: 'objeto(s)',
         loading: 'Cargando...'
       }
+    };
+
+    
+    window.translate = function(key) {
+      if(i18n && settings && i18n[settings.language] && i18n[settings.language][key]) {
+        return i18n[settings.language][key];
+      }
+      return key;
     };
 
     function translateUI() {
