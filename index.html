@@ -766,7 +766,7 @@
         <rect x="16" y="15" width="5" height="2" fill="#FFFFA0"/>
         <rect x="14" y="20" width="4" height="3" fill="#FFFFA0"/>
       </svg>
-      <span data-i18n="productor">Productor</span>
+      <span>Links</span>
     </div>
 
     <!-- Icono: Sobre Mí -->
@@ -953,7 +953,7 @@
   <!-- Ventana: Productor -->
   <div class="window" id="win-productor" style="width:420px; height:340px; top:70px; left:200px;" onmousedown="bringToFront(this)">
     <div class="title-bar">
-      <div class="title-bar-text" data-i18n="productor">Productor</div>
+      <div class="title-bar-text">Links</div>
       <div class="title-bar-controls">
         <button aria-label="Minimize" onclick="minimizeWindow('win-productor')"></button>
         <button aria-label="Maximize" onclick="maximizeWindow('win-productor')"></button>
@@ -963,7 +963,7 @@
 
     <div class="address-bar">
       <label data-i18n="address">Dirección:</label>
-      <input type="text" value="C:\Usuarios\RedBeggins\Productor" readonly />
+      <input type="text" value="C:\Usuarios\RedBeggins\Links" readonly />
     </div>
 
     <div class="window-body" style="padding: 0;">
@@ -1013,21 +1013,7 @@
         <button aria-label="Close" onclick="closeWindow('win-about')"></button>
       </div>
     </div>
-    <div class="window-body about-body" style="background: #fff;">
-      <h3 data-i18n="hello">Hola! Soy RedBeggins</h3>
-      <p data-i18n="about_me_text">Productor musical y desarrollador web apasionado por la tecnología retro, el diseño y la creación de experiencias únicas.</p>
-
-      <h3 data-i18n="skills">Habilidades</h3>
-      <ul>
-        <li>HTML5, CSS3, JavaScript</li>
-        <li><span data-i18n="music_prod">Producción Musical</span> (FL Studio, Ableton)</li>
-        <li data-i18n="design">Diseño UI/UX</li>
-        <li>Git & GitHub</li>
-      </ul>
-
-      <h3 data-i18n="contact">Contacto</h3>
-      <p><span data-i18n="collab">¿Quieres colaborar? Encuentra mis redes en la carpeta Productor del escritorio.</span></p>
-      <p style="margin-top: 12px; color: #888; font-size: 11px;" data-i18n="written_from">— Escrito desde Windows 98 —</p>
+    <div class="window-body about-body" style="background: #fff;" data-i18n-html="about_content">
     </div>
   </div>
 
@@ -1073,7 +1059,7 @@
       </div>
       <div class="start-menu-item" onclick="openWindow('win-productor'); toggleStartMenu();">
         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='3' width='6' height='2' fill='%234488cc' rx='1'/%3E%3Crect x='1' y='4' width='14' height='10' fill='%234488cc' rx='1'/%3E%3C/svg%3E" alt="" />
-        <span data-i18n="productor">Productor</span>
+        <span>Links</span>
       </div>
       <div class="start-menu-item" onclick="openWindow('win-about'); toggleStartMenu();">
         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='1' width='12' height='14' fill='%23f0f0f0' stroke='%23888' rx='1'/%3E%3Cline x1='4' y1='5' x2='12' y2='5' stroke='%23333'/%3E%3Cline x1='4' y1='8' x2='12' y2='8' stroke='%23333'/%3E%3Cline x1='4' y1='11' x2='10' y2='11' stroke='%23333'/%3E%3C/svg%3E" alt="" />
@@ -1730,7 +1716,6 @@
         os_name: 'Windows 98',
         my_computer: 'My Computer',
         winamp: 'Winamp',
-        productor: 'Productor',
         about: 'About Me',
         settings: 'Settings',
         shutdown: 'Shut Down...',
@@ -1757,14 +1742,25 @@
         next: 'Next',
         open_file: 'Open file',
         ready: 'Ready',
-        photo_viewer: 'Photo Viewer'
+        photo_viewer: 'Photo Viewer',
+        about_content: `<h3>Hi! I am RedBeggins</h3>
+      <p>Music producer and web developer passionate about retro technology, design, and creating unique experiences.</p>
+      <h3>Skills</h3>
+      <ul>
+        <li>HTML5, CSS3, JavaScript</li>
+        <li>Music Production (FL Studio, Ableton)</li>
+        <li>UI/UX Design</li>
+        <li>Git & GitHub</li>
+      </ul>
+      <h3>Contact</h3>
+      <p>Want to collaborate? Find my social media in the Links folder on the desktop.</p>
+      <p style="margin-top: 12px; color: #888; font-size: 11px;">— Written from Windows 98 —</p>`
       },
       es: {
         start_btn: 'Inicio',
         os_name: 'Windows 98',
         my_computer: 'Mi PC',
         winamp: 'Winamp',
-        productor: 'Productor',
         about: 'Sobre Mí',
         settings: 'Configuración',
         shutdown: 'Apagar...',
@@ -1791,7 +1787,19 @@
         next: 'Siguiente',
         open_file: 'Abrir archivo',
         ready: 'Listo',
-        photo_viewer: 'Visor de Fotos'
+        photo_viewer: 'Visor de Fotos',
+        about_content: `<h3>Hola! Soy RedBeggins</h3>
+      <p>Productor musical y desarrollador web apasionado por la tecnología retro, el diseño y la creación de experiencias únicas.</p>
+      <h3>Habilidades</h3>
+      <ul>
+        <li>HTML5, CSS3, JavaScript</li>
+        <li>Producción Musical (FL Studio, Ableton)</li>
+        <li>Diseño UI/UX</li>
+        <li>Git & GitHub</li>
+      </ul>
+      <h3>Contacto</h3>
+      <p>¿Quieres colaborar? Encuentra mis redes en la carpeta Links del escritorio.</p>
+      <p style="margin-top: 12px; color: #888; font-size: 11px;">— Escrito desde Windows 98 —</p>`
       }
     };
 
@@ -1818,6 +1826,13 @@
         const key = el.getAttribute('data-i18n-title');
         if (dict[key]) {
              el.title = dict[key];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (dict[key]) {
+             el.innerHTML = dict[key];
         }
       });
 
