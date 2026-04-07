@@ -1,0 +1,23 @@
+{
+  "name": "redbeggins.github.io",
+  "version": "1.0.0",
+  "description": "This application is used to manage and publish social media content for personal use.\r By using this app, users agree to use it responsibly and in compliance with platform policies.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-files": "node generate-files.js",
+    "deploy": "npm run build-files && git add . && git commit -m \"update files\" && git push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RedBeggins/RedBeggins.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/RedBeggins/RedBeggins.github.io/issues"
+  },
+  "homepage": "https://github.com/RedBeggins/RedBeggins.github.io#readme"
+}
