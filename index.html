@@ -812,8 +812,8 @@
     .welcome-bottom {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 8px;
+      justify-content: flex-end;
+      padding: 8px 12px 8px 8px;
     }
     .welcome-tab-item {
       display: none;
@@ -1202,10 +1202,6 @@
         </div>
       </div>
       <div class="welcome-bottom">
-        <label style="margin-left: 10px;">
-          <input type="checkbox" id="welcome-startup-check" checked>
-          <span data-i18n="welcome_show_startup">Show this screen each time Windows starts</span>
-        </label>
         <button data-i18n="welcome_close" onclick="closeWindow('win-welcome')">Close</button>
       </div>
     </div>
