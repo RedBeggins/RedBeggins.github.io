@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT_DIR = path.join(__dirname, 'public', 'MyPC');
+const ROOT_DIR = path.join(__dirname, 'MyPC');
 const OUTPUT_FILE = path.join(__dirname, 'data', 'files.json');
 
 // Helper to determine type based on extension
