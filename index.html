@@ -684,6 +684,82 @@
       display: inline-block;
       animation: marquee 8s linear infinite;
     }
+    /* ============================================
+       WELCOME WINDOW
+       ============================================ */
+    .welcome-window .window-body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 22px);
+    }
+    .welcome-main {
+      display: flex;
+      flex: 1;
+      border-right: 1px solid #fff;
+      border-bottom: 1px solid #fff;
+      border-left: 1px solid #808080;
+      border-top: 1px solid #808080;
+      margin: 8px;
+      margin-bottom: 0;
+    }
+    .welcome-sidebar {
+      background: #0000A0; /* Windows 98 setup gradientish blue */
+      width: 140px;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .welcome-tab {
+      color: #fff;
+      padding: 8px 10px 8px 20px;
+      cursor: pointer;
+      position: relative;
+    }
+    .welcome-tab:hover {
+      text-decoration: underline;
+    }
+    .welcome-tab.active {
+      color: #ffff00;
+      font-weight: bold;
+    }
+    .welcome-tab.active::before {
+      content: '►';
+      position: absolute;
+      left: 8px;
+      color: #ffff00;
+      font-size: 10px;
+      line-height: 14px;
+    }
+    .welcome-content-area {
+      flex: 1;
+      background: #fff;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .welcome-content-area h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .welcome-content-area p {
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .welcome-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px;
+    }
+    .welcome-tab-item {
+      display: none;
+    }
+    .welcome-tab-item.active {
+      display: block;
+    }
+
   </style>
 </head>
 <body>
@@ -1014,6 +1090,48 @@
       </div>
     </div>
     <div class="window-body about-body" style="background: #fff;" data-i18n-html="about_content">
+    </div>
+  </div>
+
+  <!-- Ventana: Welcome -->
+  <div class="window welcome-window" id="win-welcome" style="width:600px; height:400px; top:10%; left:50%; margin-left:-300px; z-index:9999;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text" data-i18n="welcome_title">Welcome</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize" onclick="minimizeWindow('win-welcome')"></button>
+        <button aria-label="Maximize" onclick="maximizeWindow('win-welcome')"></button>
+        <button aria-label="Close" onclick="closeWindow('win-welcome')"></button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="welcome-main">
+        <div class="welcome-sidebar">
+          <div class="welcome-tab active" onclick="switchWelcomeTab('welcome')" data-i18n="welcome_tab_welcome" id="wt-welcome">Welcome</div>
+          <div class="welcome-tab" onclick="switchWelcomeTab('about')" data-i18n="welcome_tab_about" id="wt-about">About Me</div>
+          <div class="welcome-tab" onclick="switchWelcomeTab('music')" data-i18n="welcome_tab_music" id="wt-music">My Music</div>
+          <div class="welcome-tab" onclick="switchWelcomeTab('projects')" data-i18n="welcome_tab_projects" id="wt-projects">Projects</div>
+          <div class="welcome-tab" onclick="switchWelcomeTab('contact')" data-i18n="welcome_tab_contact" id="wt-contact">Contact</div>
+        </div>
+        <div class="welcome-content-area">
+          <div class="welcome-tab-item active" id="wc-welcome" data-i18n-html="welcome_content_welcome_text">
+          </div>
+          <div class="welcome-tab-item" id="wc-about" data-i18n-html="welcome_content_about_text">
+          </div>
+          <div class="welcome-tab-item" id="wc-music" data-i18n-html="welcome_content_music_text">
+          </div>
+          <div class="welcome-tab-item" id="wc-projects" data-i18n-html="welcome_content_projects_text">
+          </div>
+          <div class="welcome-tab-item" id="wc-contact" data-i18n-html="welcome_content_contact_text">
+          </div>
+        </div>
+      </div>
+      <div class="welcome-bottom">
+        <label>
+          <input type="checkbox" id="welcome-startup-check" checked>
+          <span data-i18n="welcome_show_startup">Show this screen each time Windows starts</span>
+        </label>
+        <button data-i18n="welcome_close" onclick="closeWindow('win-welcome')">Close</button>
+      </div>
     </div>
   </div>
 
@@ -1351,7 +1469,7 @@
       container.innerHTML = '';
 
       document.querySelectorAll('.window.open').forEach(win => {
-        if (win.id === '') return;
+        if (win.id === '' || win.id === 'win-welcome') return;
 
         const btn = document.createElement('button');
         btn.className = 'taskbar-item';
@@ -1754,7 +1872,26 @@
       </ul>
       <h3>Contact</h3>
       <p>Want to collaborate? Find my social media in the Links folder on the desktop.</p>
-      <p style="margin-top: 12px; color: #888; font-size: 11px;">— Written from Windows 98 —</p>`
+      <p style="margin-top: 12px; color: #888; font-size: 11px;">— Written from Windows 98 —</p>`,
+        welcome_title: 'Welcome',
+        welcome_tab_welcome: 'Welcome',
+        welcome_tab_about: 'About Me',
+        welcome_tab_music: 'My Music',
+        welcome_tab_projects: 'Projects',
+        welcome_tab_contact: 'Contact',
+        welcome_content_welcome_text: `<h2>Welcome</h2><p>Welcome to my personal desktop experience.</p>
+<p>This website is a recreation of a classic Windows 98 environment where you can explore my work, music, and projects in an interactive way.</p>
+<p>Here you will find unreleased tracks, creative experiments, and tools I have built as a developer and music producer.</p>
+<p>Feel free to explore the system just like a real computer. Every folder, window, and app is part of the experience.</p>`,
+        welcome_content_about_text: `<h2>About Me</h2><p>I am RedBeggins, a music producer and web developer focused on creating unique digital experiences.</p>
+<p>I combine sound design, programming, and visual aesthetics to build projects that feel alive and interactive.</p>`,
+        welcome_content_music_text: `<h2>My Music</h2><p>This section contains unreleased tracks and ideas.</p>
+<p>You can play them directly through the integrated Winamp player.</p>`,
+        welcome_content_projects_text: `<h2>Projects</h2><p>Here you can explore tools, experiments, and web projects I have created.</p>
+<p>Each one reflects my approach to creativity and problem-solving.</p>`,
+        welcome_content_contact_text: `<h2>Contact</h2><p>If you want to collaborate or get in touch, check the Links folder on the desktop.</p>`,
+        welcome_show_startup: 'Show this screen each time Windows starts',
+        welcome_close: 'Close'
       },
       es: {
         start_btn: 'Inicio',
@@ -1799,7 +1936,26 @@
       </ul>
       <h3>Contacto</h3>
       <p>¿Quieres colaborar? Encuentra mis redes en la carpeta Links del escritorio.</p>
-      <p style="margin-top: 12px; color: #888; font-size: 11px;">— Escrito desde Windows 98 —</p>`
+      <p style="margin-top: 12px; color: #888; font-size: 11px;">— Escrito desde Windows 98 —</p>`,
+        welcome_title: 'Bienvenido',
+        welcome_tab_welcome: 'Bienvenido',
+        welcome_tab_about: 'Sobre Mí',
+        welcome_tab_music: 'Mi Música',
+        welcome_tab_projects: 'Proyectos',
+        welcome_tab_contact: 'Contacto',
+        welcome_content_welcome_text: `<h2>Bienvenido</h2><p>Bienvenido a mi experiencia de escritorio personal.</p>
+<p>Este sitio web es una recreación de un entorno clásico de Windows 98 donde puedes explorar mi trabajo, música y proyectos de forma interactiva.</p>
+<p>Aquí encontrarás pistas inéditas, experimentos creativos y herramientas que he construido como desarrollador y productor musical.</p>
+<p>Siéntete libre de explorar el sistema como una computadora real. Cada carpeta, ventana y aplicación es parte de la experiencia.</p>`,
+        welcome_content_about_text: `<h2>Sobre Mí</h2><p>Soy RedBeggins, un productor musical y desarrollador web enfocado en crear experiencias digitales únicas.</p>
+<p>Combino diseño de sonido, programación y estética visual para construir proyectos que se sientan vivos e interactivos.</p>`,
+        welcome_content_music_text: `<h2>Mi Música</h2><p>Esta sección contiene pistas inéditas e ideas.</p>
+<p>Puedes reproducirlas directamente a través del reproductor Winamp integrado.</p>`,
+        welcome_content_projects_text: `<h2>Proyectos</h2><p>Aquí puedes explorar herramientas, experimentos y proyectos web que he creado.</p>
+<p>Cada uno refleja mi enfoque hacia la creatividad y la resolución de problemas.</p>`,
+        welcome_content_contact_text: `<h2>Contacto</h2><p>Si quieres colaborar o ponerte en contacto, revisa la carpeta Links en el escritorio.</p>`,
+        welcome_show_startup: 'Mostrar esta pantalla cada vez que inicie Windows',
+        welcome_close: 'Cerrar'
       }
     };
 
@@ -1862,8 +2018,36 @@
       translateUI();
     }
 
+    /* ============================================
+       WELCOME WINDOW
+       ============================================ */
+    function switchWelcomeTab(tabId) {
+      document.querySelectorAll('.welcome-tab').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.welcome-tab-item').forEach(el => el.classList.remove('active'));
+
+      document.getElementById('wt-' + tabId).classList.add('active');
+      document.getElementById('wc-' + tabId).classList.add('active');
+    }
+
+    function initWelcome() {
+      // Regardless of the checkbox to maintain 98 style logic (cosmetic check by request),
+      // we show it on every reload if requested. The user said: "The window must automatically appear every time the page is loaded or refreshed." and "Closing only affects the current session (no localStorage for visibility)"
+      
+      // Let's hook up the checkbox for cosmetic value or functional if localStorage is checked later.
+      const chk = document.getElementById('welcome-startup-check');
+      if (chk) {
+        chk.checked = localStorage.getItem('hideWelcome') !== 'true';
+        chk.addEventListener('change', (e) => {
+          localStorage.setItem('hideWelcome', !e.target.checked);
+        });
+      }
+
+      openWindow('win-welcome');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       initSettings();
+      initWelcome();
     });
 
     // Establecer volumen inicial del slider
