@@ -693,59 +693,116 @@
       display: flex;
       flex-direction: column;
       height: calc(100% - 22px);
+      background: #c0c0c0;
+    }
+    .welcome-main-container {
+      background: #fff;
+      margin: 8px;
+      margin-bottom: 0;
+      box-shadow: inset -1px -1px 0 #fff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #000;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .welcome-header {
+      position: relative;
+      height: 70px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="70"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1" /><stop offset="60%" style="stop-color:rgb(200,225,255);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(160,200,255);stop-opacity:1" /></linearGradient></defs><rect width="100%" height="70" fill="url(%23grad)" /></svg>') left top no-repeat;
+      background-size: cover;
+      padding-top: 15px;
+      padding-left: 20px;
+    }
+    .welcome-header h1 {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 28px;
+      letter-spacing: -1px;
+    }
+    .welcome-header h1 span {
+      font-weight: normal;
+      font-size: 16px;
+      color: #333;
+      position: relative;
+      top: -8px;
+    }
+    .welcome-header-line {
+      height: 3px;
+      background: linear-gradient(90deg, #ff0 0%, #0c0 25%, #00f 50%, #f00 75%, #00f 100%);
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
     }
     .welcome-main {
       display: flex;
       flex: 1;
-      border-right: 1px solid #fff;
-      border-bottom: 1px solid #fff;
-      border-left: 1px solid #808080;
-      border-top: 1px solid #808080;
-      margin: 8px;
-      margin-bottom: 0;
     }
     .welcome-sidebar {
-      background: #0000A0; /* Windows 98 setup gradientish blue */
-      width: 140px;
-      padding: 20px 0;
+      background: #EAF0FA;
+      width: 170px;
       display: flex;
       flex-direction: column;
+      border-right: 1px solid #C0C0C0;
+    }
+    .welcome-sidebar-title {
+      background: #000;
+      color: #fff;
+      font-weight: bold;
+      letter-spacing: 2px;
+      font-size: 11px;
+      padding: 4px 6px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
     }
     .welcome-tab {
-      color: #fff;
-      padding: 8px 10px 8px 20px;
+      color: #000;
+      padding: 6px 10px 6px 12px;
       cursor: pointer;
-      position: relative;
+      display: flex;
+      align-items: center;
+      font-family: 'MS Sans Serif', Arial, sans-serif;
+      font-weight: bold;
     }
     .welcome-tab:hover {
       text-decoration: underline;
     }
     .welcome-tab.active {
-      color: #ffff00;
-      font-weight: bold;
+      color: #0000a0;
+      background: #EAF0FA;
     }
-    .welcome-tab.active::before {
-      content: '►';
-      position: absolute;
-      left: 8px;
-      color: #ffff00;
-      font-size: 10px;
-      line-height: 14px;
+    .welcome-tab-icon {
+      width: 4px;
+      height: 12px;
+      margin-right: 8px;
     }
+    .wt-blue { background: #0000a0; }
+    .wt-red { background: #d00000; }
+    .wt-green { background: #00a000; }
+    .wt-yellow { background: #d0d000; }
     .welcome-content-area {
       flex: 1;
-      background: #fff;
-      padding: 20px;
+      padding: 24px;
       overflow-y: auto;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><text x="95%" y="90%" fill="rgba(200,225,255,0.4)" font-family="Arial" font-size="200" font-weight="bold" text-anchor="end">98</text></svg>') no-repeat bottom right;
     }
     .welcome-content-area h2 {
       margin-top: 0;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       font-size: 20px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
     }
     .welcome-content-area p {
-      margin-bottom: 12px;
-      line-height: 1.4;
+      margin-bottom: 14px;
+      line-height: 1.5;
+      font-family: 'MS Sans Serif', Arial, sans-serif;
+    }
+    .welcome-content-area ul {
+      margin-top: 0;
+      margin-bottom: 14px;
+      padding-left: 20px;
+      line-height: 1.5;
     }
     .welcome-bottom {
       display: flex;
@@ -1104,29 +1161,45 @@
       </div>
     </div>
     <div class="window-body">
-      <div class="welcome-main">
-        <div class="welcome-sidebar">
-          <div class="welcome-tab active" onclick="switchWelcomeTab('welcome')" data-i18n="welcome_tab_welcome" id="wt-welcome">Welcome</div>
-          <div class="welcome-tab" onclick="switchWelcomeTab('about')" data-i18n="welcome_tab_about" id="wt-about">About Me</div>
-          <div class="welcome-tab" onclick="switchWelcomeTab('music')" data-i18n="welcome_tab_music" id="wt-music">My Music</div>
-          <div class="welcome-tab" onclick="switchWelcomeTab('projects')" data-i18n="welcome_tab_projects" id="wt-projects">Projects</div>
-          <div class="welcome-tab" onclick="switchWelcomeTab('contact')" data-i18n="welcome_tab_contact" id="wt-contact">Contact</div>
+      <div class="welcome-main-container">
+        <div class="welcome-header">
+          <h1><span>Microsoft</span><br>Windows98</h1>
+          <div class="welcome-header-line"></div>
         </div>
-        <div class="welcome-content-area">
-          <div class="welcome-tab-item active" id="wc-welcome" data-i18n-html="welcome_content_welcome_text">
+        <div class="welcome-main">
+          <div class="welcome-sidebar">
+            <div class="welcome-sidebar-title">CONTENTS</div>
+            <div class="welcome-tab active" onclick="switchWelcomeTab('welcome')" id="wt-welcome">
+              <div class="welcome-tab-icon wt-blue"></div>
+              <span data-i18n="welcome_tab_welcome">Welcome</span>
+            </div>
+            <div class="welcome-tab" onclick="switchWelcomeTab('about')" id="wt-about">
+              <div class="welcome-tab-icon wt-red"></div>
+              <span data-i18n="welcome_tab_about">About Me</span>
+            </div>
+            <div class="welcome-tab" onclick="switchWelcomeTab('music')" id="wt-music">
+              <div class="welcome-tab-icon wt-green"></div>
+              <span data-i18n="welcome_tab_music">My Music</span>
+            </div>
+            <div class="welcome-tab" onclick="switchWelcomeTab('contact')" id="wt-contact">
+              <div class="welcome-tab-icon wt-yellow"></div>
+              <span data-i18n="welcome_tab_contact">Contact</span>
+            </div>
           </div>
-          <div class="welcome-tab-item" id="wc-about" data-i18n-html="welcome_content_about_text">
-          </div>
-          <div class="welcome-tab-item" id="wc-music" data-i18n-html="welcome_content_music_text">
-          </div>
-          <div class="welcome-tab-item" id="wc-projects" data-i18n-html="welcome_content_projects_text">
-          </div>
-          <div class="welcome-tab-item" id="wc-contact" data-i18n-html="welcome_content_contact_text">
+          <div class="welcome-content-area" style="background:#fff;">
+            <div class="welcome-tab-item active" id="wc-welcome" data-i18n-html="welcome_content_welcome_text">
+            </div>
+            <div class="welcome-tab-item" id="wc-about" data-i18n-html="welcome_content_about_text">
+            </div>
+            <div class="welcome-tab-item" id="wc-music" data-i18n-html="welcome_content_music_text">
+            </div>
+            <div class="welcome-tab-item" id="wc-contact" data-i18n-html="welcome_content_contact_text">
+            </div>
           </div>
         </div>
       </div>
       <div class="welcome-bottom">
-        <label>
+        <label style="margin-left: 10px;">
           <input type="checkbox" id="welcome-startup-check" checked>
           <span data-i18n="welcome_show_startup">Show this screen each time Windows starts</span>
         </label>
@@ -1541,6 +1614,14 @@
 
         dragTarget = win;
         const rect = win.getBoundingClientRect();
+        
+        // Fix for centered elements with calc() or margins
+        // Convert the computed left/top directly to explicit pixels so there's no layout jump
+        // and kill margins that could interfere with absolute positioning coordinates
+        win.style.left = rect.left + 'px';
+        win.style.top = rect.top + 'px';
+        win.style.margin = '0';
+
         offsetX = e.clientX - rect.left;
         offsetY = e.clientY - rect.top;
 
@@ -1877,7 +1958,6 @@
         welcome_tab_welcome: 'Welcome',
         welcome_tab_about: 'About Me',
         welcome_tab_music: 'My Music',
-        welcome_tab_projects: 'Projects',
         welcome_tab_contact: 'Contact',
         welcome_content_welcome_text: `<h2>Welcome</h2><p>Welcome to my personal desktop experience.</p>
 <p>This website is a recreation of a classic Windows 98 environment where you can explore my work, music, and projects in an interactive way.</p>
@@ -1887,8 +1967,6 @@
 <p>I combine sound design, programming, and visual aesthetics to build projects that feel alive and interactive.</p>`,
         welcome_content_music_text: `<h2>My Music</h2><p>This section contains unreleased tracks and ideas.</p>
 <p>You can play them directly through the integrated Winamp player.</p>`,
-        welcome_content_projects_text: `<h2>Projects</h2><p>Here you can explore tools, experiments, and web projects I have created.</p>
-<p>Each one reflects my approach to creativity and problem-solving.</p>`,
         welcome_content_contact_text: `<h2>Contact</h2><p>If you want to collaborate or get in touch, check the Links folder on the desktop.</p>`,
         welcome_show_startup: 'Show this screen each time Windows starts',
         welcome_close: 'Close'
@@ -1941,7 +2019,6 @@
         welcome_tab_welcome: 'Bienvenido',
         welcome_tab_about: 'Sobre Mí',
         welcome_tab_music: 'Mi Música',
-        welcome_tab_projects: 'Proyectos',
         welcome_tab_contact: 'Contacto',
         welcome_content_welcome_text: `<h2>Bienvenido</h2><p>Bienvenido a mi experiencia de escritorio personal.</p>
 <p>Este sitio web es una recreación de un entorno clásico de Windows 98 donde puedes explorar mi trabajo, música y proyectos de forma interactiva.</p>
@@ -1951,8 +2028,6 @@
 <p>Combino diseño de sonido, programación y estética visual para construir proyectos que se sientan vivos e interactivos.</p>`,
         welcome_content_music_text: `<h2>Mi Música</h2><p>Esta sección contiene pistas inéditas e ideas.</p>
 <p>Puedes reproducirlas directamente a través del reproductor Winamp integrado.</p>`,
-        welcome_content_projects_text: `<h2>Proyectos</h2><p>Aquí puedes explorar herramientas, experimentos y proyectos web que he creado.</p>
-<p>Cada uno refleja mi enfoque hacia la creatividad y la resolución de problemas.</p>`,
         welcome_content_contact_text: `<h2>Contacto</h2><p>Si quieres colaborar o ponerte en contacto, revisa la carpeta Links en el escritorio.</p>`,
         welcome_show_startup: 'Mostrar esta pantalla cada vez que inicie Windows',
         welcome_close: 'Cerrar'
