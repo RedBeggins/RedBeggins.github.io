@@ -996,12 +996,12 @@
         </a>
 
         <!-- Archivos de audio como IDs -->
-        <div class="productor-item" ondblclick="playFromProducer('Beat Demo 1')">
+        <div class="productor-item" ondblclick="loadTrack(null, 'Beat Demo 1')">
           <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='2' width='24' height='28' fill='%23e8e8e8' stroke='%23888' rx='1'/%3E%3Ctext x='16' y='18' text-anchor='middle' fill='%23FF6600' font-size='14'%3E♪%3C/text%3E%3Crect x='8' y='22' width='16' height='2' fill='%23ccc'/%3E%3Crect x='8' y='25' width='12' height='2' fill='%23ccc'/%3E%3C/svg%3E" alt="" />
           <span>beat_demo_01.mp3</span>
         </div>
 
-        <div class="productor-item" ondblclick="playFromProducer('Beat Demo 2')">
+        <div class="productor-item" ondblclick="loadTrack(null, 'Beat Demo 2')">
           <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='2' width='24' height='28' fill='%23e8e8e8' stroke='%23888' rx='1'/%3E%3Ctext x='16' y='18' text-anchor='middle' fill='%23FF6600' font-size='14'%3E♪%3C/text%3E%3Crect x='8' y='22' width='16' height='2' fill='%23ccc'/%3E%3Crect x='8' y='25' width='12' height='2' fill='%23ccc'/%3E%3C/svg%3E" alt="" />
           <span>beat_demo_02.mp3</span>
         </div>
@@ -1173,7 +1173,7 @@
         } else if (item.type === "audio") {
           svgIcon = `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block"><rect x="6" y="4" width="16" height="24" fill="#FFFFFF" stroke="#808080"/><path d="M12 12 V22 A2 2 0 1 1 10 20 V12 H18 V20 A2 2 0 1 1 16 18 V10 Z" fill="#000080"/><polygon points="22,4 28,10 22,10" fill="#C0C0C0"/></svg>`;
           el.ondblclick = () => {
-            playFromProducer(item.name, item.path);
+            loadTrack(item.path, item.name);
           };
         } else if (item.type === "text") {
           svgIcon = `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block"><rect x="6" y="4" width="16" height="24" fill="#FFFFFF" stroke="#808080"/><line x1="10" y1="10" x2="18" y2="10" stroke="#000" stroke-width="1"/><line x1="10" y1="14" x2="18" y2="14" stroke="#000" stroke-width="1"/><line x1="10" y1="18" x2="18" y2="18" stroke="#000" stroke-width="1"/><line x1="10" y1="22" x2="14" y2="22" stroke="#000" stroke-width="1"/><polygon points="22,4 28,10 22,10" fill="#C0C0C0"/></svg>`;
@@ -1620,9 +1620,9 @@
     }
 
     /* ============================================
-       PRODUCTOR — Abrir pista en Winamp
+       REPRODUCTOR — Cargar y reproducir pista
        ============================================ */
-    function playFromProducer(trackName, path = null) {
+    function loadTrack(path, trackName) {
       openWindow('win-winamp');
       document.getElementById('winamp-track-title').textContent = trackName;
       document.getElementById('winamp-track-title').classList.add('scrolling');

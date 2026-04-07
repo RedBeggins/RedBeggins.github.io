@@ -8,11 +8,6 @@
           "Despertar": {
             "type": "folder",
             "contents": {
-              "Despertar letra.txt": {
-                "type": "text",
-                "name": "DESPERTAR LETRA",
-                "path": "/MyPC/C/Music/Despertar/Despertar letra.txt"
-              },
               "Despertar wip1.mp3": {
                 "type": "audio",
                 "name": "DESPERTAR WIP1",
