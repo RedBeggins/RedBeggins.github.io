@@ -3,66 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redbegins - OS</title>
+    <title>Redbegins OS - Proyectos</title>
     <link rel="stylesheet" href="https://unpkg.com/98.css">
     <style>
         body {
-            /* El clásico color verde azulado de fondo */
             background-color: #008080;
             margin: 0;
             overflow: hidden;
             font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;
             height: 100vh;
+            /* Fondo de nubes opcional para seguir tu estética */
+            background-image: url('https://w98.ms/cloud.jpg'); 
+            background-size: cover;
         }
 
-        /* Contenedor del escritorio */
         #desktop {
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 80px);
+            grid-gap: 20px;
+            height: calc(100vh - 40px);
         }
 
-        /* Estilo de los iconos del escritorio */
         .desktop-icon {
-            width: 80px;
+            width: 70px;
             text-align: center;
             color: white;
             cursor: pointer;
+            text-shadow: 1px 1px #000;
         }
 
         .desktop-icon img {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 5px;
-            /* Efecto para que parezca pixelado */
-            image-rendering: pixelated; 
+            width: 32px;
+            height: 32px;
+            image-rendering: pixelated;
         }
 
-        .desktop-icon:active img {
-            filter: invert(1); /* Efecto de selección al hacer clic */
-        }
-
-        /* Contenedor de las ventanas (ocultas por defecto) */
-        .window-container {
+        /* VENTANAS MEJORADAS */
+        .window {
             position: absolute;
-            display: none; /* Cambia a block cuando se abre */
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            display: none;
+            min-width: 250px;
+            min-height: 150px;
+            /* Esto permite redimensionar desde la esquina */
+            resize: both;
+            overflow: auto; 
+            z-index: 10;
         }
 
-        /* Posiciones iniciales de las ventanas */
-        #folder-window { top: 50px; left: 150px; width: 400px; }
-        #player-window { top: 100px; left: 600px; width: 300px; }
-        #image-viewer { top: 150px; left: 200px; width: 500px; }
+        .title-bar {
+            cursor: grab; /* Indica que se puede mover */
+        }
+
+        .title-bar:active {
+            cursor: grabbing;
+        }
+
+        .window-body {
+            height: calc(100% - 40px); /* Ajuste para que el contenido llene la ventana */
+            overflow: auto;
+        }
+
+        /* Posiciones iniciales */
+        #folder-window { top: 10%; left: 10%; width: 450px; height: 300px; }
+        #player-window { top: 20%; left: 50%; width: 320px; height: 180px; }
 
         .file-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            padding: 10px;
-            background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: white;
             border: inset 2px;
-            height: 200px;
+            padding: 10px;
+            min-height: 100px;
         }
     </style>
 </head>
@@ -70,97 +83,98 @@
 
     <div id="desktop">
         <div class="desktop-icon" ondblclick="openWindow('folder-window')">
-            <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" alt="Carpeta">
-            <div>Archivos</div>
+            <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png">
+            <div>Mis IDs</div>
         </div>
         <div class="desktop-icon" ondblclick="openWindow('player-window')">
-            <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-3.png" alt="Música">
-            <div>Reproductor</div>
+            <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-3.png">
+            <div>Winamp</div>
         </div>
     </div>
 
-    <div class="window window-container" id="folder-window">
+    <div class="window" id="folder-window">
         <div class="title-bar">
-            <div class="title-bar-text">C:\Proyectos\Redbegins</div>
+            <div class="title-bar-text">C:\Productores\Redbegins\IDs</div>
             <div class="title-bar-controls">
-                <button aria-label="Minimize"></button>
-                <button aria-label="Maximize"></button>
                 <button aria-label="Close" onclick="closeWindow('folder-window')"></button>
             </div>
         </div>
         <div class="window-body">
-            <p>Selecciona un archivo para previsualizar:</p>
             <div class="file-grid">
-                <div class="desktop-icon" ondblclick="openWindow('player-window')" style="color: black;">
-                    <img src="https://win98icons.alexmeub.com/icons/png/audio_file-0.png" alt="WAV">
-                    <div>DnB_Mix_Final.wav</div>
-                </div>
-                <div class="desktop-icon" ondblclick="openWindow('image-viewer')" style="color: black;">
-                    <img src="https://win98icons.alexmeub.com/icons/png/image_file-0.png" alt="JPG">
-                    <div>Flyer_Evento.jpg</div>
+                <div class="desktop-icon" style="color:black; text-shadow:none;">
+                    <img src="https://win98icons.alexmeub.com/icons/png/audio_file-0.png">
+                    <div style="font-size: 10px;">ID_Neuro_01.wav</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="window window-container" id="player-window">
+    <div class="window" id="player-window">
         <div class="title-bar">
-            <div class="title-bar-text">Reproductor Media</div>
+            <div class="title-bar-text">Media Player</div>
             <div class="title-bar-controls">
                 <button aria-label="Close" onclick="closeWindow('player-window')"></button>
             </div>
         </div>
-        <div class="window-body" style="background: #222; color: #0f0; text-align: center;">
-            <p>▶ Redbegins - ID [174 BPM]</p>
-            <audio controls style="width: 100%; height: 30px;">
-                <source src="tu_cancion.mp3" type="audio/mpeg">
-                Tu navegador no soporta audio.
+        <div class="window-body" style="background: #000; color: #0f0; padding: 10px;">
+            <p style="font-size: 12px;">NOW PLAYING: DnB_Track_01</p>
+            <audio controls style="width: 100%;">
+                <source src="#" type="audio/mpeg">
             </audio>
         </div>
     </div>
 
-    <div class="window window-container" id="image-viewer">
-        <div class="title-bar">
-            <div class="title-bar-text">Visor de Imágenes de Windows</div>
-            <div class="title-bar-controls">
-                <button aria-label="Close" onclick="closeWindow('image-viewer')"></button>
-            </div>
-        </div>
-        <div class="window-body">
-            <div style="border: inset 2px; padding: 2px; background: #808080;">
-                <img src="https://via.placeholder.com/450x300.png?text=Tu+Diseno+Aqui" style="width: 100%; display: block;">
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Funciones para abrir y cerrar ventanas
+        let highestZ = 10;
+
         function openWindow(id) {
-            document.getElementById(id).style.display = 'block';
-            bringToFront(id); // Para que la ventana abierta quede encima
+            const win = document.getElementById(id);
+            win.style.display = 'block';
+            focusWindow(win);
         }
 
         function closeWindow(id) {
             document.getElementById(id).style.display = 'none';
         }
 
-        // Sistema básico de z-index para que la ventana activa quede arriba
-        let highestZIndex = 10;
-        
-        function bringToFront(id) {
-            highestZIndex++;
-            document.getElementById(id).style.zIndex = highestZIndex;
+        function focusWindow(win) {
+            highestZ++;
+            win.style.zIndex = highestZ;
         }
 
-        // Agregar evento a todas las ventanas para que pasen al frente al hacerles clic
-        document.querySelectorAll('.window-container').forEach(win => {
-            win.addEventListener('mousedown', function() {
-                bringToFront(this.id);
-            });
-        });
+        // LÓGICA PARA ARRASTRAR (DRAG)
+        document.querySelectorAll('.window').forEach(win => {
+            const titleBar = win.querySelector('.title-bar');
+            
+            win.addEventListener('mousedown', () => focusWindow(win));
 
-        // Nota: Para implementar el "arrastre" (drag and drop) de las ventanas, 
-        // se necesita un poco más de lógica en JS. Si la necesitas, avísame.
+            titleBar.onmousedown = function(e) {
+                // No mover si se hace clic en los botones de cerrar
+                if (e.target.tagName === 'BUTTON') return;
+
+                let shiftX = e.clientX - win.getBoundingClientRect().left;
+                let shiftY = e.clientY - win.getBoundingClientRect().top;
+
+                function moveAt(pageX, pageY) {
+                    win.style.left = pageX - shiftX + 'px';
+                    win.style.top = pageY - shiftY + 'px';
+                }
+
+                function onMouseMove(event) {
+                    moveAt(event.pageX, event.pageY);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+
+                document.onmouseup = function() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.onmouseup = null;
+                };
+            };
+
+            // Prevenir drag nativo de imágenes dentro de la barra
+            titleBar.ondragstart = function() { return false; };
+        });
     </script>
 </body>
 </html>
