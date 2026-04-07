@@ -1,0 +1,31 @@
+{
+  "C:": {
+    "type": "folder",
+    "contents": {
+      "Music": {
+        "type": "folder",
+        "contents": {
+          "track_01.mp3": { "type": "audio", "name": "TRACK 01", "path": "data/track_01.mp3" },
+          "synthwave.mp3": { "type": "audio", "name": "SYNTHWAVE BEAT", "path": "data/synthwave.mp3" }
+        }
+      },
+      "Documents": {
+        "type": "folder",
+        "contents": {
+          "readme.txt": { "type": "text", "content": "Hola! Bienvenido a mi portafolio retro." }
+        }
+      }
+    }
+  },
+  "D:": {
+    "type": "folder",
+    "contents": {
+      "Backups": {
+        "type": "folder",
+        "contents": {
+          "old_projects.txt": { "type": "text", "content": "Proyectos viejos" }
+        }
+      }
+    }
+  }
+}
