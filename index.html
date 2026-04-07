@@ -1628,7 +1628,9 @@
       document.getElementById('winamp-track-title').classList.add('scrolling');
 
       if (path) {
-        audioPlayer.src = path;
+        // Asegurar que la ruta no inicie con '/' para compatibilidad con GH Pages
+        const safePath = path.startsWith('/') ? path.substring(1) : path;
+        audioPlayer.src = safePath;
         document.getElementById('winamp-kbps').textContent = '128';
         audioPlayer.play().then(() => {
           isPlaying = true;

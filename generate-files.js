@@ -57,7 +57,7 @@ try {
   // We simulate "C:" and "D:" as top level folders inside public/MyPC
   // Or we just scan MyPC and its root folders become the root keys
   console.log(`Scanning directory: ${ROOT_DIR}`);
-  const data = scanDir(ROOT_DIR, '/MyPC');
+  const data = scanDir(ROOT_DIR, 'MyPC');
   
   // Ensure the data directory exists
   const dataDir = path.dirname(OUTPUT_FILE);
