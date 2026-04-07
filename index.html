@@ -894,7 +894,7 @@
           </div>
           <div class="winamp-info-row">
             <span class="winamp-info-box" id="winamp-kbps"></span> kbps
-            <span class="winamp-info-box">44</span> kHz
+            <span class="winamp-info-box" id="winamp-khz">44</span> kHz
             <div class="winamp-channels">
               <span class="mono">mono</span>
               <span class="stereo active">stereo</span>
@@ -1479,34 +1479,16 @@
       audioPlayer.src = url;
       document.getElementById('winamp-track-title').textContent = '1. ' + file.name.toUpperCase();
       document.getElementById('winamp-track-title').classList.add('scrolling');
-        
-        const kbpsEl = document.getElementById('winamp-kbps');
-        const khzEl = document.querySelectorAll('.winamp-info-box')[1];
-        
-        kbpsEl.textContent = '...';
-        khzEl.textContent = '...';
+      
+      updateAudioMetadata(url, file);
 
-        audioPlayer.onloadedmetadata = () => {
-          const duration = audioPlayer.duration;
-          const sizeInBits = file.size * 8;
-          const kbps = Math.round((sizeInBits / duration) / 1000);
-          kbpsEl.textContent = kbps;
-          
-          file.arrayBuffer()
-            .then(arrayBuffer => {
-              const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-              return audioCtx.decodeAudioData(arrayBuffer);
-            })
-            .then(audioBuffer => {
-              const sampleRate = Math.round(audioBuffer.sampleRate / 1000);
-              khzEl.textContent = sampleRate;
-            })
-            .catch(err => {
-              console.error("Error reading audio metadata from file:", err);
-              kbpsEl.textContent = '128';
-              khzEl.textContent = '44';
-            });
-        };
+      // Auto-play
+      audioPlayer.play().then(() => {
+        isPlaying = true;
+        startVisualizer();
+      }).catch(() => {});
+    });
+
     /** Play / Pause toggle */
     function togglePlay() {
       if (!audioPlayer.src) return;
@@ -1639,39 +1621,8 @@
         // Asegurar que la ruta no inicie con '/' para compatibilidad con GH Pages
         const safePath = path.startsWith('/') ? path.substring(1) : path;
         audioPlayer.src = safePath;
+        updateAudioMetadata(safePath);
         
-        const kbpsEl = document.getElementById('winamp-kbps');
-        const khzEl = document.querySelectorAll('.winamp-info-box')[1]; // El segundo span es el de kHz
-        
-        kbpsEl.textContent = '...';
-        khzEl.textContent = '...';
-
-        audioPlayer.onloadedmetadata = () => {
-          const duration = audioPlayer.duration;
-          
-          fetch(safePath)
-            .then(res => res.blob())
-            .then(blob => {
-              const sizeInBits = blob.size * 8;
-              const kbps = Math.round((sizeInBits / duration) / 1000);
-              kbpsEl.textContent = kbps;
-              return blob.arrayBuffer();
-            })
-            .then(arrayBuffer => {
-              const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-              return audioCtx.decodeAudioData(arrayBuffer);
-            })
-            .then(audioBuffer => {
-              const sampleRate = Math.round(audioBuffer.sampleRate / 1000);
-              khzEl.textContent = sampleRate;
-            })
-            .catch(err => {
-              console.error("Error reading audio metadata:", err);
-              kbpsEl.textContent = '128';
-              khzEl.textContent = '44';
-            });
-        };
-
         audioPlayer.play().then(() => {
           isPlaying = true;
           startVisualizer();
@@ -1680,6 +1631,53 @@
         // Mostrar dialogo para cargar archivo real si no hay path
         alert('Para reproducir "' + trackName + '", carga un archivo .mp3 usando el boton [Abrir] en Winamp.');
       }
+    }
+
+    /** Actualizar metadata de audio real dinámicamente */
+    function updateAudioMetadata(url, fileObj = null) {
+      // Valores visuales default de carga
+      document.getElementById('winamp-kbps').textContent = '...';
+      document.getElementById('winamp-khz').textContent = '...';
+
+      let blobPromise = fileObj ? Promise.resolve(fileObj) : fetch(url).then(res => res.blob());
+      
+      blobPromise.then(blob => {
+        const sizeInBits = blob.size * 8;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        blob.arrayBuffer()
+          .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
+          .then(audioBuffer => {
+            const sampleRateHz = audioBuffer.sampleRate;
+            const sampleRateKhz = Math.round(sampleRateHz / 1000);
+            const duration = audioBuffer.duration;
+            
+            let bitrateKbps = Math.round((sizeInBits / duration) / 1000);
+            if (isNaN(bitrateKbps) || !isFinite(bitrateKbps)) bitrateKbps = 128; // Fallback
+            
+            document.getElementById('winamp-khz').textContent = sampleRateKhz;
+            document.getElementById('winamp-kbps').textContent = bitrateKbps;
+            
+            // Actualizar mono/stereo
+            const channels = audioBuffer.numberOfChannels;
+            if (channels === 1) {
+              document.querySelector('.winamp-channels .mono').classList.add('active');
+              document.querySelector('.winamp-channels .stereo').classList.remove('active');
+            } else {
+              document.querySelector('.winamp-channels .mono').classList.remove('active');
+              document.querySelector('.winamp-channels .stereo').classList.add('active');
+            }
+          })
+          .catch(err => {
+             console.error('Error decoding audio metadata:', err);
+             document.getElementById('winamp-kbps').textContent = '128';
+             document.getElementById('winamp-khz').textContent = '44';
+          });
+      }).catch(err => {
+         console.error('Error fetching file for metadata:', err);
+         document.getElementById('winamp-kbps').textContent = '128';
+         document.getElementById('winamp-khz').textContent = '44';
+      });
     }
 
     /* ============================================
