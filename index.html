@@ -30,6 +30,15 @@
       /* Deshabilitar suavizado — look bitmap auténtico */
       -webkit-font-smoothing: none;
       -moz-osx-font-smoothing: unset;
+      cursor: url('win98-cursors/Cursor79.cur'), auto;
+    }
+
+    a, button, [role="button"], input[type="button"], input[type="submit"], input[type="reset"] {
+      cursor: url('win98-cursors/Cursor107.cur'), pointer !important;
+    }
+
+    input[type="text"], input[type="password"], textarea, input:not([type]) {
+      cursor: url('win98-cursors/Cursor80.cur'), text !important;
     }
 
     /* ============================================
@@ -60,7 +69,7 @@
       align-items: center;
       width: 75px;
       padding: 4px;
-      cursor: default;
+      cursor: url('win98-cursors/Cursor79.cur'), default;
       border: 1px solid transparent;
       border-radius: 1px;
     }
@@ -111,12 +120,12 @@
     }
 
     .window .title-bar {
-      cursor: grab;
+      cursor: url('win98-cursors/Cursor97.cur'), move;
       flex-shrink: 0;
     }
 
     .window .title-bar:active {
-      cursor: grabbing;
+      cursor: url('win98-cursors/Cursor97.cur'), move;
     }
 
     .window .window-body {
@@ -229,6 +238,9 @@
       background: silver;
       border: 2px outset #dfdfdf;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-family: "Pixelated MS Sans Serif", "MS Sans Serif", monospace;
+      font-smooth: never;
+      -webkit-font-smoothing: none;
     }
 
     #start-menu.open {
@@ -255,6 +267,8 @@
       writing-mode: vertical-rl;
       transform: rotate(180deg);
       letter-spacing: 2px;
+      -webkit-font-smoothing: none;
+      font-smooth: never;
     }
 
     .start-menu-items {
@@ -266,10 +280,13 @@
     .start-menu-item {
       padding: 6px 10px;
       font-size: 11px;
+      font-family: "Pixelated MS Sans Serif", "MS Sans Serif", monospace;
       display: flex;
       align-items: center;
       gap: 8px;
-      cursor: default;
+      cursor: url('win98-cursors/Cursor79.cur'), default;
+      -webkit-font-smoothing: none;
+      font-smooth: never;
     }
 
     .start-menu-item:hover {
@@ -305,7 +322,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      cursor: default;
+      cursor: url('win98-cursors/Cursor79.cur'), default;
       padding: 4px;
       border: 1px solid transparent;
     }
@@ -524,7 +541,7 @@
       height: 10px;
       background: #111;
       border: 1px inset #444;
-      cursor: pointer;
+      cursor: url('win98-cursors/Cursor107.cur'), pointer;
     }
 
     .winamp-progress-fill {
@@ -554,7 +571,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
+      cursor: url('win98-cursors/Cursor107.cur'), pointer;
       padding: 0;
     }
 
@@ -582,7 +599,7 @@
       padding: 2px 4px;
       color: #222;
       font-weight: bold;
-      cursor: default;
+      cursor: url('win98-cursors/Cursor79.cur'), default;
     }
 
     .winamp-volume {
@@ -614,7 +631,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      cursor: default;
+      cursor: url('win98-cursors/Cursor79.cur'), default;
       padding: 4px;
       border: 1px solid transparent;
       text-decoration: none;
@@ -763,7 +780,7 @@
       color: #000;
       padding: 0 10px 0 0;
       min-height: 35px;
-      cursor: pointer;
+      cursor: url('win98-cursors/Cursor107.cur'), pointer;
       display: flex;
       align-items: center;
       font-size: 13px;
@@ -827,111 +844,70 @@
 <body>
 
   <!-- ========================================
+       BOOT SEQUENCE OVERLAY
+       ======================================== -->
+  <div id="boot-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: black; z-index: 999999; display: flex; flex-direction: column; color: white; font-family: 'VT323', monospace; font-size: 18px; pointer-events: auto; transition: opacity 1s ease-in-out;">
+    
+    <!-- CRT glitch effect -->
+    <div id="boot-crt" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 2px, 3px 100%; opacity: 0.15; animation: crtFlicker 0.15s infinite;"></div>
+
+    <!-- BIOS Stage -->
+    <div id="boot-bios" style="position: relative; z-index: 2; padding: 20px; white-space: pre-wrap; margin-top: 20px;"></div>
+    
+    <!-- Splash Screen Stage -->
+    <div id="boot-splash-stage" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: black; z-index: 3;">
+      <img src="win-98-bootscreen.jpg" alt="Windows 98 Splash" style="position: absolute; width: 100%; height: 100%; object-fit: fill; image-rendering: pixelated; z-index: 1;">
+      <div style="position: absolute; bottom: 10%; z-index: 2; width: 250px; height: 18px; border: 2px solid #555; background: black; overflow: hidden;">
+        <div id="boot-loading-bar" style="height: 100%; width: 0%; background: blue;"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes crtFlicker {
+      0% { opacity: 0.15; }
+      50% { opacity: 0.20; }
+      100% { opacity: 0.15; }
+    }
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .blink-cursor {
+      animation: blink 1s step-end infinite;
+    }
+    body.booting {
+      overflow: hidden;
+    }
+  </style>
+
+  <!-- ========================================
        ESCRITORIO
        ======================================== -->
   <div id="desktop">
 
     <!-- Icono: My Computer -->
     <div class="desktop-icon" data-window="win-mycomputer" ondblclick="openWindow('win-mycomputer')">
-      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block">
-        <!-- Monitor/Computer Win98 Style -->
-        <!-- Case background -->
-        <rect x="4" y="4" width="24" height="18" fill="#C0C0C0"/>
-        <!-- Bevel -->
-        <rect x="4" y="4" width="24" height="1" fill="#FFFFFF"/>
-        <rect x="4" y="4" width="1" height="18" fill="#FFFFFF"/>
-        <rect x="27" y="5" width="1" height="17" fill="#808080"/>
-        <rect x="5" y="21" width="23" height="1" fill="#808080"/>
-        <!-- Screen -->
-        <rect x="7" y="7" width="18" height="12" fill="#000000"/>
-        <rect x="8" y="8" width="16" height="10" fill="#008080"/>
-        <!-- Base -->
-        <rect x="12" y="22" width="8" height="4" fill="#C0C0C0"/>
-        <rect x="12" y="22" width="1" height="4" fill="#808080"/>
-        <rect x="19" y="22" width="1" height="4" fill="#FFFFFF"/>
-        <rect x="6" y="26" width="20" height="4" fill="#C0C0C0"/>
-        <rect x="6" y="26" width="20" height="1" fill="#FFFFFF"/>
-        <rect x="6" y="26" width="1" height="4" fill="#FFFFFF"/>
-        <rect x="25" y="26" width="1" height="4" fill="#808080"/>
-        <rect x="6" y="29" width="20" height="1" fill="#808080"/>
-      </svg>
+      <img src="windows98-icons/png/computer_explorer-4.png" alt="My Computer" />
       <span data-i18n="my_computer">My Computer</span>
     </div>
 
     <!-- Icono: Winamp -->
     <div class="desktop-icon" data-window="win-winamp" ondblclick="openWindow('win-winamp')">
-      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block">
-        <!-- Fondo oscuro con borde -->
-        <rect width="32" height="32" fill="#1A1A1A"/>
-        <rect x="0" y="0" width="32" height="1" fill="#555"/>
-        <rect x="0" y="0" width="1" height="32" fill="#555"/>
-        <rect x="0" y="31" width="32" height="1" fill="#000"/>
-        <rect x="31" y="0" width="1" height="32" fill="#000"/>
-        <!-- Barras de ecualizador (7 barras) -->
-        <rect x="3"  y="20" width="3" height="10" fill="#00DD00"/>
-        <rect x="7"  y="14" width="3" height="16" fill="#00DD00"/>
-        <rect x="11" y="9"  width="3" height="21" fill="#00DD00"/>
-        <rect x="15" y="16" width="3" height="14" fill="#00DD00"/>
-        <rect x="19" y="11" width="3" height="19" fill="#00DD00"/>
-        <rect x="23" y="18" width="3" height="12" fill="#00DD00"/>
-        <rect x="27" y="7"  width="3" height="23" fill="#00DD00"/>
-        <!-- Picos (amarillo) -->
-        <rect x="3"  y="18" width="3" height="2" fill="#FFFF00"/>
-        <rect x="7"  y="12" width="3" height="2" fill="#FFFF00"/>
-        <rect x="11" y="7"  width="3" height="2" fill="#FFFF00"/>
-        <rect x="15" y="14" width="3" height="1" fill="#FFFF00"/>
-        <rect x="19" y="9"  width="3" height="1" fill="#FFFF00"/>
-      </svg>
+      <img src="windows98-icons/png/cd_audio_cd_a-3.png" alt="Winamp" />
       <span data-i18n="winamp">Winamp</span>
     </div>
 
     <!-- Icono: Productor -->
     <div class="desktop-icon" data-window="win-productor" ondblclick="openWindow('win-productor')">
-      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block">
-        <!-- Carpeta azul Win98 -->
-        <rect x="2" y="9" width="12" height="3" fill="#0050A0"/>
-        <rect x="1" y="11" width="30" height="1" fill="#FFFFFF"/>
-        <rect x="1" y="11" width="1" height="18" fill="#FFFFFF"/>
-        <rect x="30" y="11" width="1" height="18" fill="#808080"/>
-        <rect x="1" y="28" width="30" height="1" fill="#808080"/>
-        <rect x="2" y="12" width="28" height="15" fill="#2080CC"/>
-        <rect x="2" y="12" width="28" height="1" fill="#88CCFF"/>
-        <rect x="2" y="12" width="1" height="15" fill="#88CCFF"/>
-        <rect x="29" y="12" width="1" height="15" fill="#004488"/>
-        <rect x="2" y="26" width="28" height="1" fill="#004488"/>
-        <!-- Nota musical pixel-art -->
-        <rect x="16" y="15" width="2" height="7" fill="#FFFFA0"/>
-        <rect x="16" y="15" width="5" height="2" fill="#FFFFA0"/>
-        <rect x="14" y="20" width="4" height="3" fill="#FFFFA0"/>
-      </svg>
+      <img src="windows98-icons/png/directory_closed-4.png" alt="Links" />
       <span>Links</span>
     </div>
 
     <!-- Icono: Sobre Mí -->
     <div class="desktop-icon" data-window="win-about" ondblclick="openWindow('win-about')">
-      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block">
-        <!-- Sombra del papel -->
-        <rect x="8" y="4" width="19" height="26" fill="#808080"/>
-        <!-- Papel blanco -->
-        <rect x="6" y="2" width="19" height="26" fill="#FFFFFF"/>
-        <!-- Bordes del papel -->
-        <rect x="6" y="2"  width="19" height="1" fill="#DFDFDF"/>
-        <rect x="6" y="2"  width="1"  height="26" fill="#DFDFDF"/>
-        <rect x="24" y="2" width="1"  height="26" fill="#808080"/>
-        <rect x="6" y="27" width="19" height="1" fill="#808080"/>
-        <!-- Encabezado amarillo (bloc de notas) -->
-        <rect x="6" y="2" width="19" height="4" fill="#FFFF88"/>
-        <rect x="6" y="2" width="19" height="1" fill="#CCCC00"/>
-        <!-- Línea roja de margen -->
-        <rect x="13" y="2" width="1" height="26" fill="#FF8080"/>
-        <!-- Líneas de texto azules -->
-        <rect x="15" y="8"  width="8" height="1" fill="#8080C0"/>
-        <rect x="15" y="11" width="8" height="1" fill="#8080C0"/>
-        <rect x="15" y="14" width="8" height="1" fill="#8080C0"/>
-        <rect x="15" y="17" width="8" height="1" fill="#8080C0"/>
-        <rect x="15" y="20" width="5" height="1" fill="#8080C0"/>
-        <rect x="15" y="23" width="6" height="1" fill="#8080C0"/>
-      </svg>
+      <img src="windows98-icons/png/notepad-2.png" alt="Sobre Mí" />
       <span data-i18n="about">Sobre Mí</span>
     </div>
 
@@ -1109,27 +1085,27 @@
 
         <!-- Redes sociales como accesos directos -->
         <a class="productor-item" href="https://www.youtube.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f0f0f0' rx='2'/%3E%3Crect x='4' y='8' width='24' height='16' rx='3' fill='%23FF0000'/%3E%3Cpolygon points='13,11 13,21 22,16' fill='%23fff'/%3E%3Cpath d='M2,28 L6,24' stroke='%23333' stroke-width='1' fill='none'/%3E%3C/svg%3E" alt="" />
+          <img src="windows98-icons/png/url1-0.png" alt="YouTube" width="32" height="32" style="image-rendering:pixelated;" />
           <span>YouTube.lnk</span>
         </a>
 
         <a class="productor-item" href="https://soundcloud.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f0f0f0' rx='2'/%3E%3Crect x='4' y='6' width='24' height='20' rx='3' fill='%23FF5500'/%3E%3Crect x='7' y='14' width='2' height='8' fill='%23fff' rx='1'/%3E%3Crect x='11' y='11' width='2' height='11' fill='%23fff' rx='1'/%3E%3Crect x='15' y='13' width='2' height='9' fill='%23fff' rx='1'/%3E%3Crect x='19' y='10' width='2' height='12' fill='%23fff' rx='1'/%3E%3Crect x='23' y='12' width='2' height='10' fill='%23fff' rx='1'/%3E%3Cpath d='M2,28 L6,24' stroke='%23333' stroke-width='1' fill='none'/%3E%3C/svg%3E" alt="" />
+          <img src="windows98-icons/png/url1-0.png" alt="SoundCloud" width="32" height="32" style="image-rendering:pixelated;" />
           <span>SoundCloud.lnk</span>
         </a>
 
         <a class="productor-item" href="https://www.instagram.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f0f0f0' rx='2'/%3E%3Cdefs%3E%3ClinearGradient id='ig' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%23FED373'/%3E%3Cstop offset='50%25' stop-color='%23F15245'/%3E%3Cstop offset='100%25' stop-color='%23D92E7F'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='4' y='4' width='24' height='24' rx='6' fill='url(%23ig)'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='23' cy='9' r='2' fill='%23fff'/%3E%3Cpath d='M2,28 L6,24' stroke='%23333' stroke-width='1' fill='none'/%3E%3C/svg%3E" alt="" />
+          <img src="windows98-icons/png/url1-0.png" alt="Instagram" width="32" height="32" style="image-rendering:pixelated;" />
           <span>Instagram.lnk</span>
         </a>
 <!--
         <a class="productor-item" href="https://twitter.com/" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f0f0f0' rx='2'/%3E%3Crect x='4' y='4' width='24' height='24' rx='4' fill='%231DA1F2'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%23fff' font-size='16' font-weight='bold'%3E𝕏%3C/text%3E%3Cpath d='M2,28 L6,24' stroke='%23333' stroke-width='1' fill='none'/%3E%3C/svg%3E" alt="" />
+          <img src="windows98-icons/png/url1-0.png" alt="X/Twitter" width="32" height="32" style="image-rendering:pixelated;" />
           <span>Twitter.lnk</span>
         </a>
 
         <a class="productor-item" href="https://github.com/" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f0f0f0' rx='2'/%3E%3Ccircle cx='16' cy='16' r='12' fill='%23333'/%3E%3Cpath d='M16,6 C10.5,6 6,10.5 6,16 c0,4.4 2.9,8.2 6.8,9.5 .5,.1 .7-.2 .7-.5 v-1.7 c-2.8,.6-3.3-1.3-3.3-1.3 -.5-1.1-1.1-1.4-1.1-1.4 -.9-.6 .1-.6 .1-.6 1,0 1.5,1 1.5,1 .9,1.5 2.3,1.1 2.8,.8 .1-.6 .3-1.1 .6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1 .4-2 1-2.7 -.1-.3-.5-1.3 .1-2.7 0,0 .8-.3 2.8,1 a9.6,9.6,0,0,1,5,0 c2-1.3 2.8-1 2.8-1 .6,1.4 .2,2.4 .1,2.7 .6,.7 1,1.6 1,2.7 0,3.9-2.4,4.7-4.6,5 .4,.3 .7,.9 .7,1.9 v2.8 c0,.3 .2,.6 .7,.5 C23.1,24.2 26,20.4 26,16 26,10.5 21.5,6 16,6z' fill='%23f0f0f0'/%3E%3Cpath d='M2,28 L6,24' stroke='%23333' stroke-width='1' fill='none'/%3E%3C/svg%3E" alt="" />
+          <img src="windows98-icons/png/url1-0.png" alt="GitHub" width="32" height="32" style="image-rendering:pixelated;" />
           <span>GitHub.lnk</span>
         </a>
  -->
@@ -1212,7 +1188,7 @@
        ======================================== -->
   <div id="taskbar">
     <button id="start-button" onclick="toggleStartMenu()">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='7' height='7' x='1' y='1' fill='%23FF0000'/%3E%3Crect width='7' height='7' x='8' y='1' fill='%2300FF00'/%3E%3Crect width='7' height='7' x='1' y='8' fill='%230000FF'/%3E%3Crect width='7' height='7' x='8' y='8' fill='%23FFFF00'/%3E%3C/svg%3E" alt="" />
+      <img src="windows98-icons/png/windows-0.png" alt="" />
       <span data-i18n="start_btn">Inicio</span>
     </button>
     <div class="taskbar-divider"></div>
@@ -1229,42 +1205,28 @@
     </div>
     <div class="start-menu-items">
       <div class="start-menu-item" onclick="openWindow('win-mycomputer'); toggleStartMenu();">
-        <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;margin-right:4px;">
-          <!-- Monitor Win98 Style inline -->
-          <rect x="4" y="4" width="24" height="18" fill="#C0C0C0"/>
-          <rect x="4" y="4" width="24" height="1" fill="#FFFFFF"/>
-          <rect x="4" y="4" width="1" height="18" fill="#FFFFFF"/>
-          <rect x="27" y="5" width="1" height="17" fill="#808080"/>
-          <rect x="5" y="21" width="23" height="1" fill="#808080"/>
-          <rect x="7" y="7" width="18" height="12" fill="#000000"/>
-          <rect x="8" y="8" width="16" height="10" fill="#008080"/>
-          <rect x="12" y="22" width="8" height="4" fill="#C0C0C0"/>
-          <rect x="6" y="26" width="20" height="4" fill="#C0C0C0"/>
-        </svg>
+        <img src="windows98-icons/png/computer_explorer-4.png" alt="My Computer" width="24" height="24" style="margin-right:6px;" />
         <span data-i18n="my_computer">My Computer</span>
       </div>
       <div class="start-menu-item" onclick="openWindow('win-winamp'); toggleStartMenu();">
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%23333'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%2300cc00'/%3E%3C/svg%3E" alt="" />
+        <img src="windows98-icons/png/cd_audio_cd_a-3.png" alt="Winamp" width="24" height="24" style="margin-right:6px;" />
         <span data-i18n="winamp">Winamp</span>
       </div>
       <div class="start-menu-item" onclick="openWindow('win-productor'); toggleStartMenu();">
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='3' width='6' height='2' fill='%234488cc' rx='1'/%3E%3Crect x='1' y='4' width='14' height='10' fill='%234488cc' rx='1'/%3E%3C/svg%3E" alt="" />
+        <img src="windows98-icons/png/directory_closed-4.png" alt="Links" width="24" height="24" style="margin-right:6px;" />
         <span>Links</span>
       </div>
       <div class="start-menu-item" onclick="openWindow('win-about'); toggleStartMenu();">
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='1' width='12' height='14' fill='%23f0f0f0' stroke='%23888' rx='1'/%3E%3Cline x1='4' y1='5' x2='12' y2='5' stroke='%23333'/%3E%3Cline x1='4' y1='8' x2='12' y2='8' stroke='%23333'/%3E%3Cline x1='4' y1='11' x2='10' y2='11' stroke='%23333'/%3E%3C/svg%3E" alt="" />
+        <img src="windows98-icons/png/notepad-2.png" alt="Sobre Mí" width="24" height="24" style="margin-right:6px;" />
         <span data-i18n="about">Sobre Mí</span>
       </div>
       <div class="start-menu-item" onclick="openWindow('win-settings'); toggleStartMenu();">
-        <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;margin-right:4px;">
-          <rect x="6" y="6" width="20" height="20" fill="#808080" stroke="#000" stroke-width="2"/>
-          <circle cx="16" cy="16" r="4" fill="#000"/>
-        </svg>
+        <img src="windows98-icons/png/settings_gear-0.png" alt="Settings" width="24" height="24" style="margin-right:6px;" />
         <span data-i18n="settings">Configuración</span>
       </div>
       <div class="start-menu-divider"></div>
       <div class="start-menu-item" onclick="toggleStartMenu();">
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%23c00'/%3E%3Cline x1='4' y1='8' x2='12' y2='8' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E" alt="" />
+        <img src="windows98-icons/png/shut_down_normal-0.png" alt="Shutdown" width="24" height="24" style="margin-right:6px;" />
         <span data-i18n="shutdown">Apagar...</span>
       </div>
     </div>
@@ -1363,18 +1325,18 @@
         let svgIcon = "";
         
         if (item.type === "folder") {
-          svgIcon = `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block"><rect x="2" y="9" width="12" height="3" fill="#DBA800"/><rect x="1" y="11" width="30" height="1" fill="#FFFFFF"/><rect x="1" y="11" width="1" height="18" fill="#FFFFFF"/><rect x="30" y="11" width="1" height="18" fill="#808080"/><rect x="1" y="28" width="30" height="1" fill="#808080"/><rect x="2" y="12" width="28" height="15" fill="#FFCA28"/><rect x="2" y="12" width="28" height="1" fill="#FFE97F"/><rect x="2" y="12" width="1" height="15" fill="#FFE97F"/><rect x="29" y="12" width="1" height="15" fill="#C89800"/><rect x="2" y="26" width="28" height="1" fill="#C89800"/></svg>`;
+          svgIcon = `<img src="windows98-icons/png/directory_closed-4.png" alt="Folder" width="32" height="32" style="display:block" />`;
           el.ondblclick = () => {
             currentPath.push(key);
             renderMyComputer();
           };
         } else if (item.type === "audio") {
-          svgIcon = `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block"><rect x="6" y="4" width="16" height="24" fill="#FFFFFF" stroke="#808080"/><path d="M12 12 V22 A2 2 0 1 1 10 20 V12 H18 V20 A2 2 0 1 1 16 18 V10 Z" fill="#000080"/><polygon points="22,4 28,10 22,10" fill="#C0C0C0"/></svg>`;
+          svgIcon = `<img src="windows98-icons/png/cd_audio_cd_a-3.png" alt="Audio" width="32" height="32" style="display:block" />`;
           el.ondblclick = () => {
             loadTrack(item.path, item.name);
           };
         } else if (item.type === "text") {
-          svgIcon = `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;shape-rendering:crispEdges;display:block"><rect x="6" y="4" width="16" height="24" fill="#FFFFFF" stroke="#808080"/><line x1="10" y1="10" x2="18" y2="10" stroke="#000" stroke-width="1"/><line x1="10" y1="14" x2="18" y2="14" stroke="#000" stroke-width="1"/><line x1="10" y1="18" x2="18" y2="18" stroke="#000" stroke-width="1"/><line x1="10" y1="22" x2="14" y2="22" stroke="#000" stroke-width="1"/><polygon points="22,4 28,10 22,10" fill="#C0C0C0"/></svg>`;
+          svgIcon = `<img src="windows98-icons/png/notepad_file-0.png" alt="Text" width="32" height="32" style="display:block" />`;
           el.ondblclick = () => {
             alert(translate('file_content') + item.content);
           };
@@ -2116,16 +2078,136 @@
         });
       }
 
-      openWindow('win-welcome');
+      // openWindow('win-welcome'); // Deferred to end of boot sequence
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       initSettings();
       initWelcome();
+      
+      initPreBoot();
     });
 
     // Establecer volumen inicial del slider
     document.getElementById('winamp-volume').value = 80;
+
+    /* ============================================
+       BOOT SEQUENCE
+       ============================================ */
+    function initPreBoot() {
+      const bios = document.getElementById('boot-bios');
+      
+      const preBootText = `Award Modular BIOS v4.51PG, An Energy Star Ally
+Copyright (C) 1984-1998, Award Software, Inc.
+
+PENTIUM-S CPU at 200MHz
+Memory Test : 32768K OK
+
+Press DEL to enter SETUP
+Press ANY KEY to continue booting...
+<span class="blink-cursor">_</span>`;
+
+      bios.innerHTML = preBootText;
+      document.body.classList.add('booting');
+
+      const triggerBoot = (e) => {
+        // Remove listeners to avoid double triggers
+        document.removeEventListener('keydown', triggerBoot);
+        document.removeEventListener('click', triggerBoot);
+        
+        bios.innerHTML = ''; // clear for sequence
+        startBootSequence();
+      };
+
+      document.addEventListener('keydown', triggerBoot);
+      document.addEventListener('click', triggerBoot);
+    }
+
+    function startBootSequence() {
+      const overlay = document.getElementById('boot-overlay');
+      const bios = document.getElementById('boot-bios');
+      const splashStage = document.getElementById('boot-splash-stage');
+      const loadingBar = document.getElementById('boot-loading-bar');
+      const crt = document.getElementById('boot-crt');
+      
+      const biosLines = [
+        "Starting Windows 98...",
+        "Checking system memory... OK",
+        "Loading drivers...",
+        "Initializing hardware...",
+        "Detecting primary Master IDE...",
+        "Detecting primary Slave IDE... None",
+        "Detecting secondary Master IDE...",
+        "Verifying DMI Pool Data.................",
+        "Booting from hard disk..."
+      ];
+      
+      // Preload sounds
+      const startSound = new Audio('win98-sounds/The Microsoft Sound.wav');
+      const beepSound = new Audio('win98-sounds/DING.WAV'); // fallback beep
+      
+      let lineIndex = 0;
+      let biosInterval = null;
+
+      function showLine(line, callback) {
+        const lineElem = document.createElement('div');
+        lineElem.textContent = line;
+        bios.appendChild(lineElem);
+        
+        if (callback) {
+          // Add a random delay before showing the next line
+          setTimeout(callback, 200 + Math.random() * 400);
+        }
+      }
+
+      function renderBiosLines() {
+        if (lineIndex < biosLines.length) {
+          if (lineIndex === 2) {
+             beepSound.play().catch(e => console.log('Autoplay prevented beep'));
+          }
+          showLine(biosLines[lineIndex], renderBiosLines);
+          lineIndex++;
+        } else {
+          // BIOS finished, proceed to Splash
+          setTimeout(showSplash, 800);
+        }
+      }
+
+      function showSplash() {
+        bios.style.display = 'none';
+        splashStage.style.display = 'flex';
+        
+        let progress = 0;
+        const loaderInt = setInterval(() => {
+          progress += Math.random() * 5;
+          if (progress > 100) progress = 100;
+          loadingBar.style.width = progress + '%';
+          if (progress === 100) {
+            clearInterval(loaderInt);
+            setTimeout(finishBoot, 800);
+          }
+        }, 50); // fast loader
+      }
+
+      function finishBoot() {
+        overlay.style.opacity = '0';
+        // Play startup sound
+        startSound.play().catch(e => console.log('Autoplay prevented sound'));
+        
+        // Wait for fade to complete
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          document.body.classList.remove('booting');
+          openWindow('win-welcome');
+          
+          // Disable CRT overlay on desktop as requested (reduce or disable)
+          // crt will be inside the overlay which is display none, so it's gone!
+        }, 1000);
+      }
+      
+      // Start the BIOS stage
+      setTimeout(renderBiosLines, 500);
+    }
 
   </script>
 
