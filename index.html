@@ -894,7 +894,7 @@
     </div>
 
     <!-- Icono: Internet Explorer -->
-    <div class="desktop-icon" data-window="win-browser" ondblclick="openBrowser('https://www.google.com/webhp?igu=1', 'Google - Microsoft Internet Explorer')">
+    <div class="desktop-icon" data-window="win-browser" ondblclick="openBrowser('youtube.html', 'YouTube - Microsoft Internet Explorer')">
       <img src="windows98-icons/png/msie1-1.png" alt="Internet Explorer" />
       <span>Internet Explorer</span>
     </div>
@@ -1111,20 +1111,20 @@
       <div class="productor-grid">
 
         <!-- Redes sociales como accesos directos -->
-        <div class="productor-item" ondblclick="openBrowser('https://www.youtube.com/redbegins', 'YouTube - Microsoft Internet Explorer')">
+        <a class="productor-item" href="https://www.youtube.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
           <img src="windows98-icons/png/url1-0.png" alt="YouTube" width="32" height="32" style="image-rendering:pixelated;" />
           <span>YouTube.lnk</span>
-        </div>
+        </a>
 
-        <div class="productor-item" ondblclick="openBrowser('https://soundcloud.com/redbegins', 'SoundCloud - Microsoft Internet Explorer')">
+        <a class="productor-item" href="https://soundcloud.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
           <img src="windows98-icons/png/url1-0.png" alt="SoundCloud" width="32" height="32" style="image-rendering:pixelated;" />
           <span>SoundCloud.lnk</span>
-        </div>
+        </a>
 
-        <div class="productor-item" ondblclick="openBrowser('https://www.instagram.com/redbegins', 'Instagram - Microsoft Internet Explorer')">
+        <a class="productor-item" href="https://www.instagram.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
           <img src="windows98-icons/png/url1-0.png" alt="Instagram" width="32" height="32" style="image-rendering:pixelated;" />
           <span>Instagram.lnk</span>
-        </div>
+        </a>
 <!--
         <a class="productor-item" href="https://twitter.com/" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
           <img src="windows98-icons/png/url1-0.png" alt="X/Twitter" width="32" height="32" style="image-rendering:pixelated;" />
@@ -1239,7 +1239,7 @@
           <span style="font-size: 11px; color: #000; margin-right: 6px;">Address</span>
           <div style="flex: 1; border: inset 2px #fff; border-bottom-color: #808080; border-right-color: #808080; background: #fff; display: flex; align-items: center;">
              <img src="windows98-icons/png/html-0.png" style="width: 16px; height: 16px; margin: 0 4px;" />
-             <input type="text" id="browser-address" value="https://www.google.com/" readonly style="border: none; outline: none; width: 100%; font-size: 11px; font-family: Tahoma, sans-serif; background: transparent; padding: 2px 0 0 0; color: #000;"/>
+             <input type="text" id="browser-address" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" readonly style="border: none; outline: none; width: 100%; font-size: 11px; font-family: Tahoma, sans-serif; background: transparent; padding: 2px 0 0 0; color: #000;"/>
           </div>
         </div>
       </div>
@@ -1346,7 +1346,7 @@
       <span data-i18n="os_name">Windows 98</span>
     </div>
     <div class="start-menu-items">
-      <div class="start-menu-item" onclick="openBrowser('https://www.google.com/webhp?igu=1', 'Google - Microsoft Internet Explorer'); toggleStartMenu();">
+      <div class="start-menu-item" onclick="openBrowser('youtube.html', 'YouTube - Microsoft Internet Explorer'); toggleStartMenu();">
         <img src="windows98-icons/png/msie1-1.png" alt="Internet Explorer" width="24" height="24" style="margin-right:6px;" />
         <span>Internet Explorer</span>
       </div>
@@ -1534,7 +1534,8 @@
       const browserTitle = document.getElementById('browser-title');
 
       browserFrame.src = url;
-      browserAddress.value = url;
+      // Siempre mantener esto con estética de RickRoll
+      browserAddress.value = (url === 'youtube.html') ? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' : url;
       browserTitle.textContent = title ? title : 'Microsoft Internet Explorer';
       
       openWindow('win-browser');
