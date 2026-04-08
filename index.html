@@ -887,6 +887,12 @@
        ======================================== -->
   <div id="desktop">
 
+    <!-- Icono: Paint -->
+    <div class="desktop-icon" data-window="win-paint" ondblclick="openWindow('win-paint')">
+      <img src="windows98-icons/png/paint_file-5.png" alt="Paint" />
+      <span data-i18n="paint">Paint</span>
+    </div>
+
     <!-- Icono: My Computer -->
     <div class="desktop-icon" data-window="win-mycomputer" ondblclick="openWindow('win-mycomputer')">
       <img src="windows98-icons/png/computer_explorer-4.png" alt="My Computer" />
@@ -916,6 +922,21 @@
   <!-- ========================================
        VENTANAS
        ======================================== -->
+
+  <!-- Ventana: Paint -->
+  <div class="window" id="win-paint" style="width:680px; height:500px; top:80px; left:120px; display:none;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text" data-i18n="paint">untitled - Paint</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize" onclick="minimizeWindow('win-paint')"></button>
+        <button aria-label="Maximize" onclick="maximizeWindow('win-paint')"></button>
+        <button aria-label="Close" onclick="closeWindow('win-paint')"></button>
+      </div>
+    </div>
+    <div class="window-body" style="padding: 0; margin: 0; height: calc(100% - 24px);">
+      <iframe src="https://jspaint.app/" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
 
   <!-- Ventana: My Computer -->
   <div class="window" id="win-mycomputer" style="width:520px; height:380px; top:60px; left:100px;" onmousedown="bringToFront(this)">
@@ -1204,6 +1225,10 @@
       <span data-i18n="os_name">Windows 98</span>
     </div>
     <div class="start-menu-items">
+      <div class="start-menu-item" onclick="openWindow('win-paint'); toggleStartMenu();">
+        <img src="windows98-icons/png/paint_file-5.png" alt="Paint" width="24" height="24" style="margin-right:6px;" />
+        <span data-i18n="paint">Paint</span>
+      </div>
       <div class="start-menu-item" onclick="openWindow('win-mycomputer'); toggleStartMenu();">
         <img src="windows98-icons/png/computer_explorer-4.png" alt="My Computer" width="24" height="24" style="margin-right:6px;" />
         <span data-i18n="my_computer">My Computer</span>
