@@ -893,6 +893,12 @@
       <span data-i18n="paint">Paint</span>
     </div>
 
+    <!-- Icono: Internet Explorer -->
+    <div class="desktop-icon" data-window="win-browser" ondblclick="openBrowser('https://www.google.com/webhp?igu=1', 'Google - Microsoft Internet Explorer')">
+      <img src="windows98-icons/png/msie1-1.png" alt="Internet Explorer" />
+      <span>Internet Explorer</span>
+    </div>
+
     <!-- Icono: My Computer -->
     <div class="desktop-icon" data-window="win-mycomputer" ondblclick="openWindow('win-mycomputer')">
       <img src="windows98-icons/png/computer_explorer-4.png" alt="My Computer" />
@@ -1105,20 +1111,20 @@
       <div class="productor-grid">
 
         <!-- Redes sociales como accesos directos -->
-        <a class="productor-item" href="https://www.youtube.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
+        <div class="productor-item" ondblclick="openBrowser('https://www.youtube.com/redbegins', 'YouTube - Microsoft Internet Explorer')">
           <img src="windows98-icons/png/url1-0.png" alt="YouTube" width="32" height="32" style="image-rendering:pixelated;" />
           <span>YouTube.lnk</span>
-        </a>
+        </div>
 
-        <a class="productor-item" href="https://soundcloud.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
+        <div class="productor-item" ondblclick="openBrowser('https://soundcloud.com/redbegins', 'SoundCloud - Microsoft Internet Explorer')">
           <img src="windows98-icons/png/url1-0.png" alt="SoundCloud" width="32" height="32" style="image-rendering:pixelated;" />
           <span>SoundCloud.lnk</span>
-        </a>
+        </div>
 
-        <a class="productor-item" href="https://www.instagram.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
+        <div class="productor-item" ondblclick="openBrowser('https://www.instagram.com/redbegins', 'Instagram - Microsoft Internet Explorer')">
           <img src="windows98-icons/png/url1-0.png" alt="Instagram" width="32" height="32" style="image-rendering:pixelated;" />
           <span>Instagram.lnk</span>
-        </a>
+        </div>
 <!--
         <a class="productor-item" href="https://twitter.com/" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
           <img src="windows98-icons/png/url1-0.png" alt="X/Twitter" width="32" height="32" style="image-rendering:pixelated;" />
@@ -1135,6 +1141,121 @@
 
     <div class="status-bar">
       <div class="status-bar-field">7 objects</div>
+    </div>
+  </div>
+
+  <!-- Ventana: Internet Explorer -->
+  <style>
+    .ie-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      box-shadow: none;
+      min-width: 44px;
+      height: 38px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-family: Tahoma, "Pixelated MS Sans Serif", Arial, sans-serif;
+      cursor: default;
+      color: #000;
+    }
+    .ie-btn:hover {
+      border: 1px solid #fff;
+      border-right-color: #808080;
+      border-bottom-color: #808080;
+      background: #dfdfdf;
+    }
+    .ie-btn:active {
+      border: 1px solid #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+      background: #dfdfdf;
+      padding-top: 2px;
+      padding-left: 2px;
+    }
+    .ie-btn img { margin-bottom: 2px; width: 20px; height: 20px; image-rendering: pixelated; filter: grayscale(100%); }
+    .ie-menu-item { padding: 2px 6px; font-size: 11px; cursor: default; }
+    .ie-menu-item:hover { background-color: #000080; color: white; }
+  </style>
+
+  <div class="window" id="win-browser" style="width:720px; height:540px; top:100px; left:150px;" onmousedown="bringToFront(this)">
+    <div class="title-bar">
+      <div class="title-bar-text" id="browser-title">Microsoft Internet Explorer</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize" onclick="minimizeWindow('win-browser')"></button>
+        <button aria-label="Maximize" onclick="maximizeWindow('win-browser')"></button>
+        <button aria-label="Close" onclick="closeWindow('win-browser')"></button>
+      </div>
+    </div>
+    
+    <div class="window-body" style="padding: 0; margin: 0; display: flex; flex-direction: column; height: calc(100% - 24px);">
+      <!-- Toolbars -->
+      <div style="background-color: #c0c0c0; padding: 2px;">
+        <!-- Menu Bar -->
+        <div style="display: flex; align-items: center; gap: 8px; padding-left: 2px; font-size: 11px; margin-bottom: 2px;">
+          <div style="display: flex; gap: 2px;">
+            <span class="ie-menu-item"><u>F</u>ile</span>
+            <span class="ie-menu-item"><u>E</u>dit</span>
+            <span class="ie-menu-item"><u>V</u>iew</span>
+            <span class="ie-menu-item">F<u>a</u>vorites</span>
+            <span class="ie-menu-item"><u>T</u>ools</span>
+            <span class="ie-menu-item"><u>H</u>elp</span>
+          </div>
+        </div>
+        
+        <!-- Standard Buttons Bar -->
+        <div style="display: flex; align-items: center; gap: 2px; padding: 2px; border-top: 1px solid #fff; border-bottom: 1px solid #808080;">
+          <div class="ie-btn" onclick="document.getElementById('browser-iframe').contentWindow.history.back()">
+             <img src="windows98-icons/png/directory_open_file_mydocs-4.png" />Back
+          </div>
+          <div class="ie-btn" onclick="document.getElementById('browser-iframe').contentWindow.history.forward()">
+             <img src="windows98-icons/png/directory_open_file_mydocs-4.png" style="transform: scaleX(-1);" />Forward
+          </div>
+          <div class="ie-btn" onclick="document.getElementById('browser-iframe').src = 'about:blank';">
+             <img src="windows98-icons/png/msg_error-2.png" />Stop
+          </div>
+          <div class="ie-btn" onclick="document.getElementById('browser-iframe').src = document.getElementById('browser-address').value;">
+             <img src="windows98-icons/png/msg_information-0.png" />Refresh
+          </div>
+          <div class="ie-btn" onclick="document.getElementById('browser-iframe').src = 'https://www.google.com/webhp?igu=1'; document.getElementById('browser-address').value = 'https://www.google.com';">
+             <img src="windows98-icons/png/chm-2.png" />Home
+          </div>
+          <div style="width: 2px; height: 34px; border-left: 1px solid #808080; border-right: 1px solid #fff; margin: 0 4px;"></div>
+          <div class="ie-btn">
+             <img src="windows98-icons/png/search_computer-1.png" />Search
+          </div>
+          <div class="ie-btn">
+             <img src="windows98-icons/png/directory_favorites-3.png" />Favorites
+          </div>
+          <div class="ie-btn">
+             <img src="windows98-icons/png/history-1.png" />History
+          </div>
+        </div>
+
+        <!-- Address Bar -->
+        <div style="display: flex; align-items: center; padding: 4px 6px; border-top: 1px solid #fff; border-bottom: 1px solid #808080;">
+          <span style="font-size: 11px; color: #000; margin-right: 6px;">Address</span>
+          <div style="flex: 1; border: inset 2px #fff; border-bottom-color: #808080; border-right-color: #808080; background: #fff; display: flex; align-items: center;">
+             <img src="windows98-icons/png/html-0.png" style="width: 16px; height: 16px; margin: 0 4px;" />
+             <input type="text" id="browser-address" value="https://www.google.com/" readonly style="border: none; outline: none; width: 100%; font-size: 11px; font-family: Tahoma, sans-serif; background: transparent; padding: 2px 0 0 0; color: #000;"/>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Content -->
+      <div style="flex: 1; border: inset 2px #fff; border-bottom-color: #dfdfdf; border-right-color: #dfdfdf; margin: 2px;">
+        <iframe id="browser-iframe" src="" style="width: 100%; height: 100%; border: none; display: block; background: #fff;"></iframe>
+      </div>
+      
+      <!-- Status bar -->
+      <div class="status-bar" style="margin: 0; padding: 2px; border-top: 1px solid #fff; height: 20px;">
+         <div class="status-bar-field" style="width: 100%; display: flex; justify-content: space-between; box-shadow: none;">
+           <span style="display:flex; align-items:center; gap:4px;"><img src="windows98-icons/png/html-0.png" style="width:12px; height:12px;"/> Done</span>
+           <span style="display:flex; align-items:center; gap:4px; width: 100px; border-left: 1px solid #808080; padding-left: 4px;"><img src="windows98-icons/png/world-0.png" style="width:12px; height:12px;"/> Internet</span>
+         </div>
+      </div>
     </div>
   </div>
 
@@ -1225,6 +1346,10 @@
       <span data-i18n="os_name">Windows 98</span>
     </div>
     <div class="start-menu-items">
+      <div class="start-menu-item" onclick="openBrowser('https://www.google.com/webhp?igu=1', 'Google - Microsoft Internet Explorer'); toggleStartMenu();">
+        <img src="windows98-icons/png/msie1-1.png" alt="Internet Explorer" width="24" height="24" style="margin-right:6px;" />
+        <span>Internet Explorer</span>
+      </div>
       <div class="start-menu-item" onclick="openWindow('win-paint'); toggleStartMenu();">
         <img src="windows98-icons/png/paint_file-5.png" alt="Paint" width="24" height="24" style="margin-right:6px;" />
         <span data-i18n="paint">Paint</span>
@@ -1399,6 +1524,21 @@
     /* ============================================
        GESTIÓN DE VENTANAS — Abrir / Cerrar / Minimizar
        ============================================ */
+
+    /**
+     * Abre Microsoft Internet Explorer con un URL
+     */
+    function openBrowser(url, title) {
+      const browserFrame = document.getElementById('browser-iframe');
+      const browserAddress = document.getElementById('browser-address');
+      const browserTitle = document.getElementById('browser-title');
+
+      browserFrame.src = url;
+      browserAddress.value = url;
+      browserTitle.textContent = title ? title : 'Microsoft Internet Explorer';
+      
+      openWindow('win-browser');
+    }
 
     /**
      * Abre una ventana y la trae al frente.
