@@ -1,1131 +1,1556 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title data-i18n="page_title">RedBeggins — Windows 98 Portfolio</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="page_title">RedBeggins — Windows 98 Portfolio</title>
 
-  <!-- 98.css — Librería CSS para estética Windows 98 -->
-  <link rel="stylesheet" href="https://unpkg.com/98.css" />
-  <!-- VT323 — Fuente bitmap/pixel retro -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
+    <!-- 98.css — Librería CSS para estética Windows 98 -->
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
+    <!-- VT323 — Fuente bitmap/pixel retro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    /* ============================================
+    <style>
+      /* ============================================
        RESET & BASE
        ============================================ */
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
-      user-select: none;
-      /* Deshabilitar suavizado — look bitmap auténtico */
-      -webkit-font-smoothing: none;
-      -moz-osx-font-smoothing: unset;
-      cursor: url('win98-cursors/Cursor79.cur'), auto;
-    }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
+        user-select: none;
+        /* Deshabilitar suavizado — look bitmap auténtico */
+        -webkit-font-smoothing: none;
+        -moz-osx-font-smoothing: unset;
+        cursor: url("win98-cursors/Cursor79.cur"), auto;
+      }
 
-    a, button, [role="button"], input[type="button"], input[type="submit"], input[type="reset"] {
-      cursor: url('win98-cursors/Cursor107.cur'), pointer !important;
-    }
+      a,
+      button,
+      [role="button"],
+      input[type="button"],
+      input[type="submit"],
+      input[type="reset"] {
+        cursor: url("win98-cursors/Cursor107.cur"), pointer !important;
+      }
 
-    input[type="text"], input[type="password"], textarea, input:not([type]) {
-      cursor: url('win98-cursors/Cursor80.cur'), text !important;
-    }
+      input[type="text"],
+      input[type="password"],
+      textarea,
+      input:not([type]) {
+        cursor: url("win98-cursors/Cursor80.cur"), text !important;
+      }
 
-    /* ============================================
+      /* ============================================
+       SCREEN CONTAINER — Responsive scaling
+       ============================================ */
+      #screen-container {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transform-origin: top left;
+        /* Eliminado transform estático para usar JS */
+      }
+
+      /* Prevent desktop from exceeding screen on mobile */
+      @media (max-width: 768px) {
+        #desktop {
+          width: 100%;
+          height: calc(100% - 28px);
+        }
+
+        .window {
+          max-width: 90vw;
+          max-height: 80vh;
+        }
+      }
+
+      /* ============================================
        ESCRITORIO — Fondo de pantalla
        ============================================ */
-    #desktop {
-      width: 100%;
-      height: calc(100% - 28px); /* Resta la barra de tareas */
-      background-color: #008080;
-      background-image: url('wallpaper/Gemini_Generated_Image_7nbhj47nbhj47nbh.png');
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
-      flex-direction: column;
-      padding: 12px;
-      gap: 8px;
-    }
+      #desktop {
+        width: 100%;
+        height: calc(100% - 28px); /* Resta la barra de tareas */
+        background-color: #008080;
+        background-image: url("wallpaper/Gemini_Generated_Image_7nbhj47nbhj47nbh.png");
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        flex-direction: column;
+        padding: 12px;
+        gap: 8px;
+      }
 
-    /* ============================================
+      /* ============================================
        ICONOS DEL ESCRITORIO
        ============================================ */
-    .desktop-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 75px;
-      padding: 4px;
-      cursor: url('win98-cursors/Cursor79.cur'), default;
-      border: 1px solid transparent;
-      border-radius: 1px;
-    }
+      .desktop-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 75px;
+        padding: 4px;
+        cursor: url("win98-cursors/Cursor79.cur"), default;
+        border: 1px solid transparent;
+        border-radius: 1px;
+      }
 
-    .desktop-icon:hover {
-      background: rgba(0, 0, 128, 0.3);
-      border: 1px dotted #fff;
-    }
+      .desktop-icon:hover {
+        background: rgba(0, 0, 128, 0.3);
+        border: 1px dotted #fff;
+      }
 
-    .desktop-icon.selected {
-      background: rgba(0, 0, 128, 0.5);
-      border: 1px dotted #fff;
-    }
+      .desktop-icon.selected {
+        background: rgba(0, 0, 128, 0.5);
+        border: 1px dotted #fff;
+      }
 
-    .desktop-icon img {
-      width: 32px;
-      height: 32px;
-      image-rendering: pixelated;
-      pointer-events: none;
-    }
+      .desktop-icon img {
+        width: 32px;
+        height: 32px;
+        image-rendering: pixelated;
+        pointer-events: none;
+      }
 
-    .desktop-icon span {
-      margin-top: 4px;
-      font-size: 14px;
-      font-family: 'VT323', 'MS Sans Serif', monospace;
-      color: #fff;
-      text-align: center;
-      word-break: break-word;
-      line-height: 1.2;
-      pointer-events: none;
-    }
+      .desktop-icon span {
+        margin-top: 4px;
+        font-size: 14px;
+        font-family: "VT323", "MS Sans Serif", monospace;
+        color: #fff;
+        text-align: center;
+        word-break: break-word;
+        line-height: 1.2;
+        pointer-events: none;
+      }
 
-    /* ============================================
+      /* ============================================
        VENTANAS
        ============================================ */
-    .window {
-      position: absolute;
-      min-width: 220px;
-      min-height: 140px;
-      display: none;            /* Se muestran al abrir */
-      flex-direction: column;
-      resize: both;
-      overflow: hidden;
-    }
+      .window {
+        position: absolute;
+        min-width: 220px;
+        min-height: 140px;
+        display: none; /* Se muestran al abrir */
+        flex-direction: column;
+        resize: both;
+        overflow: hidden;
+      }
 
-    .window.open {
-      display: flex;
-    }
+      .window.open {
+        display: flex;
+      }
 
-    .window .title-bar {
-      cursor: url('win98-cursors/Cursor97.cur'), move;
-      flex-shrink: 0;
-    }
+      .window .title-bar {
+        cursor: url("win98-cursors/Cursor97.cur"), move;
+        flex-shrink: 0;
+      }
 
-    .window .title-bar:active {
-      cursor: url('win98-cursors/Cursor97.cur'), move;
-    }
+      .window .title-bar:active {
+        cursor: url("win98-cursors/Cursor97.cur"), move;
+      }
 
-    .window .window-body {
-      flex: 1;
-      overflow: auto;
-      padding: 6px;
-    }
+      .window .window-body {
+        flex: 1;
+        overflow: auto;
+        padding: 6px;
+      }
 
-    /* ============================================
+      /* ============================================
        BARRA DE TAREAS
        ============================================ */
-    #taskbar {
-      width: 100%;
-      height: 28px;
-      min-height: 28px;
-      max-height: 28px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      padding: 2px 4px;
-      gap: 2px;
-      flex-shrink: 0;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      z-index: 99999;
-      background: silver;
-      border-top: 2px solid #fff;
-      box-shadow: inset 0 1px 0 #dfdfdf;
-      overflow: hidden;
-    }
+      #taskbar {
+        width: 100%;
+        height: 28px;
+        min-height: 28px;
+        max-height: 28px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 2px 4px;
+        gap: 2px;
+        flex-shrink: 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 99999;
+        background: silver;
+        border-top: 2px solid #fff;
+        box-shadow: inset 0 1px 0 #dfdfdf;
+        overflow: hidden;
+      }
 
-    #start-button {
-      font-weight: bold;
-      font-size: 11px;
-      padding: 2px 6px;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      min-width: 54px;
-      height: 22px;
-    }
+      #start-button {
+        font-weight: bold;
+        font-size: 11px;
+        padding: 2px 6px;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        min-width: 54px;
+        height: 22px;
+      }
 
-    #start-button img {
-      width: 16px;
-      height: 16px;
-      image-rendering: pixelated;
-    }
+      #start-button img {
+        width: 16px;
+        height: 16px;
+        image-rendering: pixelated;
+      }
 
-    .taskbar-divider {
-      width: 1px;
-      height: 20px;
-      border-left: 1px solid #808080;
-      border-right: 1px solid #fff;
-      margin: 0 2px;
-    }
+      .taskbar-divider {
+        width: 1px;
+        height: 20px;
+        border-left: 1px solid #808080;
+        border-right: 1px solid #fff;
+        margin: 0 2px;
+      }
 
-    #taskbar-items {
-      display: flex;
-      gap: 2px;
-      flex: 1;
-      overflow-x: auto;
-    }
+      #taskbar-items {
+        display: flex;
+        gap: 2px;
+        flex: 1;
+        overflow-x: auto;
+      }
 
-    .taskbar-item {
-      font-size: 11px;
-      padding: 2px 8px;
-      max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
+      .taskbar-item {
+        font-size: 11px;
+        padding: 2px 8px;
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
 
-    .taskbar-item.active {
-      font-weight: bold;
-    }
+      .taskbar-item.active {
+        font-weight: bold;
+      }
 
-    .taskbar-item img {
-      width: 16px;
-      height: 16px;
-      image-rendering: pixelated;
-    }
+      .taskbar-item img {
+        width: 16px;
+        height: 16px;
+        image-rendering: pixelated;
+      }
 
-    #taskbar-clock {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-left: 1px solid #808080;
-      border-top: 1px solid #808080;
-      border-right: 1px solid #fff;
-      border-bottom: 1px solid #fff;
-      min-width: 60px;
-      text-align: center;
-    }
+      #taskbar-clock {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-left: 1px solid #808080;
+        border-top: 1px solid #808080;
+        border-right: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+        min-width: 60px;
+        text-align: center;
+      }
 
-    /* ============================================
+      /* ============================================
        MENÚ INICIO
        ============================================ */
-    #start-menu {
-      position: fixed;
-      bottom: 28px;
-      left: 0;
-      width: 180px;
-      display: none;
-      flex-direction: column;
-      z-index: 100000;
-      background: silver;
-      border: 2px outset #dfdfdf;
-      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-      font-family: "Pixelated MS Sans Serif", "MS Sans Serif", monospace;
-      font-smooth: never;
-      -webkit-font-smoothing: none;
-    }
+      #start-menu {
+        position: fixed;
+        bottom: 28px;
+        left: 0;
+        width: 180px;
+        display: none;
+        flex-direction: column;
+        z-index: 100000;
+        background: silver;
+        border: 2px outset #dfdfdf;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-family: "Pixelated MS Sans Serif", "MS Sans Serif", monospace;
+        font-smooth: never;
+        -webkit-font-smoothing: none;
+      }
 
-    #start-menu.open {
-      display: flex;
-    }
+      #start-menu.open {
+        display: flex;
+      }
 
-    .start-menu-sidebar {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 22px;
-      background: linear-gradient(to top, #000080, #1084d0);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 4px;
-    }
+      .start-menu-sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 22px;
+        background: linear-gradient(to top, #000080, #1084d0);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 4px;
+      }
 
-    .start-menu-sidebar span {
-      color: #fff;
-      font-size: 11px;
-      font-weight: bold;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      letter-spacing: 2px;
-      -webkit-font-smoothing: none;
-      font-smooth: never;
-    }
+      .start-menu-sidebar span {
+        color: #fff;
+        font-size: 11px;
+        font-weight: bold;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        letter-spacing: 2px;
+        -webkit-font-smoothing: none;
+        font-smooth: never;
+      }
 
-    .start-menu-items {
-      margin-left: 22px;
-      display: flex;
-      flex-direction: column;
-    }
+      .start-menu-items {
+        margin-left: 22px;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .start-menu-item {
-      padding: 6px 10px;
-      font-size: 11px;
-      font-family: "Pixelated MS Sans Serif", "MS Sans Serif", monospace;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: url('win98-cursors/Cursor79.cur'), default;
-      -webkit-font-smoothing: none;
-      font-smooth: never;
-    }
+      .start-menu-item {
+        padding: 6px 10px;
+        font-size: 11px;
+        font-family: "Pixelated MS Sans Serif", "MS Sans Serif", monospace;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: url("win98-cursors/Cursor79.cur"), default;
+        -webkit-font-smoothing: none;
+        font-smooth: never;
+      }
 
-    .start-menu-item:hover {
-      background: #000080;
-      color: #fff;
-    }
+      .start-menu-item:hover {
+        background: #000080;
+        color: #fff;
+      }
 
-    .start-menu-item img {
-      width: 16px;
-      height: 16px;
-      image-rendering: pixelated;
-    }
+      .start-menu-item img {
+        width: 16px;
+        height: 16px;
+        image-rendering: pixelated;
+      }
 
-    .start-menu-divider {
-      margin-left: 22px;
-      height: 1px;
-      border-top: 1px solid #808080;
-      border-bottom: 1px solid #fff;
-      margin-right: 4px;
-    }
+      .start-menu-divider {
+        margin-left: 22px;
+        height: 1px;
+        border-top: 1px solid #808080;
+        border-bottom: 1px solid #fff;
+        margin-right: 4px;
+      }
 
-    /* ============================================
+      /* ============================================
        EXPLORADOR DE ARCHIVOS (My Computer)
        ============================================ */
-    .explorer-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 80px);
-      gap: 10px;
-      padding: 8px;
-    }
+      .explorer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 80px);
+        gap: 10px;
+        padding: 8px;
+      }
 
-    .explorer-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: url('win98-cursors/Cursor79.cur'), default;
-      padding: 4px;
-      border: 1px solid transparent;
-    }
+      .explorer-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: url("win98-cursors/Cursor79.cur"), default;
+        padding: 4px;
+        border: 1px solid transparent;
+      }
 
-    .explorer-item:hover {
-      background: rgba(0, 0, 128, 0.15);
-      border: 1px dotted navy;
-    }
+      .explorer-item:hover {
+        background: rgba(0, 0, 128, 0.15);
+        border: 1px dotted navy;
+      }
 
-    .explorer-item img {
-      width: 32px;
-      height: 32px;
-      image-rendering: pixelated;
-    }
+      .explorer-item img {
+        width: 32px;
+        height: 32px;
+        image-rendering: pixelated;
+      }
 
-    .explorer-item span {
-      font-size: 11px;
-      text-align: center;
-      margin-top: 4px;
-      word-break: break-word;
-      line-height: 1.2;
-    }
+      .explorer-item span {
+        font-size: 11px;
+        text-align: center;
+        margin-top: 4px;
+        word-break: break-word;
+        line-height: 1.2;
+      }
 
-    /* ============================================
+      /* ============================================
        ADDRESS BAR (Explorer)
        ============================================ */
-    .address-bar {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 4px;
-      background: silver;
-      border-bottom: 1px solid #808080;
-      font-size: 11px;
-      flex-shrink: 0;
-    }
+      .address-bar {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 4px;
+        background: silver;
+        border-bottom: 1px solid #808080;
+        font-size: 11px;
+        flex-shrink: 0;
+      }
 
-    .address-bar label {
-      font-size: 11px;
-    }
+      .address-bar label {
+        font-size: 11px;
+      }
 
-    .address-bar input {
-      flex: 1;
-      font-size: 11px;
-      padding: 1px 4px;
-    }
+      .address-bar input {
+        flex: 1;
+        font-size: 11px;
+        padding: 1px 4px;
+      }
 
-    /* ============================================
+      /* ============================================
        TOOLBAR (Explorer)
        ============================================ */
-    .toolbar-row {
-      display: flex;
-      gap: 2px;
-      padding: 2px 4px;
-      background: silver;
-      border-bottom: 1px solid #808080;
-      flex-shrink: 0;
-    }
+      .toolbar-row {
+        display: flex;
+        gap: 2px;
+        padding: 2px 4px;
+        background: silver;
+        border-bottom: 1px solid #808080;
+        flex-shrink: 0;
+      }
 
-    .toolbar-row button {
-      font-size: 11px;
-      padding: 1px 6px;
-    }
+      .toolbar-row button {
+        font-size: 11px;
+        padding: 1px 6px;
+      }
 
-    /* ============================================
+      /* ============================================
        VISOR DE FOTOS
        ============================================ */
-    .photo-viewer {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #000;
-      height: 100%;
-      padding: 8px;
-    }
+      .photo-viewer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+        height: 100%;
+        padding: 8px;
+      }
 
-    .photo-viewer img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      image-rendering: auto;
-    }
+      .photo-viewer img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        image-rendering: auto;
+      }
 
-    /* ============================================
+      /* ============================================
        WINAMP — Estética Classic Winamp
        ============================================ */
-    .winamp-window {
-      background: #292931 !important; /* Gris oscuro metálico */
-      border: 2px outset #555 !important;
-      padding: 0 !important;
-      resize: none !important; /* Bloquea el redimensionado */
-      min-height: auto;        /* Evita clips por altura mínima global */
-    }
+      .winamp-window {
+        background: #292931 !important; /* Gris oscuro metálico */
+        border: 2px outset #555 !important;
+        padding: 0 !important;
+        resize: none !important; /* Bloquea el redimensionado */
+        min-height: auto; /* Evita clips por altura mínima global */
+      }
 
-    .winamp-window .title-bar {
-      background: linear-gradient(90deg, #101035, #203060, #101035) !important;
-      border-bottom: 2px groove #444;
-      justify-content: space-between;
-    }
+      .winamp-window .title-bar {
+        background: linear-gradient(
+          90deg,
+          #101035,
+          #203060,
+          #101035
+        ) !important;
+        border-bottom: 2px groove #444;
+        justify-content: space-between;
+      }
 
-    .winamp-body {
-      background: #292931;
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+      .winamp-body {
+        background: #292931;
+        padding: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
 
-    .winamp-display {
-      background: #000;
-      border: 2px inset #333;
-      padding: 6px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      height: 60px;
-    }
+      .winamp-display {
+        background: #000;
+        border: 2px inset #333;
+        padding: 6px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 60px;
+      }
 
-    /* Pantalla izquierda: Tiempo y visualizador */
-    .winamp-display-left {
-      width: 70px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      padding-right: 6px;
-      border-right: 1px solid #111;
-    }
+      /* Pantalla izquierda: Tiempo y visualizador */
+      .winamp-display-left {
+        width: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding-right: 6px;
+        border-right: 1px solid #111;
+      }
 
-    .winamp-time {
-      color: #00DD00;
-      font-family: 'VT323', monospace;
-      font-size: 28px;
-      line-height: 1;
-      text-shadow: 0 0 2px #00DD00;
-    }
+      .winamp-time {
+        color: #00dd00;
+        font-family: "VT323", monospace;
+        font-size: 28px;
+        line-height: 1;
+        text-shadow: 0 0 2px #00dd00;
+      }
 
-    .winamp-visualizer {
-      display: flex;
-      align-items: flex-end;
-      gap: 1px;
-      height: 12px;
-      margin-top: 4px;
-      width: 100%;
-      justify-content: flex-end;
-    }
+      .winamp-visualizer {
+        display: flex;
+        align-items: flex-end;
+        gap: 1px;
+        height: 12px;
+        margin-top: 4px;
+        width: 100%;
+        justify-content: flex-end;
+      }
 
-    .winamp-bar {
-      width: 3px;
-      background: #00DD00;
-      transition: height 0.1s;
-    }
+      .winamp-bar {
+        width: 3px;
+        background: #00dd00;
+        transition: height 0.1s;
+      }
 
-    /* Pantalla derecha: Nombre e info */
-    .winamp-display-right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding-left: 6px;
-      overflow: hidden;
-    }
+      /* Pantalla derecha: Nombre e info */
+      .winamp-display-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-left: 6px;
+        overflow: hidden;
+      }
 
-    .winamp-track-wrapper {
-      flex: 1;
-      overflow: hidden;
-    }
+      .winamp-track-wrapper {
+        flex: 1;
+        overflow: hidden;
+      }
 
-    .winamp-title-text {
-      color: #00DD00;
-      font-family: 'VT323', monospace;
-      font-size: 16px;
-      white-space: nowrap;
-      display: inline-block;
-      text-shadow: 0 0 1px #00DD00;
-    }
+      .winamp-title-text {
+        color: #00dd00;
+        font-family: "VT323", monospace;
+        font-size: 16px;
+        white-space: nowrap;
+        display: inline-block;
+        text-shadow: 0 0 1px #00dd00;
+      }
 
-    .winamp-info-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-family: Arial, sans-serif;
-      font-size: 9px;
-      color: #00DD00;
-      margin-top: 4px;
-    }
+      .winamp-info-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: Arial, sans-serif;
+        font-size: 9px;
+        color: #00dd00;
+        margin-top: 4px;
+      }
 
-    .winamp-info-box {
-      font-family: 'VT323', monospace;
-      font-size: 12px;
-      background: #003300;
-      padding: 0 2px;
-    }
+      .winamp-info-box {
+        font-family: "VT323", monospace;
+        font-size: 12px;
+        background: #003300;
+        padding: 0 2px;
+      }
 
-    .winamp-channels {
-      display: flex;
-      gap: 4px;
-      margin-left: auto;
-    }
+      .winamp-channels {
+        display: flex;
+        gap: 4px;
+        margin-left: auto;
+      }
 
-    .winamp-channels span {
-      color: #335533;
-    }
+      .winamp-channels span {
+        color: #335533;
+      }
 
-    .winamp-channels span.active {
-      color: #00DD00;
-      text-shadow: 0 0 2px #00DD00;
-    }
+      .winamp-channels span.active {
+        color: #00dd00;
+        text-shadow: 0 0 2px #00dd00;
+      }
 
-    /* Sliders de progreso y volumen */
-    .winamp-sliders-row {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+      /* Sliders de progreso y volumen */
+      .winamp-sliders-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
 
-    .winamp-progress {
-      height: 10px;
-      background: #111;
-      border: 1px inset #444;
-      cursor: url('win98-cursors/Cursor107.cur'), pointer;
-    }
+      .winamp-progress {
+        height: 10px;
+        background: #111;
+        border: 1px inset #444;
+        cursor: url("win98-cursors/Cursor107.cur"), pointer;
+      }
 
-    .winamp-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #990000, #ff0000);
-      width: 0%;
-      border-right: 2px solid #fff;
-    }
+      .winamp-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #990000, #ff0000);
+        width: 0%;
+        border-right: 2px solid #fff;
+      }
 
-    .winamp-controls-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+      .winamp-controls-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-    /* Botones de control al estilo clásico */
-    .winamp-controls {
-      display: flex;
-      gap: 0;
-    }
+      /* Botones de control al estilo clásico */
+      .winamp-controls {
+        display: flex;
+        gap: 0;
+      }
 
-    .winamp-controls button {
-      background: #aaa;
-      border: 2px outset #ddd;
-      width: 24px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: url('win98-cursors/Cursor107.cur'), pointer;
-      padding: 0;
-    }
+      .winamp-controls button {
+        background: #aaa;
+        border: 2px outset #ddd;
+        width: 24px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: url("win98-cursors/Cursor107.cur"), pointer;
+        padding: 0;
+      }
 
-    .winamp-controls button:active {
-      border-style: inset;
-      background: #999;
-    }
+      .winamp-controls button:active {
+        border-style: inset;
+        background: #999;
+      }
 
-    .winamp-controls button svg {
-      fill: #222;
-      width: 10px;
-      height: 10px;
-    }
+      .winamp-controls button svg {
+        fill: #222;
+        width: 10px;
+        height: 10px;
+      }
 
-    /* Icono Shuffle/Repeat fake */
-    .winamp-toggles {
-      display: flex;
-      gap: 2px;
-    }
-    
-    .w-toggle {
-      font-size: 9px;
-      background: #aaa;
-      border: 1px outset #ddd;
-      padding: 2px 4px;
-      color: #222;
-      font-weight: bold;
-      cursor: url('win98-cursors/Cursor79.cur'), default;
-    }
+      /* Icono Shuffle/Repeat fake */
+      .winamp-toggles {
+        display: flex;
+        gap: 2px;
+      }
 
-    .winamp-volume {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: #000;
-      border: 1px inset #555;
-      padding: 2px 4px;
-    }
+      .w-toggle {
+        font-size: 9px;
+        background: #aaa;
+        border: 1px outset #ddd;
+        padding: 2px 4px;
+        color: #222;
+        font-weight: bold;
+        cursor: url("win98-cursors/Cursor79.cur"), default;
+      }
 
-    .winamp-volume input[type="range"] {
-      width: 120px;
-      height: 6px;
-      accent-color: #00DD00;
-    }
+      .winamp-volume {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: #000;
+        border: 1px inset #555;
+        padding: 2px 4px;
+      }
 
-    /* ============================================
+      .winamp-volume input[type="range"] {
+        width: 120px;
+        height: 6px;
+        accent-color: #00dd00;
+      }
+
+      /* ============================================
        PRODUCTOR — Carpeta con enlaces
        ============================================ */
-    .productor-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 90px);
-      gap: 10px;
-      padding: 8px;
-    }
+      .productor-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 90px);
+        gap: 10px;
+        padding: 8px;
+      }
 
-    .productor-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: url('win98-cursors/Cursor79.cur'), default;
-      padding: 4px;
-      border: 1px solid transparent;
-      text-decoration: none;
-      color: inherit;
-    }
+      .productor-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: url("win98-cursors/Cursor79.cur"), default;
+        padding: 4px;
+        border: 1px solid transparent;
+        text-decoration: none;
+        color: inherit;
+      }
 
-    .productor-item:hover {
-      background: rgba(0, 0, 128, 0.15);
-      border: 1px dotted navy;
-    }
+      .productor-item:hover {
+        background: rgba(0, 0, 128, 0.15);
+        border: 1px dotted navy;
+      }
 
-    .productor-item img {
-      width: 32px;
-      height: 32px;
-      image-rendering: pixelated;
-    }
+      .productor-item img {
+        width: 32px;
+        height: 32px;
+        image-rendering: pixelated;
+      }
 
-    .productor-item span {
-      font-size: 11px;
-      text-align: center;
-      margin-top: 4px;
-      word-break: break-word;
-      line-height: 1.2;
-    }
+      .productor-item span {
+        font-size: 11px;
+        text-align: center;
+        margin-top: 4px;
+        word-break: break-word;
+        line-height: 1.2;
+      }
 
-    /* ============================================
+      /* ============================================
        SOBRE MI — Ventana de texto
        ============================================ */
-    .about-body {
-      font-size: 12px;
-      line-height: 1.6;
-      padding: 10px;
-    }
+      .about-body {
+        font-size: 12px;
+        line-height: 1.6;
+        padding: 10px;
+      }
 
-    .about-body h3 {
-      margin-bottom: 6px;
-      font-size: 13px;
-    }
+      .about-body h3 {
+        margin-bottom: 6px;
+        font-size: 13px;
+      }
 
-    .about-body p {
-      margin-bottom: 8px;
-    }
+      .about-body p {
+        margin-bottom: 8px;
+      }
 
-    .about-body ul {
-      padding-left: 18px;
-      margin-bottom: 8px;
-    }
+      .about-body ul {
+        padding-left: 18px;
+        margin-bottom: 8px;
+      }
 
-    /* ============================================
+      /* ============================================
        STATUS BAR
        ============================================ */
-    .status-bar {
-      flex-shrink: 0;
-    }
+      .status-bar {
+        flex-shrink: 0;
+      }
 
-    /* ============================================
+      /* ============================================
        ANIMACIONES
        ============================================ */
-    @keyframes marquee {
-      0%   { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
+      @keyframes marquee {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
 
-    .winamp-title-text.scrolling {
-      display: inline-block;
-      animation: marquee 8s linear infinite;
-    }
-    /* ============================================
+      .winamp-title-text.scrolling {
+        display: inline-block;
+        animation: marquee 8s linear infinite;
+      }
+      /* ============================================
        WELCOME WINDOW
        ============================================ */
-    .welcome-window {
-      resize: none;
-    }
-    .welcome-window .window-body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      height: calc(100% - 22px);
-      background: #c0c0c0;
-      overflow: hidden;
-    }
-    .welcome-main-container {
-      background: #fff;
-      margin: 8px;
-      margin-bottom: 0;
-      box-shadow: inset -1px -1px 0 #fff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #000;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      min-height: 0;
-    }
-    .welcome-header {
-      position: relative;
-      height: 90px;
-      flex-shrink: 0;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="90"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1" /><stop offset="60%" style="stop-color:rgb(200,225,255);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(160,200,255);stop-opacity:1" /></linearGradient></defs><rect width="100%" height="90" fill="url(%23grad)" /></svg>') left top no-repeat;
-      background-size: cover;
-      padding-top: 15px;
-      padding-left: 20px;
-    }
-    .welcome-header h1 {
-      margin: 0;
-      font-size: 36px;
-      line-height: 0.9;
-      letter-spacing: -1px;
-    }
-    .welcome-header h1 span {
-      font-weight: normal;
-      font-size: 18px;
-      color: #333;
-      position: relative;
-      top: -12px;
-    }
-    .welcome-header-line {
-      height: 3px;
-      background: linear-gradient(90deg, #ff0 0%, #0c0 25%, #00f 50%, #f00 75%, #00f 100%);
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-    }
-    .welcome-main {
-      display: flex;
-      flex: 1;
-      min-height: 0;
-    }
-    .welcome-sidebar {
-      background: #EAF0FA;
-      width: 170px;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid #C0C0C0;
-    }
-    .welcome-sidebar-title {
-      background: #000;
-      color: #fff;
-      font-weight: bold;
-      letter-spacing: 2px;
-      font-size: 11px;
-      padding: 4px 6px;
-      text-transform: uppercase;
-    }
-    .welcome-tab {
-      color: #000;
-      padding: 0 10px 0 0;
-      min-height: 35px;
-      cursor: url('win98-cursors/Cursor107.cur'), pointer;
-      display: flex;
-      align-items: center;
-      font-size: 13px;
-      font-weight: bold;
-      border-bottom: 1px solid #C0C0C0;
-    }
-    .welcome-tab:hover {
-      text-decoration: underline;
-    }
-    .welcome-tab.active {
-      color: #0000a0;
-      background: #EAF0FA;
-    }
-    .welcome-tab-icon {
-      width: 6px;
-      align-self: stretch;
-      margin-right: 8px;
-    }
-    .wt-blue { background: #009cff; }
-    .wt-red { background: #ff3100; }
-    .wt-green { background: #6bce38; }
-    .wt-yellow { background: #ffce00; }
-    .welcome-content-area {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><text x="95%" y="90%" fill="rgba(200,225,255,0.4)" font-family="MS Sans Serif, sans-serif" font-size="200" font-weight="bold" text-anchor="end">98</text></svg>') no-repeat bottom right;
-    }
-    .welcome-content-area h2 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .welcome-content-area p {
-      margin-bottom: 14px;
-      line-height: 1.5;
-      font-size: 14px;
-    }
-    .welcome-content-area ul {
-      margin-top: 0;
-      margin-bottom: 14px;
-      padding-left: 20px;
-      line-height: 1.5;
-    }
-    .welcome-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 8px 12px 8px 8px;
-    }
-    .welcome-tab-item {
-      display: none;
-    }
-    .welcome-tab-item.active {
-      display: block;
-    }
-
-  </style>
-</head>
-<body>
-
-  <!-- ========================================
+      .welcome-window {
+        resize: none;
+      }
+      .welcome-window .window-body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 22px);
+        background: #c0c0c0;
+        overflow: hidden;
+      }
+      .welcome-main-container {
+        background: #fff;
+        margin: 8px;
+        margin-bottom: 0;
+        box-shadow:
+          inset -1px -1px 0 #fff,
+          inset 1px 1px #808080,
+          inset -2px -2px #dfdfdf,
+          inset 2px 2px #000;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        min-height: 0;
+      }
+      .welcome-header {
+        position: relative;
+        height: 90px;
+        flex-shrink: 0;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="90"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1" /><stop offset="60%" style="stop-color:rgb(200,225,255);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(160,200,255);stop-opacity:1" /></linearGradient></defs><rect width="100%" height="90" fill="url(%23grad)" /></svg>')
+          left top no-repeat;
+        background-size: cover;
+        padding-top: 15px;
+        padding-left: 20px;
+      }
+      .welcome-header h1 {
+        margin: 0;
+        font-size: 36px;
+        line-height: 0.9;
+        letter-spacing: -1px;
+      }
+      .welcome-header h1 span {
+        font-weight: normal;
+        font-size: 18px;
+        color: #333;
+        position: relative;
+        top: -12px;
+      }
+      .welcome-header-line {
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          #ff0 0%,
+          #0c0 25%,
+          #00f 50%,
+          #f00 75%,
+          #00f 100%
+        );
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+      .welcome-main {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+      }
+      .welcome-sidebar {
+        background: #eaf0fa;
+        width: 170px;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #c0c0c0;
+      }
+      .welcome-sidebar-title {
+        background: #000;
+        color: #fff;
+        font-weight: bold;
+        letter-spacing: 2px;
+        font-size: 11px;
+        padding: 4px 6px;
+        text-transform: uppercase;
+      }
+      .welcome-tab {
+        color: #000;
+        padding: 0 10px 0 0;
+        min-height: 35px;
+        cursor: url("win98-cursors/Cursor107.cur"), pointer;
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        font-weight: bold;
+        border-bottom: 1px solid #c0c0c0;
+      }
+      .welcome-tab:hover {
+        text-decoration: underline;
+      }
+      .welcome-tab.active {
+        color: #0000a0;
+        background: #eaf0fa;
+      }
+      .welcome-tab-icon {
+        width: 6px;
+        align-self: stretch;
+        margin-right: 8px;
+      }
+      .wt-blue {
+        background: #009cff;
+      }
+      .wt-red {
+        background: #ff3100;
+      }
+      .wt-green {
+        background: #6bce38;
+      }
+      .wt-yellow {
+        background: #ffce00;
+      }
+      .welcome-content-area {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><text x="95%" y="90%" fill="rgba(200,225,255,0.4)" font-family="MS Sans Serif, sans-serif" font-size="200" font-weight="bold" text-anchor="end">98</text></svg>')
+          no-repeat bottom right;
+      }
+      .welcome-content-area h2 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .welcome-content-area p {
+        margin-bottom: 14px;
+        line-height: 1.5;
+        font-size: 14px;
+      }
+      .welcome-content-area ul {
+        margin-top: 0;
+        margin-bottom: 14px;
+        padding-left: 20px;
+        line-height: 1.5;
+      }
+      .welcome-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 8px 12px 8px 8px;
+      }
+      .welcome-tab-item {
+        display: none;
+      }
+      .welcome-tab-item.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="screen-container">
+      <!-- ========================================
        BOOT SEQUENCE OVERLAY
        ======================================== -->
-  <div id="boot-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: black; z-index: 999999; display: flex; flex-direction: column; color: white; font-family: 'VT323', monospace; font-size: 18px; pointer-events: auto; transition: opacity 1s ease-in-out;">
-    
-    <!-- CRT glitch effect -->
-    <div id="boot-crt" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 2px, 3px 100%; opacity: 0.15; animation: crtFlicker 0.15s infinite;"></div>
+      <div
+        id="boot-overlay"
+        style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: black;
+          z-index: 999999;
+          display: flex;
+          flex-direction: column;
+          color: white;
+          font-family: &quot;VT323&quot;, monospace;
+          font-size: 18px;
+          pointer-events: auto;
+          transition: opacity 1s ease-in-out;
+        "
+      >
+        <!-- CRT glitch effect -->
+        <div
+          id="boot-crt"
+          style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            background:
+              linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+              linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.06),
+                rgba(0, 255, 0, 0.02),
+                rgba(0, 0, 255, 0.06)
+              );
+            background-size:
+              100% 2px,
+              3px 100%;
+            opacity: 0.15;
+            animation: crtFlicker 0.15s infinite;
+          "
+        ></div>
 
-    <!-- BIOS Stage -->
-    <div id="boot-bios" style="position: relative; z-index: 2; padding: 20px; white-space: pre-wrap; margin-top: 20px;"></div>
-    
-    <!-- Splash Screen Stage -->
-    <div id="boot-splash-stage" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: black; z-index: 3;">
-      <img src="win-98-bootscreen.jpg" alt="Windows 98 Splash" style="position: absolute; width: 100%; height: 100%; object-fit: fill; image-rendering: pixelated; z-index: 1;">
-      <div style="position: absolute; bottom: 10%; z-index: 2; width: 250px; height: 18px; border: 2px solid #555; background: black; overflow: hidden;">
-        <div id="boot-loading-bar" style="height: 100%; width: 0%; background: blue;"></div>
+        <!-- BIOS Stage -->
+        <div
+          id="boot-bios"
+          style="
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            white-space: pre-wrap;
+            margin-top: 20px;
+          "
+        ></div>
+
+        <!-- Splash Screen Stage -->
+        <div
+          id="boot-splash-stage"
+          style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: black;
+            z-index: 3;
+          "
+        >
+          <img
+            src="win-98-bootscreen.jpg"
+            alt="Windows 98 Splash"
+            style="
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              object-fit: fill;
+              image-rendering: pixelated;
+              z-index: 1;
+            "
+          />
+          <div
+            style="
+              position: absolute;
+              bottom: 10%;
+              z-index: 2;
+              width: 250px;
+              height: 18px;
+              border: 2px solid #555;
+              background: black;
+              overflow: hidden;
+            "
+          >
+            <div
+              id="boot-loading-bar"
+              style="height: 100%; width: 0%; background: blue"
+            ></div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <style>
-    @keyframes crtFlicker {
-      0% { opacity: 0.15; }
-      50% { opacity: 0.20; }
-      100% { opacity: 0.15; }
-    }
-    @keyframes blink {
-      0% { opacity: 1; }
-      50% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    .blink-cursor {
-      animation: blink 1s step-end infinite;
-    }
-    body.booting {
-      overflow: hidden;
-    }
-  </style>
+      <style>
+        @keyframes crtFlicker {
+          0% {
+            opacity: 0.15;
+          }
+          50% {
+            opacity: 0.2;
+          }
+          100% {
+            opacity: 0.15;
+          }
+        }
+        @keyframes blink {
+          0% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+        .blink-cursor {
+          animation: blink 1s step-end infinite;
+        }
+        body.booting {
+          overflow: hidden;
+        }
+      </style>
 
-  <!-- ========================================
+      <!-- ========================================
        ESCRITORIO
        ======================================== -->
-  <div id="desktop">
+      <div id="desktop">
+        <!-- Icono: Paint -->
+        <div
+          class="desktop-icon"
+          data-window="win-paint"
+          ondblclick="openWindow('win-paint')"
+        >
+          <img src="windows98-icons/png/paint_file-5.png" alt="Paint" />
+          <span data-i18n="paint">Paint</span>
+        </div>
 
-    <!-- Icono: Paint -->
-    <div class="desktop-icon" data-window="win-paint" ondblclick="openWindow('win-paint')">
-      <img src="windows98-icons/png/paint_file-5.png" alt="Paint" />
-      <span data-i18n="paint">Paint</span>
-    </div>
+        <!-- Icono: Internet Explorer -->
+        <div
+          class="desktop-icon"
+          data-window="win-browser"
+          ondblclick="
+            openBrowser('youtube.html', 'YouTube - Microsoft Internet Explorer')
+          "
+        >
+          <img src="windows98-icons/png/msie1-1.png" alt="Internet Explorer" />
+          <span>Internet Explorer</span>
+        </div>
 
-    <!-- Icono: Internet Explorer -->
-    <div class="desktop-icon" data-window="win-browser" ondblclick="openBrowser('youtube.html', 'YouTube - Microsoft Internet Explorer')">
-      <img src="windows98-icons/png/msie1-1.png" alt="Internet Explorer" />
-      <span>Internet Explorer</span>
-    </div>
+        <!-- Icono: My Computer -->
+        <div
+          class="desktop-icon"
+          data-window="win-mycomputer"
+          ondblclick="openWindow('win-mycomputer')"
+        >
+          <img
+            src="windows98-icons/png/computer_explorer-4.png"
+            alt="My Computer"
+          />
+          <span data-i18n="my_computer">My Computer</span>
+        </div>
 
-    <!-- Icono: My Computer -->
-    <div class="desktop-icon" data-window="win-mycomputer" ondblclick="openWindow('win-mycomputer')">
-      <img src="windows98-icons/png/computer_explorer-4.png" alt="My Computer" />
-      <span data-i18n="my_computer">My Computer</span>
-    </div>
+        <!-- Icono: Winamp -->
+        <div
+          class="desktop-icon"
+          data-window="win-winamp"
+          ondblclick="openWindow('win-winamp')"
+        >
+          <img src="windows98-icons/png/cd_audio_cd_a-3.png" alt="Winamp" />
+          <span data-i18n="winamp">Winamp</span>
+        </div>
 
-    <!-- Icono: Winamp -->
-    <div class="desktop-icon" data-window="win-winamp" ondblclick="openWindow('win-winamp')">
-      <img src="windows98-icons/png/cd_audio_cd_a-3.png" alt="Winamp" />
-      <span data-i18n="winamp">Winamp</span>
-    </div>
+        <!-- Icono: Productor -->
+        <div
+          class="desktop-icon"
+          data-window="win-productor"
+          ondblclick="openWindow('win-productor')"
+        >
+          <img src="windows98-icons/png/directory_closed-4.png" alt="Links" />
+          <span>Links</span>
+        </div>
 
-    <!-- Icono: Productor -->
-    <div class="desktop-icon" data-window="win-productor" ondblclick="openWindow('win-productor')">
-      <img src="windows98-icons/png/directory_closed-4.png" alt="Links" />
-      <span>Links</span>
-    </div>
+        <!-- Icono: Sobre Mí -->
+        <div
+          class="desktop-icon"
+          data-window="win-about"
+          ondblclick="openWindow('win-about')"
+        >
+          <img src="windows98-icons/png/notepad-2.png" alt="Sobre Mí" />
+          <span data-i18n="about">Sobre Mí</span>
+        </div>
+      </div>
 
-    <!-- Icono: Sobre Mí -->
-    <div class="desktop-icon" data-window="win-about" ondblclick="openWindow('win-about')">
-      <img src="windows98-icons/png/notepad-2.png" alt="Sobre Mí" />
-      <span data-i18n="about">Sobre Mí</span>
-    </div>
-
-  </div>
-
-  <!-- ========================================
+      <!-- ========================================
        VENTANAS
        ======================================== -->
 
-  <!-- Ventana: Paint -->
-  <div class="window" id="win-paint" style="width:680px; height:500px; top:80px; left:120px;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text" data-i18n="paint">untitled - Paint</div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" onclick="minimizeWindow('win-paint')"></button>
-        <button aria-label="Maximize" onclick="maximizeWindow('win-paint')"></button>
-        <button aria-label="Close" onclick="closeWindow('win-paint')"></button>
-      </div>
-    </div>
-    <div class="window-body" style="padding: 0; margin: 0; height: calc(100% - 24px);">
-      <iframe src="https://jspaint.app/" style="width: 100%; height: 100%; border: none;"></iframe>
-    </div>
-  </div>
-
-  <!-- Ventana: My Computer -->
-  <div class="window" id="win-mycomputer" style="width:520px; height:380px; top:60px; left:100px;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text" data-i18n="window_mycomputer">My Computer</div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" onclick="minimizeWindow('win-mycomputer')"></button>
-        <button aria-label="Maximize" onclick="maximizeWindow('win-mycomputer')"></button>
-        <button aria-label="Close" onclick="closeWindow('win-mycomputer')"></button>
-      </div>
-    </div>
-
-    <!-- Barra de dirección / Herramientas -->
-    <div class="toolbar-row">
-      <button onclick="goBackMyComputer()" style="display:flex; align-items:center; gap:4px; margin-right:4px;">
-        <svg width="12" height="12" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;">
-          <!-- Flecha izquierda simple -->
-          <polygon points="12,2 4,8 12,14" fill="#000"/>
-        </svg>
-        Back
-      </button>
-      <label style="line-height:22px;" data-i18n="address">Address:</label>
-      <input type="text" id="mycomputer-address" value="/MyPC" readonly style="flex:1; margin-left:4px;" />
-    </div>
-
-    <div class="window-body" style="padding: 0; background: #fff; overflow-y: auto;">
-      <div class="explorer-grid" id="mycomputer-grid">
-        <!-- Renderizado dinámico de archivos -->
-      </div>
-    </div>
-
-    <div class="status-bar">
-      <div class="status-bar-field" id="mycomputer-status">0 <span data-i18n="objects">objects</span></div>
-    </div>
-  </div>
-
-  <!-- Ventana: Visor de Fotos (se genera dinámicamente) -->
-  <div class="window" id="win-photo-viewer" style="width:640px; height:480px; top:80px; left:160px;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text" id="photo-viewer-title"><span data-i18n="photo_viewer">Visor de Fotos</span></div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" onclick="minimizeWindow('win-photo-viewer')"></button>
-        <button aria-label="Maximize" onclick="maximizeWindow('win-photo-viewer')"></button>
-        <button aria-label="Close" onclick="closeWindow('win-photo-viewer')"></button>
-      </div>
-    </div>
-    <div class="window-body" style="padding:0; background:#000;">
-      <div class="photo-viewer">
-        <img id="photo-viewer-img" src="" alt="Preview" />
-      </div>
-    </div>
-    <div class="status-bar">
-      <div class="status-bar-field" id="photo-viewer-status"><span data-i18n="ready">Listo</span></div>
-    </div>
-  </div>
-
-  <!-- Ventana: Winamp (Classic Style) -->
-  <div class="window winamp-window" id="win-winamp" style="width:710px; height:auto; top:100px; left:320px;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text" style="color: #fff; font-weight: bold; letter-spacing: 1px; padding-left: 6px;">WINAMP</div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" onclick="minimizeWindow('win-winamp')"></button>
-        <button aria-label="Close" onclick="closeWindow('win-winamp')"></button>
-      </div>
-    </div>
-    <div class="window-body winamp-body">
-
-      <!-- Pantalla Winamp -->
-      <div class="winamp-display">
-        <div class="winamp-display-left">
-          <div class="winamp-time" id="winamp-time">00:00</div>
-          <div class="winamp-visualizer" id="winamp-visualizer">
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
-            <div class="winamp-bar" style="height: 2px;"></div>
+      <!-- Ventana: Paint -->
+      <div
+        class="window"
+        id="win-paint"
+        style="width: 680px; height: 500px; top: 80px; left: 120px"
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div class="title-bar-text" data-i18n="paint">untitled - Paint</div>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Minimize"
+              onclick="minimizeWindow('win-paint')"
+            ></button>
+            <button
+              aria-label="Maximize"
+              onclick="maximizeWindow('win-paint')"
+            ></button>
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-paint')"
+            ></button>
           </div>
         </div>
-        <div class="winamp-display-right">
-          <div class="winamp-track-wrapper">
-            <div class="winamp-title-text" id="winamp-track-title"><span data-i18n="winamp_no_track">1. WINAMP - SIN PISTA</span></div>
+        <div
+          class="window-body"
+          style="padding: 0; margin: 0; height: calc(100% - 24px)"
+        >
+          <iframe
+            src="https://jspaint.app/"
+            style="width: 100%; height: 100%; border: none"
+          ></iframe>
+        </div>
+      </div>
+
+      <!-- Ventana: My Computer -->
+      <div
+        class="window"
+        id="win-mycomputer"
+        style="width: 520px; height: 380px; top: 60px; left: 100px"
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div class="title-bar-text" data-i18n="window_mycomputer">
+            My Computer
           </div>
-          <div class="winamp-info-row">
-            <span class="winamp-info-box" id="winamp-kbps"></span> <span data-i18n="kbps">kbps</span>
-            <span class="winamp-info-box" id="winamp-khz">44</span> <span data-i18n="khz">kHz</span>
-            <div class="winamp-channels">
-              <span class="mono" data-i18n="mono">mono</span>
-              <span class="stereo active" data-i18n="stereo">stereo</span>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Minimize"
+              onclick="minimizeWindow('win-mycomputer')"
+            ></button>
+            <button
+              aria-label="Maximize"
+              onclick="maximizeWindow('win-mycomputer')"
+            ></button>
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-mycomputer')"
+            ></button>
+          </div>
+        </div>
+
+        <!-- Barra de dirección / Herramientas -->
+        <div class="toolbar-row">
+          <button
+            onclick="goBackMyComputer()"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              margin-right: 4px;
+            "
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+              style="image-rendering: pixelated"
+            >
+              <!-- Flecha izquierda simple -->
+              <polygon points="12,2 4,8 12,14" fill="#000" />
+            </svg>
+            Back
+          </button>
+          <label style="line-height: 22px" data-i18n="address">Address:</label>
+          <input
+            type="text"
+            id="mycomputer-address"
+            value="/MyPC"
+            readonly
+            style="flex: 1; margin-left: 4px"
+          />
+        </div>
+
+        <div
+          class="window-body"
+          style="padding: 0; background: #fff; overflow-y: auto"
+        >
+          <div class="explorer-grid" id="mycomputer-grid">
+            <!-- Renderizado dinámico de archivos -->
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <div class="status-bar-field" id="mycomputer-status">
+            0 <span data-i18n="objects">objects</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ventana: Visor de Fotos (se genera dinámicamente) -->
+      <div
+        class="window"
+        id="win-photo-viewer"
+        style="width: 640px; height: 480px; top: 80px; left: 160px"
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div class="title-bar-text" id="photo-viewer-title">
+            <span data-i18n="photo_viewer">Visor de Fotos</span>
+          </div>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Minimize"
+              onclick="minimizeWindow('win-photo-viewer')"
+            ></button>
+            <button
+              aria-label="Maximize"
+              onclick="maximizeWindow('win-photo-viewer')"
+            ></button>
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-photo-viewer')"
+            ></button>
+          </div>
+        </div>
+        <div class="window-body" style="padding: 0; background: #000">
+          <div class="photo-viewer">
+            <img id="photo-viewer-img" src="" alt="Preview" />
+          </div>
+        </div>
+        <div class="status-bar">
+          <div class="status-bar-field" id="photo-viewer-status">
+            <span data-i18n="ready">Listo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ventana: Winamp (Classic Style) -->
+      <div
+        class="window winamp-window"
+        id="win-winamp"
+        style="width: 710px; height: auto; top: 100px; left: 320px"
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div
+            class="title-bar-text"
+            style="
+              color: #fff;
+              font-weight: bold;
+              letter-spacing: 1px;
+              padding-left: 6px;
+            "
+          >
+            WINAMP
+          </div>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Minimize"
+              onclick="minimizeWindow('win-winamp')"
+            ></button>
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-winamp')"
+            ></button>
+          </div>
+        </div>
+        <div class="window-body winamp-body">
+          <!-- Pantalla Winamp -->
+          <div class="winamp-display">
+            <div class="winamp-display-left">
+              <div class="winamp-time" id="winamp-time">00:00</div>
+              <div class="winamp-visualizer" id="winamp-visualizer">
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+                <div class="winamp-bar" style="height: 2px"></div>
+              </div>
+            </div>
+            <div class="winamp-display-right">
+              <div class="winamp-track-wrapper">
+                <div class="winamp-title-text" id="winamp-track-title">
+                  <span data-i18n="winamp_no_track">1. WINAMP - SIN PISTA</span>
+                </div>
+              </div>
+              <div class="winamp-info-row">
+                <span class="winamp-info-box" id="winamp-kbps"></span>
+                <span data-i18n="kbps">kbps</span>
+                <span class="winamp-info-box" id="winamp-khz">44</span>
+                <span data-i18n="khz">kHz</span>
+                <div class="winamp-channels">
+                  <span class="mono" data-i18n="mono">mono</span>
+                  <span class="stereo active" data-i18n="stereo">stereo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Barra de progreso -->
+          <div class="winamp-sliders-row">
+            <div
+              class="winamp-progress"
+              id="winamp-progress"
+              onclick="seekAudio(event)"
+            >
+              <div class="winamp-progress-fill" id="winamp-progress-fill"></div>
+            </div>
+          </div>
+
+          <!-- Controles (Play/Pause separados, etc) -->
+          <div class="winamp-controls-row">
+            <div class="winamp-controls">
+              <!-- Anterior -->
+              <button
+                onclick="prevTrack()"
+                title="Anterior"
+                data-i18n-title="prev"
+              >
+                <svg viewBox="0 0 10 10">
+                  <path
+                    d="M8,1 L5,5 L8,9 Z M5,1 L2,5 L5,9 Z M2,1 L2,9 Z"
+                    stroke="#333"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <!-- Play -->
+              <button
+                onclick="
+                  audioPlayer
+                    .play()
+                    .then(() => {
+                      isPlaying = true;
+                      startVisualizer();
+                    })
+                    .catch(() => {})
+                "
+                title="Play"
+                data-i18n-title="play"
+              >
+                <svg viewBox="0 0 10 10">
+                  <path
+                    d="M2,1 L8,5 L2,9 Z"
+                    stroke="#333"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <!-- Pause -->
+              <button
+                onclick="
+                  audioPlayer.pause();
+                  isPlaying = false;
+                  stopVisualizer();
+                "
+                title="Pausa"
+                data-i18n-title="pause"
+              >
+                <svg viewBox="0 0 10 10">
+                  <rect x="2" y="1" width="2" height="8" />
+                  <rect x="6" y="1" width="2" height="8" />
+                </svg>
+              </button>
+              <!-- Stop -->
+              <button onclick="stopAudio()" title="Stop" data-i18n-title="stop">
+                <svg viewBox="0 0 10 10">
+                  <rect x="2" y="2" width="6" height="6" />
+                </svg>
+              </button>
+              <!-- Siguiente -->
+              <button
+                onclick="nextTrack()"
+                title="Siguiente"
+                data-i18n-title="next"
+              >
+                <svg viewBox="0 0 10 10">
+                  <path
+                    d="M2,1 L5,5 L2,9 Z M5,1 L8,5 L5,9 Z M8,1 L8,9 Z"
+                    stroke="#333"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <!-- Eject / Abrir -->
+              <button
+                onclick="loadAudioFile()"
+                title="Abrir archivo"
+                data-i18n-title="open_file"
+                style="margin-left: 4px; width: 22px"
+              >
+                <svg viewBox="0 0 10 10">
+                  <path
+                    d="M1,7 L5,2 L9,7 Z M1,8 L9,8 Z"
+                    stroke="#333"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div class="winamp-toggles">
+              <div class="w-toggle" data-i18n="winamp_vol">VOL</div>
+              <div class="winamp-volume">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="80"
+                  id="winamp-volume"
+                  oninput="setVolume(this.value)"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Barra de progreso -->
-      <div class="winamp-sliders-row">
-        <div class="winamp-progress" id="winamp-progress" onclick="seekAudio(event)">
-          <div class="winamp-progress-fill" id="winamp-progress-fill"></div>
-        </div>
-      </div>
-
-      <!-- Controles (Play/Pause separados, etc) -->
-      <div class="winamp-controls-row">
-        <div class="winamp-controls">
-          <!-- Anterior -->
-          <button onclick="prevTrack()" title="Anterior" data-i18n-title="prev">
-            <svg viewBox="0 0 10 10"><path d="M8,1 L5,5 L8,9 Z M5,1 L2,5 L5,9 Z M2,1 L2,9 Z" stroke="#333" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </button>
-          <!-- Play -->
-          <button onclick="audioPlayer.play().then(() => { isPlaying = true; startVisualizer(); }).catch(()=>{})" title="Play" data-i18n-title="play">
-            <svg viewBox="0 0 10 10"><path d="M2,1 L8,5 L2,9 Z" stroke="#333" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </button>
-          <!-- Pause -->
-          <button onclick="audioPlayer.pause(); isPlaying = false; stopVisualizer();" title="Pausa" data-i18n-title="pause">
-            <svg viewBox="0 0 10 10"><rect x="2" y="1" width="2" height="8"/><rect x="6" y="1" width="2" height="8"/></svg>
-          </button>
-          <!-- Stop -->
-          <button onclick="stopAudio()" title="Stop" data-i18n-title="stop">
-            <svg viewBox="0 0 10 10"><rect x="2" y="2" width="6" height="6"/></svg>
-          </button>
-          <!-- Siguiente -->
-          <button onclick="nextTrack()" title="Siguiente" data-i18n-title="next">
-            <svg viewBox="0 0 10 10"><path d="M2,1 L5,5 L2,9 Z M5,1 L8,5 L5,9 Z M8,1 L8,9 Z" stroke="#333" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </button>
-          <!-- Eject / Abrir -->
-          <button onclick="loadAudioFile()" title="Abrir archivo" data-i18n-title="open_file" style="margin-left:4px; width:22px;">
-            <svg viewBox="0 0 10 10"><path d="M1,7 L5,2 L9,7 Z M1,8 L9,8 Z" stroke="#333" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-
-        <div class="winamp-toggles">
-          <div class="w-toggle" data-i18n="winamp_vol">VOL</div>
-          <div class="winamp-volume">
-            <input type="range" min="0" max="100" value="80" id="winamp-volume" oninput="setVolume(this.value)" />
+      <!-- Ventana: Productor -->
+      <div
+        class="window"
+        id="win-productor"
+        style="width: 420px; height: 340px; top: 70px; left: 200px"
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div class="title-bar-text">Links</div>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Minimize"
+              onclick="minimizeWindow('win-productor')"
+            ></button>
+            <button
+              aria-label="Maximize"
+              onclick="maximizeWindow('win-productor')"
+            ></button>
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-productor')"
+            ></button>
           </div>
         </div>
-      </div>
 
-    </div>
-  </div>
+        <div class="address-bar">
+          <label data-i18n="address">Dirección:</label>
+          <input type="text" value="C:\Usuarios\RedBeggins\Links" readonly />
+        </div>
 
-  <!-- Ventana: Productor -->
-  <div class="window" id="win-productor" style="width:420px; height:340px; top:70px; left:200px;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text">Links</div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" onclick="minimizeWindow('win-productor')"></button>
-        <button aria-label="Maximize" onclick="maximizeWindow('win-productor')"></button>
-        <button aria-label="Close" onclick="closeWindow('win-productor')"></button>
-      </div>
-    </div>
+        <div class="window-body" style="padding: 0">
+          <div class="productor-grid">
+            <!-- Redes sociales como accesos directos -->
+            <a
+              class="productor-item"
+              href="https://www.youtube.com/redbegins"
+              target="_blank"
+              rel="noopener noreferrer"
+              ondblclick="this.click()"
+            >
+              <img
+                src="windows98-icons/png/url1-0.png"
+                alt="YouTube"
+                width="32"
+                height="32"
+                style="image-rendering: pixelated"
+              />
+              <span>YouTube.lnk</span>
+            </a>
 
-    <div class="address-bar">
-      <label data-i18n="address">Dirección:</label>
-      <input type="text" value="C:\Usuarios\RedBeggins\Links" readonly />
-    </div>
+            <a
+              class="productor-item"
+              href="https://soundcloud.com/redbegins"
+              target="_blank"
+              rel="noopener noreferrer"
+              ondblclick="this.click()"
+            >
+              <img
+                src="windows98-icons/png/url1-0.png"
+                alt="SoundCloud"
+                width="32"
+                height="32"
+                style="image-rendering: pixelated"
+              />
+              <span>SoundCloud.lnk</span>
+            </a>
 
-    <div class="window-body" style="padding: 0;">
-      <div class="productor-grid">
-
-        <!-- Redes sociales como accesos directos -->
-        <a class="productor-item" href="https://www.youtube.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
-          <img src="windows98-icons/png/url1-0.png" alt="YouTube" width="32" height="32" style="image-rendering:pixelated;" />
-          <span>YouTube.lnk</span>
-        </a>
-
-        <a class="productor-item" href="https://soundcloud.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
-          <img src="windows98-icons/png/url1-0.png" alt="SoundCloud" width="32" height="32" style="image-rendering:pixelated;" />
-          <span>SoundCloud.lnk</span>
-        </a>
-
-        <a class="productor-item" href="https://www.instagram.com/redbegins" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
-          <img src="windows98-icons/png/url1-0.png" alt="Instagram" width="32" height="32" style="image-rendering:pixelated;" />
-          <span>Instagram.lnk</span>
-        </a>
-<!--
+            <a
+              class="productor-item"
+              href="https://www.instagram.com/redbegins"
+              target="_blank"
+              rel="noopener noreferrer"
+              ondblclick="this.click()"
+            >
+              <img
+                src="windows98-icons/png/url1-0.png"
+                alt="Instagram"
+                width="32"
+                height="32"
+                style="image-rendering: pixelated"
+              />
+              <span>Instagram.lnk</span>
+            </a>
+            <!--
         <a class="productor-item" href="https://twitter.com/" target="_blank" rel="noopener noreferrer" ondblclick="this.click()">
           <img src="windows98-icons/png/url1-0.png" alt="X/Twitter" width="32" height="32" style="image-rendering:pixelated;" />
           <span>Twitter.lnk</span>
@@ -1136,940 +1561,1445 @@
           <span>GitHub.lnk</span>
         </a>
  -->
-      </div>
-    </div>
-
-    <div class="status-bar">
-      <div class="status-bar-field">7 objects</div>
-    </div>
-  </div>
-
-  <!-- Ventana: Internet Explorer -->
-  <style>
-    .ie-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      box-shadow: none;
-      min-width: 44px;
-      height: 38px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-family: Tahoma, "Pixelated MS Sans Serif", Arial, sans-serif;
-      cursor: default;
-      color: #000;
-    }
-    .ie-btn:hover {
-      border: 1px solid #fff;
-      border-right-color: #808080;
-      border-bottom-color: #808080;
-      background: #dfdfdf;
-    }
-    .ie-btn:active {
-      border: 1px solid #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-      background: #dfdfdf;
-      padding-top: 2px;
-      padding-left: 2px;
-    }
-    .ie-btn img { margin-bottom: 2px; width: 20px; height: 20px; image-rendering: pixelated; filter: grayscale(100%); }
-    .ie-menu-item { padding: 2px 6px; font-size: 11px; cursor: default; }
-    .ie-menu-item:hover { background-color: #000080; color: white; }
-  </style>
-
-  <div class="window" id="win-browser" style="width:720px; height:540px; top:100px; left:150px;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text" id="browser-title">Microsoft Internet Explorer</div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" onclick="minimizeWindow('win-browser')"></button>
-        <button aria-label="Maximize" onclick="maximizeWindow('win-browser')"></button>
-        <button aria-label="Close" onclick="closeWindow('win-browser')"></button>
-      </div>
-    </div>
-    
-    <div class="window-body" style="padding: 0; margin: 0; display: flex; flex-direction: column; height: calc(100% - 24px);">
-      <!-- Toolbars -->
-      <div style="background-color: #c0c0c0; padding: 2px;">
-        <!-- Menu Bar -->
-        <div style="display: flex; align-items: center; gap: 8px; padding-left: 2px; font-size: 11px; margin-bottom: 2px;">
-          <div style="display: flex; gap: 2px;">
-            <span class="ie-menu-item"><u>F</u>ile</span>
-            <span class="ie-menu-item"><u>E</u>dit</span>
-            <span class="ie-menu-item"><u>V</u>iew</span>
-            <span class="ie-menu-item">F<u>a</u>vorites</span>
-            <span class="ie-menu-item"><u>T</u>ools</span>
-            <span class="ie-menu-item"><u>H</u>elp</span>
-          </div>
-        </div>
-        
-        <!-- Standard Buttons Bar -->
-        <div style="display: flex; align-items: center; gap: 2px; padding: 2px; border-top: 1px solid #fff; border-bottom: 1px solid #808080;">
-          <div class="ie-btn" onclick="document.getElementById('browser-iframe').contentWindow.history.back()">
-             <img src="windows98-icons/png/directory_open_file_mydocs-4.png" />Back
-          </div>
-          <div class="ie-btn" onclick="document.getElementById('browser-iframe').contentWindow.history.forward()">
-             <img src="windows98-icons/png/directory_open_file_mydocs-4.png" style="transform: scaleX(-1);" />Forward
-          </div>
-          <div class="ie-btn" onclick="document.getElementById('browser-iframe').src = 'about:blank';">
-             <img src="windows98-icons/png/msg_error-2.png" />Stop
-          </div>
-          <div class="ie-btn" onclick="document.getElementById('browser-iframe').src = document.getElementById('browser-address').value;">
-             <img src="windows98-icons/png/msg_information-0.png" />Refresh
-          </div>
-          <div class="ie-btn" onclick="document.getElementById('browser-iframe').src = 'https://www.google.com/webhp?igu=1'; document.getElementById('browser-address').value = 'https://www.google.com';">
-             <img src="windows98-icons/png/chm-2.png" />Home
-          </div>
-          <div style="width: 2px; height: 34px; border-left: 1px solid #808080; border-right: 1px solid #fff; margin: 0 4px;"></div>
-          <div class="ie-btn">
-             <img src="windows98-icons/png/search_computer-1.png" />Search
-          </div>
-          <div class="ie-btn">
-             <img src="windows98-icons/png/directory_favorites-3.png" />Favorites
-          </div>
-          <div class="ie-btn">
-             <img src="windows98-icons/png/history-1.png" />History
           </div>
         </div>
 
-        <!-- Address Bar -->
-        <div style="display: flex; align-items: center; padding: 4px 6px; border-top: 1px solid #fff; border-bottom: 1px solid #808080;">
-          <span style="font-size: 11px; color: #000; margin-right: 6px;">Address</span>
-          <div style="flex: 1; border: inset 2px #fff; border-bottom-color: #808080; border-right-color: #808080; background: #fff; display: flex; align-items: center;">
-             <img src="windows98-icons/png/html-0.png" style="width: 16px; height: 16px; margin: 0 4px;" />
-             <input type="text" id="browser-address" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" readonly style="border: none; outline: none; width: 100%; font-size: 11px; font-family: Tahoma, sans-serif; background: transparent; padding: 2px 0 0 0; color: #000;"/>
+        <div class="status-bar">
+          <div class="status-bar-field">7 objects</div>
+        </div>
+      </div>
+
+      <!-- Ventana: Internet Explorer -->
+      <style>
+        .ie-btn {
+          background: transparent;
+          border: 1px solid transparent;
+          box-shadow: none;
+          min-width: 44px;
+          height: 38px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          font-family: Tahoma, "Pixelated MS Sans Serif", Arial, sans-serif;
+          cursor: default;
+          color: #000;
+        }
+        .ie-btn:hover {
+          border: 1px solid #fff;
+          border-right-color: #808080;
+          border-bottom-color: #808080;
+          background: #dfdfdf;
+        }
+        .ie-btn:active {
+          border: 1px solid #808080;
+          border-right-color: #fff;
+          border-bottom-color: #fff;
+          background: #dfdfdf;
+          padding-top: 2px;
+          padding-left: 2px;
+        }
+        .ie-btn img {
+          margin-bottom: 2px;
+          width: 20px;
+          height: 20px;
+          image-rendering: pixelated;
+          filter: grayscale(100%);
+        }
+        .ie-menu-item {
+          padding: 2px 6px;
+          font-size: 11px;
+          cursor: default;
+        }
+        .ie-menu-item:hover {
+          background-color: #000080;
+          color: white;
+        }
+      </style>
+
+      <div
+        class="window"
+        id="win-browser"
+        style="width: 720px; height: 540px; top: 100px; left: 150px"
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div class="title-bar-text" id="browser-title">
+            Microsoft Internet Explorer
+          </div>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Minimize"
+              onclick="minimizeWindow('win-browser')"
+            ></button>
+            <button
+              aria-label="Maximize"
+              onclick="maximizeWindow('win-browser')"
+            ></button>
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-browser')"
+            ></button>
+          </div>
+        </div>
+
+        <div
+          class="window-body"
+          style="
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 24px);
+          "
+        >
+          <!-- Toolbars -->
+          <div style="background-color: #c0c0c0; padding: 2px">
+            <!-- Menu Bar -->
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding-left: 2px;
+                font-size: 11px;
+                margin-bottom: 2px;
+              "
+            >
+              <div style="display: flex; gap: 2px">
+                <span class="ie-menu-item"><u>F</u>ile</span>
+                <span class="ie-menu-item"><u>E</u>dit</span>
+                <span class="ie-menu-item"><u>V</u>iew</span>
+                <span class="ie-menu-item">F<u>a</u>vorites</span>
+                <span class="ie-menu-item"><u>T</u>ools</span>
+                <span class="ie-menu-item"><u>H</u>elp</span>
+              </div>
+            </div>
+
+            <!-- Standard Buttons Bar -->
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 2px;
+                padding: 2px;
+                border-top: 1px solid #fff;
+                border-bottom: 1px solid #808080;
+              "
+            >
+              <div
+                class="ie-btn"
+                onclick="
+                  document
+                    .getElementById('browser-iframe')
+                    .contentWindow.history.back()
+                "
+              >
+                <img
+                  src="windows98-icons/png/directory_open_file_mydocs-4.png"
+                />Back
+              </div>
+              <div
+                class="ie-btn"
+                onclick="
+                  document
+                    .getElementById('browser-iframe')
+                    .contentWindow.history.forward()
+                "
+              >
+                <img
+                  src="windows98-icons/png/directory_open_file_mydocs-4.png"
+                  style="transform: scaleX(-1)"
+                />Forward
+              </div>
+              <div
+                class="ie-btn"
+                onclick="
+                  document.getElementById('browser-iframe').src = 'about:blank'
+                "
+              >
+                <img src="windows98-icons/png/msg_error-2.png" />Stop
+              </div>
+              <div
+                class="ie-btn"
+                onclick="
+                  document.getElementById('browser-iframe').src =
+                    document.getElementById('browser-address').value
+                "
+              >
+                <img src="windows98-icons/png/msg_information-0.png" />Refresh
+              </div>
+              <div
+                class="ie-btn"
+                onclick="
+                  document.getElementById('browser-iframe').src =
+                    'https://www.google.com/webhp?igu=1';
+                  document.getElementById('browser-address').value =
+                    'https://www.google.com';
+                "
+              >
+                <img src="windows98-icons/png/chm-2.png" />Home
+              </div>
+              <div
+                style="
+                  width: 2px;
+                  height: 34px;
+                  border-left: 1px solid #808080;
+                  border-right: 1px solid #fff;
+                  margin: 0 4px;
+                "
+              ></div>
+              <div class="ie-btn">
+                <img src="windows98-icons/png/search_computer-1.png" />Search
+              </div>
+              <div class="ie-btn">
+                <img
+                  src="windows98-icons/png/directory_favorites-3.png"
+                />Favorites
+              </div>
+              <div class="ie-btn">
+                <img src="windows98-icons/png/history-1.png" />History
+              </div>
+            </div>
+
+            <!-- Address Bar -->
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                padding: 4px 6px;
+                border-top: 1px solid #fff;
+                border-bottom: 1px solid #808080;
+              "
+            >
+              <span style="font-size: 11px; color: #000; margin-right: 6px"
+                >Address</span
+              >
+              <div
+                style="
+                  flex: 1;
+                  border: inset 2px #fff;
+                  border-bottom-color: #808080;
+                  border-right-color: #808080;
+                  background: #fff;
+                  display: flex;
+                  align-items: center;
+                "
+              >
+                <img
+                  src="windows98-icons/png/html-0.png"
+                  style="width: 16px; height: 16px; margin: 0 4px"
+                />
+                <input
+                  type="text"
+                  id="browser-address"
+                  value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  readonly
+                  style="
+                    border: none;
+                    outline: none;
+                    width: 100%;
+                    font-size: 11px;
+                    font-family: Tahoma, sans-serif;
+                    background: transparent;
+                    padding: 2px 0 0 0;
+                    color: #000;
+                  "
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div
+            style="
+              flex: 1;
+              border: inset 2px #fff;
+              border-bottom-color: #dfdfdf;
+              border-right-color: #dfdfdf;
+              margin: 2px;
+            "
+          >
+            <iframe
+              id="browser-iframe"
+              src=""
+              style="
+                width: 100%;
+                height: 100%;
+                border: none;
+                display: block;
+                background: #fff;
+              "
+            ></iframe>
+          </div>
+
+          <!-- Status bar -->
+          <div
+            class="status-bar"
+            style="
+              margin: 0;
+              padding: 2px;
+              border-top: 1px solid #fff;
+              height: 20px;
+            "
+          >
+            <div
+              class="status-bar-field"
+              style="
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                box-shadow: none;
+              "
+            >
+              <span style="display: flex; align-items: center; gap: 4px"
+                ><img
+                  src="windows98-icons/png/html-0.png"
+                  style="width: 12px; height: 12px"
+                />
+                Done</span
+              >
+              <span
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                  width: 100px;
+                  border-left: 1px solid #808080;
+                  padding-left: 4px;
+                "
+                ><img
+                  src="windows98-icons/png/world-0.png"
+                  style="width: 12px; height: 12px"
+                />
+                Internet</span
+              >
+            </div>
           </div>
         </div>
       </div>
-      
-      <!-- Content -->
-      <div style="flex: 1; border: inset 2px #fff; border-bottom-color: #dfdfdf; border-right-color: #dfdfdf; margin: 2px;">
-        <iframe id="browser-iframe" src="" style="width: 100%; height: 100%; border: none; display: block; background: #fff;"></iframe>
-      </div>
-      
-      <!-- Status bar -->
-      <div class="status-bar" style="margin: 0; padding: 2px; border-top: 1px solid #fff; height: 20px;">
-         <div class="status-bar-field" style="width: 100%; display: flex; justify-content: space-between; box-shadow: none;">
-           <span style="display:flex; align-items:center; gap:4px;"><img src="windows98-icons/png/html-0.png" style="width:12px; height:12px;"/> Done</span>
-           <span style="display:flex; align-items:center; gap:4px; width: 100px; border-left: 1px solid #808080; padding-left: 4px;"><img src="windows98-icons/png/world-0.png" style="width:12px; height:12px;"/> Internet</span>
-         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Ventana: Sobre Mí -->
-  <div class="window" id="win-about" style="width:440px; height:350px; top:90px; left:180px;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text" data-i18n="window_about">Sobre Mi — Bloc de notas</div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" onclick="minimizeWindow('win-about')"></button>
-        <button aria-label="Maximize" onclick="maximizeWindow('win-about')"></button>
-        <button aria-label="Close" onclick="closeWindow('win-about')"></button>
-      </div>
-    </div>
-    <div class="window-body about-body" style="background: #fff;" data-i18n-html="about_content">
-    </div>
-  </div>
-
-  <!-- Ventana: Welcome -->
-  <div class="window welcome-window" id="win-welcome" style="width:740px; height:520px; top:calc(50% - 260px); left:calc(50% - 370px); z-index:9999;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text" data-i18n="welcome_title">Welcome</div>
-      <div class="title-bar-controls">
-        <button aria-label="Close" onclick="closeWindow('win-welcome')"></button>
-      </div>
-    </div>
-    <div class="window-body">
-      <div class="welcome-main-container">
-        <div class="welcome-header">
-          <h1><span>Microsoft</span><br>Windows98</h1>
-          <div class="welcome-header-line"></div>
-        </div>
-        <div class="welcome-main">
-          <div class="welcome-sidebar">
-            <div class="welcome-sidebar-title">CONTENTS</div>
-            <div class="welcome-tab active" onclick="switchWelcomeTab('welcome')" id="wt-welcome">
-              <div class="welcome-tab-icon wt-blue"></div>
-              <span data-i18n="welcome_tab_welcome">Welcome</span>
-            </div>
-            <div class="welcome-tab" onclick="switchWelcomeTab('about')" id="wt-about">
-              <div class="welcome-tab-icon wt-red"></div>
-              <span data-i18n="welcome_tab_about">About Me</span>
-            </div>
-            <div class="welcome-tab" onclick="switchWelcomeTab('music')" id="wt-music">
-              <div class="welcome-tab-icon wt-green"></div>
-              <span data-i18n="welcome_tab_music">My Music</span>
-            </div>
-            <div class="welcome-tab" onclick="switchWelcomeTab('contact')" id="wt-contact">
-              <div class="welcome-tab-icon wt-yellow"></div>
-              <span data-i18n="welcome_tab_contact">Contact</span>
-            </div>
+      <!-- Ventana: Sobre Mí -->
+      <div
+        class="window"
+        id="win-about"
+        style="width: 440px; height: 350px; top: 90px; left: 180px"
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div class="title-bar-text" data-i18n="window_about">
+            Sobre Mi — Bloc de notas
           </div>
-          <div class="welcome-content-area" style="background:#fff;">
-            <div class="welcome-tab-item active" id="wc-welcome" data-i18n-html="welcome_content_welcome_text">
-            </div>
-            <div class="welcome-tab-item" id="wc-about" data-i18n-html="welcome_content_about_text">
-            </div>
-            <div class="welcome-tab-item" id="wc-music" data-i18n-html="welcome_content_music_text">
-            </div>
-            <div class="welcome-tab-item" id="wc-contact" data-i18n-html="welcome_content_contact_text">
-            </div>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Minimize"
+              onclick="minimizeWindow('win-about')"
+            ></button>
+            <button
+              aria-label="Maximize"
+              onclick="maximizeWindow('win-about')"
+            ></button>
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-about')"
+            ></button>
           </div>
         </div>
+        <div
+          class="window-body about-body"
+          style="background: #fff"
+          data-i18n-html="about_content"
+        ></div>
       </div>
-      <div class="welcome-bottom">
-        <button data-i18n="welcome_close" onclick="closeWindow('win-welcome')">Close</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- ========================================
+      <!-- Ventana: Welcome -->
+      <div
+        class="window welcome-window"
+        id="win-welcome"
+        style="
+          width: 740px;
+          height: 520px;
+          top: calc(50% - 260px);
+          left: calc(50% - 370px);
+          z-index: 9999;
+        "
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div class="title-bar-text" data-i18n="welcome_title">Welcome</div>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-welcome')"
+            ></button>
+          </div>
+        </div>
+        <div class="window-body">
+          <div class="welcome-main-container">
+            <div class="welcome-header">
+              <h1><span>Microsoft</span><br />Windows98</h1>
+              <div class="welcome-header-line"></div>
+            </div>
+            <div class="welcome-main">
+              <div class="welcome-sidebar">
+                <div class="welcome-sidebar-title">CONTENTS</div>
+                <div
+                  class="welcome-tab active"
+                  onclick="switchWelcomeTab('welcome')"
+                  id="wt-welcome"
+                >
+                  <div class="welcome-tab-icon wt-blue"></div>
+                  <span data-i18n="welcome_tab_welcome">Welcome</span>
+                </div>
+                <div
+                  class="welcome-tab"
+                  onclick="switchWelcomeTab('about')"
+                  id="wt-about"
+                >
+                  <div class="welcome-tab-icon wt-red"></div>
+                  <span data-i18n="welcome_tab_about">About Me</span>
+                </div>
+                <div
+                  class="welcome-tab"
+                  onclick="switchWelcomeTab('music')"
+                  id="wt-music"
+                >
+                  <div class="welcome-tab-icon wt-green"></div>
+                  <span data-i18n="welcome_tab_music">My Music</span>
+                </div>
+                <div
+                  class="welcome-tab"
+                  onclick="switchWelcomeTab('contact')"
+                  id="wt-contact"
+                >
+                  <div class="welcome-tab-icon wt-yellow"></div>
+                  <span data-i18n="welcome_tab_contact">Contact</span>
+                </div>
+              </div>
+              <div class="welcome-content-area" style="background: #fff">
+                <div
+                  class="welcome-tab-item active"
+                  id="wc-welcome"
+                  data-i18n-html="welcome_content_welcome_text"
+                ></div>
+                <div
+                  class="welcome-tab-item"
+                  id="wc-about"
+                  data-i18n-html="welcome_content_about_text"
+                ></div>
+                <div
+                  class="welcome-tab-item"
+                  id="wc-music"
+                  data-i18n-html="welcome_content_music_text"
+                ></div>
+                <div
+                  class="welcome-tab-item"
+                  id="wc-contact"
+                  data-i18n-html="welcome_content_contact_text"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="welcome-bottom">
+            <button
+              data-i18n="welcome_close"
+              onclick="closeWindow('win-welcome')"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================
        BARRA DE TAREAS
        ======================================== -->
-  <div id="taskbar">
-    <button id="start-button" onclick="toggleStartMenu()">
-      <img src="windows98-icons/png/windows-0.png" alt="" />
-      <span data-i18n="start_btn">Inicio</span>
-    </button>
-    <div class="taskbar-divider"></div>
-    <div id="taskbar-items"></div>
-    <div id="taskbar-clock"></div>
-  </div>
+      <div id="taskbar">
+        <button id="start-button" onclick="toggleStartMenu()">
+          <img src="windows98-icons/png/windows-0.png" alt="" />
+          <span data-i18n="start_btn">Inicio</span>
+        </button>
+        <div class="taskbar-divider"></div>
+        <div id="taskbar-items"></div>
+        <div id="taskbar-clock"></div>
+      </div>
 
-  <!-- ========================================
+      <!-- ========================================
        MENÚ INICIO
        ======================================== -->
-  <div id="start-menu">
-    <div class="start-menu-sidebar">
-      <span data-i18n="os_name">Windows 98</span>
-    </div>
-    <div class="start-menu-items">
-      <div class="start-menu-item" onclick="openBrowser('youtube.html', 'YouTube - Microsoft Internet Explorer'); toggleStartMenu();">
-        <img src="windows98-icons/png/msie1-1.png" alt="Internet Explorer" width="24" height="24" style="margin-right:6px;" />
-        <span>Internet Explorer</span>
+      <div id="start-menu">
+        <div class="start-menu-sidebar">
+          <span data-i18n="os_name">Windows 98</span>
+        </div>
+        <div class="start-menu-items">
+          <div
+            class="start-menu-item"
+            onclick="
+              openBrowser(
+                'youtube.html',
+                'YouTube - Microsoft Internet Explorer',
+              );
+              toggleStartMenu();
+            "
+          >
+            <img
+              src="windows98-icons/png/msie1-1.png"
+              alt="Internet Explorer"
+              width="24"
+              height="24"
+              style="margin-right: 6px"
+            />
+            <span>Internet Explorer</span>
+          </div>
+          <div
+            class="start-menu-item"
+            onclick="
+              openWindow('win-paint');
+              toggleStartMenu();
+            "
+          >
+            <img
+              src="windows98-icons/png/paint_file-5.png"
+              alt="Paint"
+              width="24"
+              height="24"
+              style="margin-right: 6px"
+            />
+            <span data-i18n="paint">Paint</span>
+          </div>
+          <div
+            class="start-menu-item"
+            onclick="
+              openWindow('win-mycomputer');
+              toggleStartMenu();
+            "
+          >
+            <img
+              src="windows98-icons/png/computer_explorer-4.png"
+              alt="My Computer"
+              width="24"
+              height="24"
+              style="margin-right: 6px"
+            />
+            <span data-i18n="my_computer">My Computer</span>
+          </div>
+          <div
+            class="start-menu-item"
+            onclick="
+              openWindow('win-winamp');
+              toggleStartMenu();
+            "
+          >
+            <img
+              src="windows98-icons/png/cd_audio_cd_a-3.png"
+              alt="Winamp"
+              width="24"
+              height="24"
+              style="margin-right: 6px"
+            />
+            <span data-i18n="winamp">Winamp</span>
+          </div>
+          <div
+            class="start-menu-item"
+            onclick="
+              openWindow('win-productor');
+              toggleStartMenu();
+            "
+          >
+            <img
+              src="windows98-icons/png/directory_closed-4.png"
+              alt="Links"
+              width="24"
+              height="24"
+              style="margin-right: 6px"
+            />
+            <span>Links</span>
+          </div>
+          <div
+            class="start-menu-item"
+            onclick="
+              openWindow('win-about');
+              toggleStartMenu();
+            "
+          >
+            <img
+              src="windows98-icons/png/notepad-2.png"
+              alt="Sobre Mí"
+              width="24"
+              height="24"
+              style="margin-right: 6px"
+            />
+            <span data-i18n="about">Sobre Mí</span>
+          </div>
+          <div
+            class="start-menu-item"
+            onclick="
+              openWindow('win-settings');
+              toggleStartMenu();
+            "
+          >
+            <img
+              src="windows98-icons/png/settings_gear-0.png"
+              alt="Settings"
+              width="24"
+              height="24"
+              style="margin-right: 6px"
+            />
+            <span data-i18n="settings">Configuración</span>
+          </div>
+          <div class="start-menu-divider"></div>
+          <div class="start-menu-item" onclick="toggleStartMenu()">
+            <img
+              src="windows98-icons/png/shut_down_normal-0.png"
+              alt="Shutdown"
+              width="24"
+              height="24"
+              style="margin-right: 6px"
+            />
+            <span data-i18n="shutdown">Apagar...</span>
+          </div>
+        </div>
       </div>
-      <div class="start-menu-item" onclick="openWindow('win-paint'); toggleStartMenu();">
-        <img src="windows98-icons/png/paint_file-5.png" alt="Paint" width="24" height="24" style="margin-right:6px;" />
-        <span data-i18n="paint">Paint</span>
-      </div>
-      <div class="start-menu-item" onclick="openWindow('win-mycomputer'); toggleStartMenu();">
-        <img src="windows98-icons/png/computer_explorer-4.png" alt="My Computer" width="24" height="24" style="margin-right:6px;" />
-        <span data-i18n="my_computer">My Computer</span>
-      </div>
-      <div class="start-menu-item" onclick="openWindow('win-winamp'); toggleStartMenu();">
-        <img src="windows98-icons/png/cd_audio_cd_a-3.png" alt="Winamp" width="24" height="24" style="margin-right:6px;" />
-        <span data-i18n="winamp">Winamp</span>
-      </div>
-      <div class="start-menu-item" onclick="openWindow('win-productor'); toggleStartMenu();">
-        <img src="windows98-icons/png/directory_closed-4.png" alt="Links" width="24" height="24" style="margin-right:6px;" />
-        <span>Links</span>
-      </div>
-      <div class="start-menu-item" onclick="openWindow('win-about'); toggleStartMenu();">
-        <img src="windows98-icons/png/notepad-2.png" alt="Sobre Mí" width="24" height="24" style="margin-right:6px;" />
-        <span data-i18n="about">Sobre Mí</span>
-      </div>
-      <div class="start-menu-item" onclick="openWindow('win-settings'); toggleStartMenu();">
-        <img src="windows98-icons/png/settings_gear-0.png" alt="Settings" width="24" height="24" style="margin-right:6px;" />
-        <span data-i18n="settings">Configuración</span>
-      </div>
-      <div class="start-menu-divider"></div>
-      <div class="start-menu-item" onclick="toggleStartMenu();">
-        <img src="windows98-icons/png/shut_down_normal-0.png" alt="Shutdown" width="24" height="24" style="margin-right:6px;" />
-        <span data-i18n="shutdown">Apagar...</span>
-      </div>
-    </div>
-  </div>
 
-  
-  <!-- ========================================
+      <!-- ========================================
        VENTANA DE CONFIGURACIÓN
        ======================================== -->
-  <div class="window" id="win-settings" style="width:300px; height:200px; top:150px; left:150px;" onmousedown="bringToFront(this)">
-    <div class="title-bar">
-      <div class="title-bar-text" data-i18n="settings_title">Configuración</div>
-      <div class="title-bar-controls">
-        <button aria-label="Close" onclick="closeWindow('win-settings')"></button>
+      <div
+        class="window"
+        id="win-settings"
+        style="width: 300px; height: 200px; top: 150px; left: 150px"
+        onmousedown="bringToFront(this)"
+      >
+        <div class="title-bar">
+          <div class="title-bar-text" data-i18n="settings_title">
+            Configuración
+          </div>
+          <div class="title-bar-controls">
+            <button
+              aria-label="Close"
+              onclick="closeWindow('win-settings')"
+            ></button>
+          </div>
+        </div>
+        <div class="window-body">
+          <fieldset>
+            <legend data-i18n="settings_language">Idioma</legend>
+            <div class="field-row">
+              <input id="lang-en" type="radio" name="language" value="en" />
+              <label for="lang-en">English</label>
+            </div>
+            <div class="field-row">
+              <input id="lang-es" type="radio" name="language" value="es" />
+              <label for="lang-es">Español</label>
+            </div>
+          </fieldset>
+        </div>
       </div>
-    </div>
-    <div class="window-body">
-      <fieldset>
-        <legend data-i18n="settings_language">Idioma</legend>
-        <div class="field-row">
-          <input id="lang-en" type="radio" name="language" value="en">
-          <label for="lang-en">English</label>
-        </div>
-        <div class="field-row">
-          <input id="lang-es" type="radio" name="language" value="es">
-          <label for="lang-es">Español</label>
-        </div>
-      </fieldset>
-    </div>
-  </div>
 
-  <!-- Input oculto para cargar archivos de audio -->
-  <input type="file" id="audio-file-input" accept="audio/*" style="display:none;" />
+      <!-- Input oculto para cargar archivos de audio -->
+      <input
+        type="file"
+        id="audio-file-input"
+        accept="audio/*"
+        style="display: none"
+      />
 
-  <!-- ========================================
+      <!-- ========================================
        JAVASCRIPT — Lógica del escritorio
        ======================================== -->
-  <script>
-    /* ============================================
+      <script>
+        /* ============================================
        ESTADO GLOBAL & FILE SYSTEM
        ============================================ */
-    let highestZIndex = 10;          // z-index máximo actual
-    let activeWindowId = null;       // ventana activa
-    let audioPlayer = new Audio();   // reproductor de audio global
-    let isPlaying = false;
-    let animFrameId = null;
+        let highestZIndex = 10; // z-index máximo actual
+        let activeWindowId = null; // ventana activa
+        let audioPlayer = new Audio(); // reproductor de audio global
+        let isPlaying = false;
+        let animFrameId = null;
 
-    // Estado de ventanas antes de maximizar (para restaurar)
-    const windowStates = {};
+        // Estado de ventanas antes de maximizar (para restaurar)
+        const windowStates = {};
 
-    // Sistema de archivos virtual (My Computer)
-    let myComputerFS = null;
+        // Sistema de archivos virtual (My Computer)
+        let myComputerFS = null;
 
-    let currentPath = ["MyPC"];
+        let currentPath = ["MyPC"];
 
-    function getDirectoryFromPath(pathArr) {
-      if (!myComputerFS) return null;
-      if (pathArr.length === 1 && pathArr[0] === "MyPC") return myComputerFS;
-      let curr = myComputerFS;
-      for (let i = 1; i < pathArr.length; i++) {
-        if (curr[pathArr[i]] && curr[pathArr[i]].contents) {
-          curr = curr[pathArr[i]].contents;
-        } else {
-          return null;
+        function getDirectoryFromPath(pathArr) {
+          if (!myComputerFS) return null;
+          if (pathArr.length === 1 && pathArr[0] === "MyPC")
+            return myComputerFS;
+          let curr = myComputerFS;
+          for (let i = 1; i < pathArr.length; i++) {
+            if (curr[pathArr[i]] && curr[pathArr[i]].contents) {
+              curr = curr[pathArr[i]].contents;
+            } else {
+              return null;
+            }
+          }
+          return curr;
         }
-      }
-      return curr;
-    }
 
-    function renderMyComputer() {
-      const grid = document.getElementById("mycomputer-grid");
-      const address = document.getElementById("mycomputer-address");
-      const status = document.getElementById("mycomputer-status");
-      
-      grid.innerHTML = "";
-      address.value = currentPath.join("\\");
+        function renderMyComputer() {
+          const grid = document.getElementById("mycomputer-grid");
+          const address = document.getElementById("mycomputer-address");
+          const status = document.getElementById("mycomputer-status");
 
-      if (!myComputerFS) {
-        status.innerHTML = `<span data-i18n="loading">` + translate('loading') + `</span>`;
-        grid.innerHTML = `<div style='padding:8px; font-size:11px;' data-i18n='loading_files'>` + translate('loading') + `</div>`;
-        return;
-      }
+          grid.innerHTML = "";
+          address.value = currentPath.join("\\");
 
-      const dir = getDirectoryFromPath(currentPath);
-      if (!dir) return;
+          if (!myComputerFS) {
+            status.innerHTML =
+              `<span data-i18n="loading">` + translate("loading") + `</span>`;
+            grid.innerHTML =
+              `<div style='padding:8px; font-size:11px;' data-i18n='loading_files'>` +
+              translate("loading") +
+              `</div>`;
+            return;
+          }
 
-      const keys = Object.keys(dir);
-      
-      status.innerHTML = keys.length + ' <span data-i18n="objects">' + translate('objects') + '</span>';
+          const dir = getDirectoryFromPath(currentPath);
+          if (!dir) return;
 
-      keys.forEach(key => {
-        const item = dir[key];
-        const el = document.createElement("div");
-        el.className = "explorer-item";
-        
-        let svgIcon = "";
-        
-        if (item.type === "folder") {
-          svgIcon = `<img src="windows98-icons/png/directory_closed-4.png" alt="Folder" width="32" height="32" style="display:block" />`;
-          el.ondblclick = () => {
-            currentPath.push(key);
+          const keys = Object.keys(dir);
+
+          status.innerHTML =
+            keys.length +
+            ' <span data-i18n="objects">' +
+            translate("objects") +
+            "</span>";
+
+          keys.forEach((key) => {
+            const item = dir[key];
+            const el = document.createElement("div");
+            el.className = "explorer-item";
+
+            let svgIcon = "";
+
+            if (item.type === "folder") {
+              svgIcon = `<img src="windows98-icons/png/directory_closed-4.png" alt="Folder" width="32" height="32" style="display:block" />`;
+              el.ondblclick = () => {
+                currentPath.push(key);
+                renderMyComputer();
+              };
+            } else if (item.type === "audio") {
+              svgIcon = `<img src="windows98-icons/png/cd_audio_cd_a-3.png" alt="Audio" width="32" height="32" style="display:block" />`;
+              el.ondblclick = () => {
+                loadTrack(item.path, item.name);
+              };
+            } else if (item.type === "text") {
+              svgIcon = `<img src="windows98-icons/png/notepad_file-0.png" alt="Text" width="32" height="32" style="display:block" />`;
+              el.ondblclick = () => {
+                alert(translate("file_content") + item.content);
+              };
+            }
+
+            el.innerHTML = svgIcon + "<span>" + key + "</span>";
+            grid.appendChild(el);
+          });
+        }
+
+        function goBackMyComputer() {
+          if (currentPath.length > 1) {
+            currentPath.pop();
             renderMyComputer();
-          };
-        } else if (item.type === "audio") {
-          svgIcon = `<img src="windows98-icons/png/cd_audio_cd_a-3.png" alt="Audio" width="32" height="32" style="display:block" />`;
-          el.ondblclick = () => {
-            loadTrack(item.path, item.name);
-          };
-        } else if (item.type === "text") {
-          svgIcon = `<img src="windows98-icons/png/notepad_file-0.png" alt="Text" width="32" height="32" style="display:block" />`;
-          el.ondblclick = () => {
-            alert(translate('file_content') + item.content);
-          };
+          }
         }
 
-        el.innerHTML = svgIcon + "<span>" + key + "</span>";
-        grid.appendChild(el);
-      });
-    }
+        // Call initial file render
+        document.addEventListener("DOMContentLoaded", () => {
+          renderMyComputer();
+        });
 
-    function goBackMyComputer() {
-      if (currentPath.length > 1) {
-        currentPath.pop();
-        renderMyComputer();
-      }
-    }
-
-    // Call initial file render
-    document.addEventListener("DOMContentLoaded", () => {
-      renderMyComputer();
-    });
-
-    /* ============================================
+        /* ============================================
        RELOJ DE LA BARRA DE TAREAS
        ============================================ */
-    function updateClock() {
-      const now = new Date();
-      const h = now.getHours().toString().padStart(2, '0');
-      const m = now.getMinutes().toString().padStart(2, '0');
-      document.getElementById('taskbar-clock').textContent = h + ':' + m;
-    }
-    updateClock();
-    setInterval(updateClock, 10000);
+        function updateClock() {
+          const now = new Date();
+          const h = now.getHours().toString().padStart(2, "0");
+          const m = now.getMinutes().toString().padStart(2, "0");
+          document.getElementById("taskbar-clock").textContent = h + ":" + m;
+        }
+        updateClock();
+        setInterval(updateClock, 10000);
 
-    /* ============================================
+        /* ============================================
        GESTIÓN DE VENTANAS — Abrir / Cerrar / Minimizar
        ============================================ */
 
-    /**
-     * Abre Microsoft Internet Explorer con un URL
-     */
-    function openBrowser(url, title) {
-      const browserFrame = document.getElementById('browser-iframe');
-      const browserAddress = document.getElementById('browser-address');
-      const browserTitle = document.getElementById('browser-title');
+        /**
+         * Abre Microsoft Internet Explorer con un URL
+         */
+        function openBrowser(url, title) {
+          const browserFrame = document.getElementById("browser-iframe");
+          const browserAddress = document.getElementById("browser-address");
+          const browserTitle = document.getElementById("browser-title");
 
-      browserFrame.src = url;
-      // Siempre mantener esto con estética de RickRoll
-      browserAddress.value = (url === 'youtube.html') ? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' : url;
-      browserTitle.textContent = title ? title : 'Microsoft Internet Explorer';
-      
-      openWindow('win-browser');
-    }
+          browserFrame.src = url;
+          // Siempre mantener esto con estética de RickRoll
+          browserAddress.value =
+            url === "youtube.html"
+              ? "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              : url;
+          browserTitle.textContent = title
+            ? title
+            : "Microsoft Internet Explorer";
 
-    /**
-     * Abre una ventana y la trae al frente.
-     * Agrega un item en la barra de tareas.
-     */
-    function openWindow(id) {
-      const win = document.getElementById(id);
-      if (!win) return;
-
-      if (id === 'win-mycomputer' && !myComputerFS) {
-        fetch('data/files.json')
-          .then(res => {
-            if (!res.ok) throw new Error('HTTP status ' + res.status);
-            return res.json();
-          })
-          .then(data => {
-            myComputerFS = data;
-            renderMyComputer();
-          })
-          .catch(err => {
-            console.error('Error fetching files.json:', err);
-            myComputerFS = { "Error": { type: "text", content: translate('err_files') } };
-            renderMyComputer();
-          });
-      }
-
-      win.classList.add('open');
-      bringToFront(win);
-      updateTaskbar();
-    }
-
-    /**
-     * Cierra una ventana y elimina su item de la barra de tareas.
-     */
-    function closeWindow(id) {
-      const win = document.getElementById(id);
-      if (!win) return;
-
-      win.classList.remove('open');
-      // Limpiar display inline (lo pone minimizeWindow/taskbar) para que el
-      // CSS "display:none" de .window tome efecto correctamente.
-      win.style.display = '';
-
-      // Si es Winamp, detener audio
-      if (id === 'win-winamp') {
-        stopAudio();
-      }
-
-      // Restaurar estado guardado si estaba maximizada
-      if (windowStates[id]) {
-        delete windowStates[id];
-      }
-
-      updateTaskbar();
-    }
-
-    /**
-     * Minimiza (oculta) una ventana pero mantiene el item en la barra.
-     */
-    function minimizeWindow(id) {
-      const win = document.getElementById(id);
-      if (!win) return;
-      win.style.display = 'none';
-      updateTaskbar();
-    }
-
-    /**
-     * Maximiza o restaura una ventana.
-     */
-    function maximizeWindow(id) {
-      const win = document.getElementById(id);
-      if (!win) return;
-
-      if (windowStates[id]) {
-        // Restaurar
-        restoreWindowState(id);
-      } else {
-        // Guardar estado actual
-        windowStates[id] = {
-          width: win.style.width,
-          height: win.style.height,
-          top: win.style.top,
-          left: win.style.left,
-        };
-        // Maximizar
-        win.style.top = '0';
-        win.style.left = '0';
-        win.style.width = '100%';
-        win.style.height = 'calc(100% - 28px)';
-      }
-
-      bringToFront(win);
-    }
-
-    function restoreWindowState(id) {
-      const win = document.getElementById(id);
-      const state = windowStates[id];
-      if (!win || !state) return;
-
-      win.style.width = state.width;
-      win.style.height = state.height;
-      win.style.top = state.top;
-      win.style.left = state.left;
-
-      delete windowStates[id];
-    }
-
-    /* ============================================
-       Z-INDEX — Traer ventana al frente
-       ============================================ */
-    function bringToFront(win) {
-      highestZIndex++;
-      win.style.zIndex = highestZIndex;
-      activeWindowId = win.id;
-
-      // Marcar ventana activa en la barra de tareas
-      document.querySelectorAll('.taskbar-item').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.window === win.id);
-      });
-    }
-
-    /* ============================================
-       BARRA DE TAREAS — Actualizar items
-       ============================================ */
-    function updateTaskbar() {
-      const container = document.getElementById('taskbar-items');
-      container.innerHTML = '';
-
-      document.querySelectorAll('.window.open').forEach(win => {
-        if (win.id === '' || win.id === 'win-welcome') return;
-
-        const btn = document.createElement('button');
-        btn.className = 'taskbar-item';
-        btn.dataset.window = win.id;
-
-        // Obtener título de la ventana
-        const titleEl = win.querySelector('.title-bar-text');
-        btn.textContent = titleEl ? titleEl.textContent : win.id;
-
-        // Al hacer clic: mostrar/ocultar o traer al frente
-        btn.addEventListener('click', () => {
-          if (win.style.display === 'none') {
-            win.style.display = 'flex';
-            bringToFront(win);
-          } else if (activeWindowId === win.id) {
-            // Si ya está activa, minimizar
-            win.style.display = 'none';
-          } else {
-            bringToFront(win);
-          }
-          updateTaskbar();
-        });
-
-        if (activeWindowId === win.id && win.style.display !== 'none') {
-          btn.classList.add('active');
+          openWindow("win-browser");
         }
 
-        container.appendChild(btn);
-      });
-    }
+        /**
+         * Abre una ventana y la trae al frente.
+         * Agrega un item en la barra de tareas.
+         */
+        function openWindow(id) {
+          const win = document.getElementById(id);
+          if (!win) return;
 
-    /* ============================================
+          if (id === "win-mycomputer" && !myComputerFS) {
+            fetch("data/files.json")
+              .then((res) => {
+                if (!res.ok) throw new Error("HTTP status " + res.status);
+                return res.json();
+              })
+              .then((data) => {
+                myComputerFS = data;
+                renderMyComputer();
+              })
+              .catch((err) => {
+                console.error("Error fetching files.json:", err);
+                myComputerFS = {
+                  Error: { type: "text", content: translate("err_files") },
+                };
+                renderMyComputer();
+              });
+          }
+
+          win.classList.add("open");
+          bringToFront(win);
+          updateTaskbar();
+        }
+
+        /**
+         * Cierra una ventana y elimina su item de la barra de tareas.
+         */
+        function closeWindow(id) {
+          const win = document.getElementById(id);
+          if (!win) return;
+
+          win.classList.remove("open");
+          // Limpiar display inline (lo pone minimizeWindow/taskbar) para que el
+          // CSS "display:none" de .window tome efecto correctamente.
+          win.style.display = "";
+
+          // Si es Winamp, detener audio
+          if (id === "win-winamp") {
+            stopAudio();
+          }
+
+          // Restaurar estado guardado si estaba maximizada
+          if (windowStates[id]) {
+            delete windowStates[id];
+          }
+
+          updateTaskbar();
+        }
+
+        /**
+         * Minimiza (oculta) una ventana pero mantiene el item en la barra.
+         */
+        function minimizeWindow(id) {
+          const win = document.getElementById(id);
+          if (!win) return;
+          win.style.display = "none";
+          updateTaskbar();
+        }
+
+        /**
+         * Maximiza o restaura una ventana.
+         */
+        function maximizeWindow(id) {
+          const win = document.getElementById(id);
+          if (!win) return;
+
+          if (windowStates[id]) {
+            // Restaurar
+            restoreWindowState(id);
+          } else {
+            // Guardar estado actual
+            windowStates[id] = {
+              width: win.style.width,
+              height: win.style.height,
+              top: win.style.top,
+              left: win.style.left,
+            };
+            // Maximizar
+            win.style.top = "0";
+            win.style.left = "0";
+            win.style.width = "100%";
+            win.style.height = "calc(100% - 28px)";
+          }
+
+          bringToFront(win);
+        }
+
+        function restoreWindowState(id) {
+          const win = document.getElementById(id);
+          const state = windowStates[id];
+          if (!win || !state) return;
+
+          win.style.width = state.width;
+          win.style.height = state.height;
+          win.style.top = state.top;
+          win.style.left = state.left;
+
+          delete windowStates[id];
+        }
+
+        /* ============================================
+       Z-INDEX — Traer ventana al frente
+       ============================================ */
+        function bringToFront(win) {
+          highestZIndex++;
+          win.style.zIndex = highestZIndex;
+          activeWindowId = win.id;
+
+          // Marcar ventana activa en la barra de tareas
+          document.querySelectorAll(".taskbar-item").forEach((btn) => {
+            btn.classList.toggle("active", btn.dataset.window === win.id);
+          });
+        }
+
+        /* ============================================
+       BARRA DE TAREAS — Actualizar items
+       ============================================ */
+        function updateTaskbar() {
+          const container = document.getElementById("taskbar-items");
+          container.innerHTML = "";
+
+          document.querySelectorAll(".window.open").forEach((win) => {
+            if (win.id === "" || win.id === "win-welcome") return;
+
+            const btn = document.createElement("button");
+            btn.className = "taskbar-item";
+            btn.dataset.window = win.id;
+
+            // Obtener título de la ventana
+            const titleEl = win.querySelector(".title-bar-text");
+            btn.textContent = titleEl ? titleEl.textContent : win.id;
+
+            // Al hacer clic: mostrar/ocultar o traer al frente
+            btn.addEventListener("click", () => {
+              if (win.style.display === "none") {
+                win.style.display = "flex";
+                bringToFront(win);
+              } else if (activeWindowId === win.id) {
+                // Si ya está activa, minimizar
+                win.style.display = "none";
+              } else {
+                bringToFront(win);
+              }
+              updateTaskbar();
+            });
+
+            if (activeWindowId === win.id && win.style.display !== "none") {
+              btn.classList.add("active");
+            }
+
+            container.appendChild(btn);
+          });
+        }
+
+        /* ============================================
        MENÚ INICIO
        ============================================ */
-    function toggleStartMenu() {
-      document.getElementById('start-menu').classList.toggle('open');
-    }
+        function toggleStartMenu() {
+          document.getElementById("start-menu").classList.toggle("open");
+        }
 
-    // Cerrar menú inicio al hacer clic fuera
-    document.addEventListener('click', (e) => {
-      const menu = document.getElementById('start-menu');
-      const startBtn = document.getElementById('start-button');
-      if (menu.classList.contains('open') &&
-          !menu.contains(e.target) &&
-          !startBtn.contains(e.target)) {
-        menu.classList.remove('open');
-      }
-    });
+        // Cerrar menú inicio al hacer clic fuera
+        document.addEventListener("click", (e) => {
+          const menu = document.getElementById("start-menu");
+          const startBtn = document.getElementById("start-button");
+          if (
+            menu.classList.contains("open") &&
+            !menu.contains(e.target) &&
+            !startBtn.contains(e.target)
+          ) {
+            menu.classList.remove("open");
+          }
+        });
 
-    /* ============================================
+        /* ============================================
        DRAG — Arrastrar ventanas por la title-bar
        ============================================ */
-    (function initDrag() {
-      let dragTarget = null;
-      let offsetX = 0;
-      let offsetY = 0;
+        (function initDrag() {
+          let dragTarget = null;
+          let offsetX = 0;
+          let offsetY = 0;
 
-      document.addEventListener('mousedown', (e) => {
-        // Verificar que se hizo clic en una title-bar (pero no en los botones de control)
-        const titleBar = e.target.closest('.title-bar');
-        if (!titleBar) return;
-        if (e.target.closest('.title-bar-controls')) return;
+          function startDrag(e) {
+            // Verificar que se hizo clic en una title-bar (pero no en los botones de control)
+            const titleBar = e.target.closest(".title-bar");
+            if (!titleBar) return;
+            if (e.target.closest(".title-bar-controls")) return;
 
-        const win = titleBar.closest('.window');
-        if (!win || win.id === 'taskbar') return;
+            const win = titleBar.closest(".window");
+            if (!win || win.id === "taskbar") return;
 
-        // No arrastrar si está maximizada
-        if (windowStates[win.id]) return;
+            // No arrastrar si está maximizada
+            if (windowStates[win.id]) return;
 
-        dragTarget = win;
-        const rect = win.getBoundingClientRect();
-        
-        // Fix for centered elements with calc() or margins
-        // Convert the computed left/top directly to explicit pixels so there's no layout jump
-        // and kill margins that could interfere with absolute positioning coordinates
-        win.style.left = rect.left + 'px';
-        win.style.top = rect.top + 'px';
-        win.style.margin = '0';
+            dragTarget = win;
+            const rect = win.getBoundingClientRect();
+            const containerScale = getComputedStyle(
+              document.getElementById("screen-container"),
+            ).transform;
+            let scale = 1;
+            if (containerScale !== "none") {
+              const matrix = new DOMMatrix(containerScale);
+              scale = matrix.a;
+            }
 
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
+            // Fix for centered elements with calc() or margins
+            win.style.left = rect.left / scale + "px";
+            win.style.top = rect.top / scale + "px";
+            win.style.margin = "0";
 
-        bringToFront(win);
-        e.preventDefault();
-      });
+            const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+            const clientY = e.clientY ?? (e.touches ? e.touches[0].clientY : 0);
 
-      document.addEventListener('mousemove', (e) => {
-        if (!dragTarget) return;
+            offsetX = (clientX - rect.left) / scale;
+            offsetY = (clientY - rect.top) / scale;
 
-        let newX = e.clientX - offsetX;
-        let newY = e.clientY - offsetY;
+            bringToFront(win);
+            // Only prevent default on mouse, on touch it can break clicks depending on timing
+            if (e.type === "mousedown") {
+              e.preventDefault();
+            }
+          }
 
-        // Limitar dentro de la pantalla (permitir salir un poco por los bordes)
-        newX = Math.max(-dragTarget.offsetWidth + 80, Math.min(newX, window.innerWidth - 40));
-        newY = Math.max(0, Math.min(newY, window.innerHeight - 60));
+          function moveDrag(e) {
+            if (!dragTarget) return;
 
-        dragTarget.style.left = newX + 'px';
-        dragTarget.style.top = newY + 'px';
-      });
+            const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+            const clientY = e.clientY ?? (e.touches ? e.touches[0].clientY : 0);
 
-      document.addEventListener('mouseup', () => {
-        dragTarget = null;
-      });
-    })();
+            const containerScale = getComputedStyle(
+              document.getElementById("screen-container"),
+            ).transform;
+            let scale = 1;
+            if (containerScale !== "none") {
+              const matrix = new DOMMatrix(containerScale);
+              scale = matrix.a;
+            }
 
-    /* ============================================
-       ICONOS DE ESCRITORIO — Selección al clic
+            let newX = clientX / scale - offsetX;
+            let newY = clientY / scale - offsetY;
+
+            // Limitar dentro de la pantalla
+            newX = Math.max(
+              -dragTarget.offsetWidth + 80,
+              Math.min(newX, window.innerWidth / scale - 40),
+            );
+            newY = Math.max(0, Math.min(newY, window.innerHeight / scale - 60));
+
+            dragTarget.style.left = newX + "px";
+            dragTarget.style.top = newY + "px";
+
+            if (e.type === "touchmove") e.preventDefault();
+          }
+
+          function endDrag() {
+            dragTarget = null;
+          }
+
+          // Mouse events
+          document.addEventListener("mousedown", startDrag, { passive: false });
+          document.addEventListener("mousemove", moveDrag, { passive: false });
+          document.addEventListener("mouseup", endDrag);
+
+          // Touch events
+          document.addEventListener("touchstart", startDrag, {
+            passive: false,
+          });
+          document.addEventListener("touchmove", moveDrag, { passive: false });
+          document.addEventListener("touchend", endDrag);
+        })();
+
+        /* ============================================
+       ICONOS DE ESCRITORIO — Selección al clic/toque
        ============================================ */
-    document.querySelectorAll('.desktop-icon').forEach(icon => {
-      icon.addEventListener('click', (e) => {
-        // Deseleccionar todos
-        document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
-        icon.classList.add('selected');
-      });
-    });
+        let lastTap = 0;
+        let lastTappedIcon = null;
 
-    // Deseleccionar iconos al hacer clic en el escritorio vacío
-    document.getElementById('desktop').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) {
-        document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
-      }
-    });
+        document.querySelectorAll(".desktop-icon").forEach((icon) => {
+          function handleSelection(e) {
+            const now = Date.now();
+            const isTouchDoubleTap =
+              now - lastTap < 400 && lastTappedIcon === icon;
 
-    /* ============================================
+            if (!isTouchDoubleTap) {
+              // Deseleccionar todos
+              document
+                .querySelectorAll(".desktop-icon")
+                .forEach((i) => i.classList.remove("selected"));
+              icon.classList.add("selected");
+            } else {
+              // Double tap handled here for touch devices if the ondblclick fails to trigger on mobile
+              if (e.type === "touchend") {
+                icon.ondblclick && icon.ondblclick(e);
+              }
+            }
+
+            lastTap = now;
+            lastTappedIcon = icon;
+          }
+
+          icon.addEventListener("click", handleSelection);
+          icon.addEventListener("touchend", handleSelection);
+        });
+
+        // Deseleccionar iconos al hacer clic en el escritorio vacío
+        document.getElementById("desktop").addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) {
+            document
+              .querySelectorAll(".desktop-icon")
+              .forEach((i) => i.classList.remove("selected"));
+          }
+        });
+
+        document.getElementById("desktop").addEventListener("touchend", (e) => {
+          if (e.target === e.currentTarget) {
+            document
+              .querySelectorAll(".desktop-icon")
+              .forEach((i) => i.classList.remove("selected"));
+          }
+        });
+
+        /* ============================================
        VISOR DE FOTOS
        ============================================ */
-    function openPhotoViewer(title, imgSrc) {
-      const viewer = document.getElementById('win-photo-viewer');
-      document.getElementById('photo-viewer-title').innerHTML = '<span data-i18n="photo_viewer">' + translate('photo_viewer') + '</span> — ' + title;
-      document.getElementById('photo-viewer-img').src = imgSrc;
-      document.getElementById('photo-viewer-status').textContent = title;
+        function openPhotoViewer(title, imgSrc) {
+          const viewer = document.getElementById("win-photo-viewer");
+          document.getElementById("photo-viewer-title").innerHTML =
+            '<span data-i18n="photo_viewer">' +
+            translate("photo_viewer") +
+            "</span> — " +
+            title;
+          document.getElementById("photo-viewer-img").src = imgSrc;
+          document.getElementById("photo-viewer-status").textContent = title;
 
-      viewer.classList.add('open');
-      bringToFront(viewer);
-      updateTaskbar();
-    }
+          viewer.classList.add("open");
+          bringToFront(viewer);
+          updateTaskbar();
+        }
 
-    /* ============================================
+        /* ============================================
        WINAMP — Reproductor de audio
        ============================================ */
 
-    /** Abre un diálogo para cargar un archivo .mp3 local */
-    function loadAudioFile() {
-      document.getElementById('audio-file-input').click();
-    }
+        /** Abre un diálogo para cargar un archivo .mp3 local */
+        function loadAudioFile() {
+          document.getElementById("audio-file-input").click();
+        }
 
-    document.getElementById('audio-file-input').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+        document
+          .getElementById("audio-file-input")
+          .addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-      const url = URL.createObjectURL(file);
-      audioPlayer.src = url;
-      document.getElementById('winamp-track-title').textContent = '1. ' + file.name.toUpperCase();
-      document.getElementById('winamp-track-title').classList.add('scrolling');
-      
-      updateAudioMetadata(url, file);
+            const url = URL.createObjectURL(file);
+            audioPlayer.src = url;
+            document.getElementById("winamp-track-title").textContent =
+              "1. " + file.name.toUpperCase();
+            document
+              .getElementById("winamp-track-title")
+              .classList.add("scrolling");
 
-      // Auto-play
-      audioPlayer.play().then(() => {
-        isPlaying = true;
-        startVisualizer();
-      }).catch(() => {});
-    });
+            updateAudioMetadata(url, file);
 
-    /** Play / Pause toggle */
-    function togglePlay() {
-      if (!audioPlayer.src) return;
+            // Auto-play
+            audioPlayer
+              .play()
+              .then(() => {
+                isPlaying = true;
+                startVisualizer();
+              })
+              .catch(() => {});
+          });
 
-      if (isPlaying) {
-        audioPlayer.pause();
-        isPlaying = false;
-        stopVisualizer();
-      } else {
-        audioPlayer.play().then(() => {
-          isPlaying = true;
-          startVisualizer();
-        }).catch(() => {});
-      }
-    }
+        /** Play / Pause toggle */
+        function togglePlay() {
+          if (!audioPlayer.src) return;
 
-    /** Detener reproducción */
-    function stopAudio() {
-      audioPlayer.pause();
-      audioPlayer.currentTime = 0;
-      isPlaying = false;
-      document.getElementById('winamp-progress-fill').style.width = '0%';
-      document.getElementById('winamp-time').textContent = '00:00';
-      stopVisualizer();
-    }
-    function setVolume(val) {
-      audioPlayer.volume = val / 100;
-    }
-    audioPlayer.volume = 0.8;
+          if (isPlaying) {
+            audioPlayer.pause();
+            isPlaying = false;
+            stopVisualizer();
+          } else {
+            audioPlayer
+              .play()
+              .then(() => {
+                isPlaying = true;
+                startVisualizer();
+              })
+              .catch(() => {});
+          }
+        }
 
-    /** Seek al hacer clic en la barra de progreso */
-    function seekAudio(e) {
-      if (!audioPlayer.duration) return;
-      const bar = document.getElementById('winamp-progress');
-      const rect = bar.getBoundingClientRect();
-      const ratio = (e.clientX - rect.left) / rect.width;
-      audioPlayer.currentTime = ratio * audioPlayer.duration;
-    }
+        /** Detener reproducción */
+        function stopAudio() {
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+          isPlaying = false;
+          document.getElementById("winamp-progress-fill").style.width = "0%";
+          document.getElementById("winamp-time").textContent = "00:00";
+          stopVisualizer();
+        }
+        function setVolume(val) {
+          audioPlayer.volume = val / 100;
+        }
+        audioPlayer.volume = 0.8;
 
-    /** Actualizar barra de progreso y tiempo */
-    audioPlayer.addEventListener('timeupdate', () => {
-      if (!audioPlayer.duration) return;
+        /** Seek al hacer clic en la barra de progreso */
+        function seekAudio(e) {
+          if (!audioPlayer.duration) return;
+          const bar = document.getElementById("winamp-progress");
+          const rect = bar.getBoundingClientRect();
+          const ratio = (e.clientX - rect.left) / rect.width;
+          audioPlayer.currentTime = ratio * audioPlayer.duration;
+        }
 
-      const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-      document.getElementById('winamp-progress-fill').style.width = pct + '%';
+        /** Actualizar barra de progreso y tiempo */
+        audioPlayer.addEventListener("timeupdate", () => {
+          if (!audioPlayer.duration) return;
 
-      const cur = formatTime(audioPlayer.currentTime);
-      document.getElementById('winamp-time').textContent = cur;
-    });
+          const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+          document.getElementById("winamp-progress-fill").style.width =
+            pct + "%";
 
-    audioPlayer.addEventListener('ended', () => {
-      isPlaying = false;
-      document.getElementById('winamp-progress-fill').style.width = '0%';
-      stopVisualizer();
-    });
+          const cur = formatTime(audioPlayer.currentTime);
+          document.getElementById("winamp-time").textContent = cur;
+        });
 
-    function formatTime(seconds) {
-      const m = Math.floor(seconds / 60);
-      const s = Math.floor(seconds % 60).toString().padStart(2, '0');
-      return m + ':' + s;
-    }
+        audioPlayer.addEventListener("ended", () => {
+          isPlaying = false;
+          document.getElementById("winamp-progress-fill").style.width = "0%";
+          stopVisualizer();
+        });
 
-    /** Pista anterior / siguiente (placeholder) */
-    function prevTrack() {
-      if (audioPlayer.src) {
-        audioPlayer.currentTime = 0;
-      }
-    }
+        function formatTime(seconds) {
+          const m = Math.floor(seconds / 60);
+          const s = Math.floor(seconds % 60)
+            .toString()
+            .padStart(2, "0");
+          return m + ":" + s;
+        }
 
-    function nextTrack() {
-      // Sin playlist, solo reinicia
-      if (audioPlayer.src) {
-        audioPlayer.currentTime = 0;
-      }
-    }
+        /** Pista anterior / siguiente (placeholder) */
+        function prevTrack() {
+          if (audioPlayer.src) {
+            audioPlayer.currentTime = 0;
+          }
+        }
 
-    /* ============================================
+        function nextTrack() {
+          // Sin playlist, solo reinicia
+          if (audioPlayer.src) {
+            audioPlayer.currentTime = 0;
+          }
+        }
+
+        /* ============================================
        WINAMP — Visualizador de barras animadas
        ============================================ */
-    function startVisualizer() {
-      const bars = document.querySelectorAll('#winamp-visualizer .winamp-bar');
+        function startVisualizer() {
+          const bars = document.querySelectorAll(
+            "#winamp-visualizer .winamp-bar",
+          );
 
-      function animate() {
-        bars.forEach(bar => {
-          const h = Math.random() * 26 + 4;
-          bar.style.height = h + 'px';
-        });
-        animFrameId = requestAnimationFrame(animate);
-      }
+          function animate() {
+            bars.forEach((bar) => {
+              const h = Math.random() * 26 + 4;
+              bar.style.height = h + "px";
+            });
+            animFrameId = requestAnimationFrame(animate);
+          }
 
-      // Animar a ~15fps para look retro
-      function throttledAnimate() {
-        animate();
-        clearInterval(visualizerInterval);
-        visualizerInterval = setInterval(() => {
-          bars.forEach(bar => {
-            const h = Math.random() * 26 + 4;
-            bar.style.height = h + 'px';
-          });
-        }, 100);
-      }
+          // Animar a ~15fps para look retro
+          function throttledAnimate() {
+            animate();
+            clearInterval(visualizerInterval);
+            visualizerInterval = setInterval(() => {
+              bars.forEach((bar) => {
+                const h = Math.random() * 26 + 4;
+                bar.style.height = h + "px";
+              });
+            }, 100);
+          }
 
-      throttledAnimate();
-    }
+          throttledAnimate();
+        }
 
-    let visualizerInterval = null;
+        let visualizerInterval = null;
 
-    function stopVisualizer() {
-      if (animFrameId) {
-        cancelAnimationFrame(animFrameId);
-        animFrameId = null;
-      }
-      clearInterval(visualizerInterval);
+        function stopVisualizer() {
+          if (animFrameId) {
+            cancelAnimationFrame(animFrameId);
+            animFrameId = null;
+          }
+          clearInterval(visualizerInterval);
 
-      // Reset barras
-      document.querySelectorAll('#winamp-visualizer .winamp-bar').forEach(bar => {
-        bar.style.height = '4px';
-      });
-    }
+          // Reset barras
+          document
+            .querySelectorAll("#winamp-visualizer .winamp-bar")
+            .forEach((bar) => {
+              bar.style.height = "4px";
+            });
+        }
 
-    /* ============================================
+        /* ============================================
        REPRODUCTOR — Cargar y reproducir pista
        ============================================ */
-    function loadTrack(path, trackName) {
-      openWindow('win-winamp');
-      document.getElementById('winamp-track-title').textContent = trackName;
-      document.getElementById('winamp-track-title').classList.add('scrolling');
+        function loadTrack(path, trackName) {
+          openWindow("win-winamp");
+          document.getElementById("winamp-track-title").textContent = trackName;
+          document
+            .getElementById("winamp-track-title")
+            .classList.add("scrolling");
 
-      if (path) {
-        // Asegurar que la ruta no inicie con '/' para compatibilidad con GH Pages
-        const safePath = path.startsWith('/') ? path.substring(1) : path;
-        audioPlayer.src = safePath;
-        updateAudioMetadata(safePath);
-        
-        audioPlayer.play().then(() => {
-          isPlaying = true;
-          startVisualizer();
-        }).catch(() => {});
-      } else {
-        // Mostrar dialogo para cargar archivo real si no hay path
-        alert(translate('alert_mp3').replace('{track}', trackName));
-      }
-    }
+          if (path) {
+            // Asegurar que la ruta no inicie con '/' para compatibilidad con GH Pages
+            const safePath = path.startsWith("/") ? path.substring(1) : path;
+            audioPlayer.src = safePath;
+            updateAudioMetadata(safePath);
 
-    /** Actualizar metadata de audio real dinámicamente */
-    function updateAudioMetadata(url, fileObj = null) {
-      // Valores visuales default de carga
-      document.getElementById('winamp-kbps').textContent = '...';
-      document.getElementById('winamp-khz').textContent = '...';
+            audioPlayer
+              .play()
+              .then(() => {
+                isPlaying = true;
+                startVisualizer();
+              })
+              .catch(() => {});
+          } else {
+            // Mostrar dialogo para cargar archivo real si no hay path
+            alert(translate("alert_mp3").replace("{track}", trackName));
+          }
+        }
 
-      let blobPromise = fileObj ? Promise.resolve(fileObj) : fetch(url).then(res => res.blob());
-      
-      blobPromise.then(blob => {
-        const sizeInBits = blob.size * 8;
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        blob.arrayBuffer()
-          .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
-          .then(audioBuffer => {
-            const sampleRateHz = audioBuffer.sampleRate;
-            const sampleRateKhz = Math.round(sampleRateHz / 1000);
-            const duration = audioBuffer.duration;
-            
-            let bitrateKbps = Math.round((sizeInBits / duration) / 1000);
-            if (isNaN(bitrateKbps) || !isFinite(bitrateKbps)) bitrateKbps = 128; // Fallback
-            
-            document.getElementById('winamp-khz').textContent = sampleRateKhz;
-            document.getElementById('winamp-kbps').textContent = bitrateKbps;
-            
-            // Actualizar mono/stereo
-            const channels = audioBuffer.numberOfChannels;
-            if (channels === 1) {
-              document.querySelector('.winamp-channels .mono').classList.add('active');
-              document.querySelector('.winamp-channels .stereo').classList.remove('active');
-            } else {
-              document.querySelector('.winamp-channels .mono').classList.remove('active');
-              document.querySelector('.winamp-channels .stereo').classList.add('active');
-            }
-          })
-          .catch(err => {
-             console.error('Error decoding audio metadata:', err);
-             document.getElementById('winamp-kbps').textContent = '128';
-             document.getElementById('winamp-khz').textContent = '44';
-          });
-      }).catch(err => {
-         console.error('Error fetching file for metadata:', err);
-         document.getElementById('winamp-kbps').textContent = '128';
-         document.getElementById('winamp-khz').textContent = '44';
-      });
-    }
+        /** Actualizar metadata de audio real dinámicamente */
+        function updateAudioMetadata(url, fileObj = null) {
+          // Valores visuales default de carga
+          document.getElementById("winamp-kbps").textContent = "...";
+          document.getElementById("winamp-khz").textContent = "...";
 
-    /* ============================================
+          let blobPromise = fileObj
+            ? Promise.resolve(fileObj)
+            : fetch(url).then((res) => res.blob());
+
+          blobPromise
+            .then((blob) => {
+              const sizeInBits = blob.size * 8;
+              const audioCtx = new (
+                window.AudioContext || window.webkitAudioContext
+              )();
+
+              blob
+                .arrayBuffer()
+                .then((arrayBuffer) => audioCtx.decodeAudioData(arrayBuffer))
+                .then((audioBuffer) => {
+                  const sampleRateHz = audioBuffer.sampleRate;
+                  const sampleRateKhz = Math.round(sampleRateHz / 1000);
+                  const duration = audioBuffer.duration;
+
+                  let bitrateKbps = Math.round(sizeInBits / duration / 1000);
+                  if (isNaN(bitrateKbps) || !isFinite(bitrateKbps))
+                    bitrateKbps = 128; // Fallback
+
+                  document.getElementById("winamp-khz").textContent =
+                    sampleRateKhz;
+                  document.getElementById("winamp-kbps").textContent =
+                    bitrateKbps;
+
+                  // Actualizar mono/stereo
+                  const channels = audioBuffer.numberOfChannels;
+                  if (channels === 1) {
+                    document
+                      .querySelector(".winamp-channels .mono")
+                      .classList.add("active");
+                    document
+                      .querySelector(".winamp-channels .stereo")
+                      .classList.remove("active");
+                  } else {
+                    document
+                      .querySelector(".winamp-channels .mono")
+                      .classList.remove("active");
+                    document
+                      .querySelector(".winamp-channels .stereo")
+                      .classList.add("active");
+                  }
+                })
+                .catch((err) => {
+                  console.error("Error decoding audio metadata:", err);
+                  document.getElementById("winamp-kbps").textContent = "128";
+                  document.getElementById("winamp-khz").textContent = "44";
+                });
+            })
+            .catch((err) => {
+              console.error("Error fetching file for metadata:", err);
+              document.getElementById("winamp-kbps").textContent = "128";
+              document.getElementById("winamp-khz").textContent = "44";
+            });
+        }
+
+        /* ============================================
        INICIALIZACIÓN
        ============================================ */
-    
-    /* ============================================
+
+        /* ============================================
        SISTEMA DE CONFIGURACIÓN Y TRADUCCIÓN
        ============================================ */
-    const settings = {
-      language: 'en'
-    };
+        const settings = {
+          language: "en",
+        };
 
-    const i18n = {
-      en: {
-        start_btn: 'Start',
-        os_name: 'Windows 98',
-        my_computer: 'My Computer',
-        winamp: 'Winamp',
-        about: 'About Me',
-        settings: 'Settings',
-        shutdown: 'Shut Down...',
-        settings_title: 'Settings',
-        settings_language: 'Language',
-        window_mycomputer: 'My Computer',
-        window_about: 'About Me — Notepad',
-        address: 'Address:',
-        back: 'Back',
-        objects: 'object(s)',
-        loading: 'Loading...',
-        loading_files: 'Loading files...',
-        winamp_no_track: '1. WINAMP - NO TRACK',
-        winamp_vol: 'VOL',
-        kbps: 'kbps',
-        khz: 'kHz',
-        mono: 'mono',
-        stereo: 'stereo',
-        hello: 'Hi! I am RedBeggins',
-        prev: 'Previous',
-        play: 'Play',
-        pause: 'Pause',
-        stop: 'Stop',
-        next: 'Next',
-        open_file: 'Open file',
-        ready: 'Ready',
-        photo_viewer: 'Photo Viewer',
-        about_content: `<h3>Hi! I am RedBeggins</h3>
+        const i18n = {
+          en: {
+            start_btn: "Start",
+            os_name: "Windows 98",
+            my_computer: "My Computer",
+            winamp: "Winamp",
+            about: "About Me",
+            settings: "Settings",
+            shutdown: "Shut Down...",
+            settings_title: "Settings",
+            settings_language: "Language",
+            window_mycomputer: "My Computer",
+            window_about: "About Me — Notepad",
+            address: "Address:",
+            back: "Back",
+            objects: "object(s)",
+            loading: "Loading...",
+            loading_files: "Loading files...",
+            winamp_no_track: "1. WINAMP - NO TRACK",
+            winamp_vol: "VOL",
+            kbps: "kbps",
+            khz: "kHz",
+            mono: "mono",
+            stereo: "stereo",
+            hello: "Hi! I am RedBeggins",
+            prev: "Previous",
+            play: "Play",
+            pause: "Pause",
+            stop: "Stop",
+            next: "Next",
+            open_file: "Open file",
+            ready: "Ready",
+            photo_viewer: "Photo Viewer",
+            about_content: `<h3>Hi! I am RedBeggins</h3>
       <p>Music producer and web developer passionate about retro technology, design, and creating unique experiences.</p>
       <h3>Skills</h3>
       <ul>
@@ -2081,56 +3011,56 @@
       <h3>Contact</h3>
       <p>Want to collaborate? Find my social media in the Links folder on the desktop.</p>
       <p style="margin-top: 12px; color: #888; font-size: 11px;">— Written from Windows 98 —</p>`,
-        welcome_title: 'Welcome',
-        welcome_tab_welcome: 'Welcome',
-        welcome_tab_about: 'About Me',
-        welcome_tab_music: 'My Music',
-        welcome_tab_contact: 'Contact',
-        welcome_content_welcome_text: `<h2>Welcome</h2><p>Welcome to my personal desktop experience.</p>
+            welcome_title: "Welcome",
+            welcome_tab_welcome: "Welcome",
+            welcome_tab_about: "About Me",
+            welcome_tab_music: "My Music",
+            welcome_tab_contact: "Contact",
+            welcome_content_welcome_text: `<h2>Welcome</h2><p>Welcome to my personal desktop experience.</p>
 <p>This website is a recreation of a classic Windows 98 environment where you can explore my work, music, and projects in an interactive way.</p>
 <p>Here you will find unreleased tracks, creative experiments, and tools I have built as a developer and music producer.</p>
 <p>Feel free to explore the system just like a real computer. Every folder, window, and app is part of the experience.</p>`,
-        welcome_content_about_text: `<h2>About Me</h2><p>I am RedBeggins, a music producer and web developer focused on creating unique digital experiences.</p>
+            welcome_content_about_text: `<h2>About Me</h2><p>I am RedBeggins, a music producer and web developer focused on creating unique digital experiences.</p>
 <p>I combine sound design, programming, and visual aesthetics to build projects that feel alive and interactive.</p>`,
-        welcome_content_music_text: `<h2>My Music</h2><p>This section contains unreleased tracks and ideas.</p>
+            welcome_content_music_text: `<h2>My Music</h2><p>This section contains unreleased tracks and ideas.</p>
 <p>You can play them directly through the integrated Winamp player.</p>`,
-        welcome_content_contact_text: `<h2>Contact</h2><p>If you want to collaborate or get in touch, check the Links folder on the desktop.</p>`,
-        welcome_show_startup: 'Show this screen each time Windows starts',
-        welcome_close: 'Close'
-      },
-      es: {
-        start_btn: 'Inicio',
-        os_name: 'Windows 98',
-        my_computer: 'Mi PC',
-        winamp: 'Winamp',
-        about: 'Sobre Mí',
-        settings: 'Configuración',
-        shutdown: 'Apagar...',
-        settings_title: 'Configuración',
-        settings_language: 'Idioma',
-        window_mycomputer: 'Mi PC',
-        window_about: 'Sobre Mí — Bloc de notas',
-        address: 'Dirección:',
-        back: 'Atrás',
-        objects: 'objeto(s)',
-        loading: 'Cargando...',
-        loading_files: 'Cargando archivos...',
-        winamp_no_track: '1. WINAMP - SIN PISTA',
-        winamp_vol: 'VOL',
-        kbps: 'kbps',
-        khz: 'kHz',
-        mono: 'mono',
-        stereo: 'stereo',
-        hello: '¡Hola! Soy RedBeggins',
-        prev: 'Anterior',
-        play: 'Play',
-        pause: 'Pausa',
-        stop: 'Stop',
-        next: 'Siguiente',
-        open_file: 'Abrir archivo',
-        ready: 'Listo',
-        photo_viewer: 'Visor de Fotos',
-        about_content: `<h3>Hola! Soy RedBeggins</h3>
+            welcome_content_contact_text: `<h2>Contact</h2><p>If you want to collaborate or get in touch, check the Links folder on the desktop.</p>`,
+            welcome_show_startup: "Show this screen each time Windows starts",
+            welcome_close: "Close",
+          },
+          es: {
+            start_btn: "Inicio",
+            os_name: "Windows 98",
+            my_computer: "Mi PC",
+            winamp: "Winamp",
+            about: "Sobre Mí",
+            settings: "Configuración",
+            shutdown: "Apagar...",
+            settings_title: "Configuración",
+            settings_language: "Idioma",
+            window_mycomputer: "Mi PC",
+            window_about: "Sobre Mí — Bloc de notas",
+            address: "Dirección:",
+            back: "Atrás",
+            objects: "objeto(s)",
+            loading: "Cargando...",
+            loading_files: "Cargando archivos...",
+            winamp_no_track: "1. WINAMP - SIN PISTA",
+            winamp_vol: "VOL",
+            kbps: "kbps",
+            khz: "kHz",
+            mono: "mono",
+            stereo: "stereo",
+            hello: "¡Hola! Soy RedBeggins",
+            prev: "Anterior",
+            play: "Play",
+            pause: "Pausa",
+            stop: "Stop",
+            next: "Siguiente",
+            open_file: "Abrir archivo",
+            ready: "Listo",
+            photo_viewer: "Visor de Fotos",
+            about_content: `<h3>Hola! Soy RedBeggins</h3>
       <p>Productor musical y desarrollador web apasionado por la tecnología retro, el diseño y la creación de experiencias únicas.</p>
       <h3>Habilidades</h3>
       <ul>
@@ -2142,128 +3072,147 @@
       <h3>Contacto</h3>
       <p>¿Quieres colaborar? Encuentra mis redes en la carpeta Links del escritorio.</p>
       <p style="margin-top: 12px; color: #888; font-size: 11px;">— Escrito desde Windows 98 —</p>`,
-        welcome_title: 'Bienvenido',
-        welcome_tab_welcome: 'Bienvenido',
-        welcome_tab_about: 'Sobre Mí',
-        welcome_tab_music: 'Mi Música',
-        welcome_tab_contact: 'Contacto',
-        welcome_content_welcome_text: `<h2>Bienvenido</h2><p>Bienvenido a mi experiencia de escritorio personal.</p>
+            welcome_title: "Bienvenido",
+            welcome_tab_welcome: "Bienvenido",
+            welcome_tab_about: "Sobre Mí",
+            welcome_tab_music: "Mi Música",
+            welcome_tab_contact: "Contacto",
+            welcome_content_welcome_text: `<h2>Bienvenido</h2><p>Bienvenido a mi experiencia de escritorio personal.</p>
 <p>Este sitio web es una recreación de un entorno clásico de Windows 98 donde puedes explorar mi trabajo, música y proyectos de forma interactiva.</p>
 <p>Aquí encontrarás pistas inéditas, experimentos creativos y herramientas que he construido como desarrollador y productor musical.</p>
 <p>Siéntete libre de explorar el sistema como una computadora real. Cada carpeta, ventana y aplicación es parte de la experiencia.</p>`,
-        welcome_content_about_text: `<h2>Sobre Mí</h2><p>Soy RedBeggins, un productor musical y desarrollador web enfocado en crear experiencias digitales únicas.</p>
+            welcome_content_about_text: `<h2>Sobre Mí</h2><p>Soy RedBeggins, un productor musical y desarrollador web enfocado en crear experiencias digitales únicas.</p>
 <p>Combino diseño de sonido, programación y estética visual para construir proyectos que se sientan vivos e interactivos.</p>`,
-        welcome_content_music_text: `<h2>Mi Música</h2><p>Esta sección contiene pistas inéditas e ideas.</p>
+            welcome_content_music_text: `<h2>Mi Música</h2><p>Esta sección contiene pistas inéditas e ideas.</p>
 <p>Puedes reproducirlas directamente a través del reproductor Winamp integrado.</p>`,
-        welcome_content_contact_text: `<h2>Contacto</h2><p>Si quieres colaborar o ponerte en contacto, revisa la carpeta Links en el escritorio.</p>`,
-        welcome_show_startup: 'Mostrar esta pantalla cada vez que inicie Windows',
-        welcome_close: 'Cerrar'
-      }
-    };
+            welcome_content_contact_text: `<h2>Contacto</h2><p>Si quieres colaborar o ponerte en contacto, revisa la carpeta Links en el escritorio.</p>`,
+            welcome_show_startup:
+              "Mostrar esta pantalla cada vez que inicie Windows",
+            welcome_close: "Cerrar",
+          },
+        };
 
-    
-    window.translate = function(key) {
-      if(i18n && settings && i18n[settings.language] && i18n[settings.language][key]) {
-        return i18n[settings.language][key];
-      }
-      return key;
-    };
+        window.translate = function (key) {
+          if (
+            i18n &&
+            settings &&
+            i18n[settings.language] &&
+            i18n[settings.language][key]
+          ) {
+            return i18n[settings.language][key];
+          }
+          return key;
+        };
 
-    function translateUI() {
-      const lang = settings.language;
-      const dict = i18n[lang];
+        function translateUI() {
+          const lang = settings.language;
+          const dict = i18n[lang];
 
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (dict[key]) {
-             el.textContent = dict[key];
+          document.querySelectorAll("[data-i18n]").forEach((el) => {
+            const key = el.getAttribute("data-i18n");
+            if (dict[key]) {
+              el.textContent = dict[key];
+            }
+          });
+
+          document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+            const key = el.getAttribute("data-i18n-title");
+            if (dict[key]) {
+              el.title = dict[key];
+            }
+          });
+
+          document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+            const key = el.getAttribute("data-i18n-html");
+            if (dict[key]) {
+              el.innerHTML = dict[key];
+            }
+          });
+
+          // also update the document language tag
+          document.documentElement.lang = lang;
         }
-      });
 
-      document.querySelectorAll('[data-i18n-title]').forEach(el => {
-        const key = el.getAttribute('data-i18n-title');
-        if (dict[key]) {
-             el.title = dict[key];
+        function initSettings() {
+          const savedLang = localStorage.getItem("language");
+          if (savedLang && (savedLang === "en" || savedLang === "es")) {
+            settings.language = savedLang;
+          } else {
+            const browserLang = navigator.language || navigator.userLanguage;
+            settings.language = browserLang.startsWith("es") ? "es" : "en";
+            localStorage.setItem("language", settings.language);
+          }
+
+          // Update Radio buttons
+          const radioEn = document.getElementById("lang-en");
+          const radioEs = document.getElementById("lang-es");
+          if (settings.language === "en" && radioEn) radioEn.checked = true;
+          if (settings.language === "es" && radioEs) radioEs.checked = true;
+
+          if (radioEn)
+            radioEn.addEventListener("change", () => {
+              settings.language = "en";
+              localStorage.setItem("language", "en");
+              translateUI();
+            });
+          if (radioEs)
+            radioEs.addEventListener("change", () => {
+              settings.language = "es";
+              localStorage.setItem("language", "es");
+              translateUI();
+            });
+
+          translateUI();
         }
-      });
 
-      document.querySelectorAll('[data-i18n-html]').forEach(el => {
-        const key = el.getAttribute('data-i18n-html');
-        if (dict[key]) {
-             el.innerHTML = dict[key];
-        }
-      });
-
-      // also update the document language tag
-      document.documentElement.lang = lang;
-    }
-
-    function initSettings() {
-      const savedLang = localStorage.getItem('language');
-      if (savedLang && (savedLang === 'en' || savedLang === 'es')) {
-        settings.language = savedLang;
-      } else {
-        const browserLang = navigator.language || navigator.userLanguage;
-        settings.language = browserLang.startsWith('es') ? 'es' : 'en';
-        localStorage.setItem('language', settings.language);
-      }
-
-      // Update Radio buttons
-      const radioEn = document.getElementById('lang-en');
-      const radioEs = document.getElementById('lang-es');
-      if (settings.language === 'en' && radioEn) radioEn.checked = true;
-      if (settings.language === 'es' && radioEs) radioEs.checked = true;
-
-      if (radioEn) radioEn.addEventListener('change', () => { settings.language = 'en'; localStorage.setItem('language', 'en'); translateUI(); });
-      if (radioEs) radioEs.addEventListener('change', () => { settings.language = 'es'; localStorage.setItem('language', 'es'); translateUI(); });
-
-      translateUI();
-    }
-
-    /* ============================================
+        /* ============================================
        WELCOME WINDOW
        ============================================ */
-    function switchWelcomeTab(tabId) {
-      document.querySelectorAll('.welcome-tab').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.welcome-tab-item').forEach(el => el.classList.remove('active'));
+        function switchWelcomeTab(tabId) {
+          document
+            .querySelectorAll(".welcome-tab")
+            .forEach((el) => el.classList.remove("active"));
+          document
+            .querySelectorAll(".welcome-tab-item")
+            .forEach((el) => el.classList.remove("active"));
 
-      document.getElementById('wt-' + tabId).classList.add('active');
-      document.getElementById('wc-' + tabId).classList.add('active');
-    }
+          document.getElementById("wt-" + tabId).classList.add("active");
+          document.getElementById("wc-" + tabId).classList.add("active");
+        }
 
-    function initWelcome() {
-      // Regardless of the checkbox to maintain 98 style logic (cosmetic check by request),
-      // we show it on every reload if requested. The user said: "The window must automatically appear every time the page is loaded or refreshed." and "Closing only affects the current session (no localStorage for visibility)"
-      
-      // Let's hook up the checkbox for cosmetic value or functional if localStorage is checked later.
-      const chk = document.getElementById('welcome-startup-check');
-      if (chk) {
-        chk.checked = localStorage.getItem('hideWelcome') !== 'true';
-        chk.addEventListener('change', (e) => {
-          localStorage.setItem('hideWelcome', !e.target.checked);
+        function initWelcome() {
+          // Regardless of the checkbox to maintain 98 style logic (cosmetic check by request),
+          // we show it on every reload if requested. The user said: "The window must automatically appear every time the page is loaded or refreshed." and "Closing only affects the current session (no localStorage for visibility)"
+
+          // Let's hook up the checkbox for cosmetic value or functional if localStorage is checked later.
+          const chk = document.getElementById("welcome-startup-check");
+          if (chk) {
+            chk.checked = localStorage.getItem("hideWelcome") !== "true";
+            chk.addEventListener("change", (e) => {
+              localStorage.setItem("hideWelcome", !e.target.checked);
+            });
+          }
+
+          // openWindow('win-welcome'); // Deferred to end of boot sequence
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+          initSettings();
+          initWelcome();
+
+          initPreBoot();
         });
-      }
 
-      // openWindow('win-welcome'); // Deferred to end of boot sequence
-    }
+        // Establecer volumen inicial del slider
+        document.getElementById("winamp-volume").value = 80;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      initSettings();
-      initWelcome();
-      
-      initPreBoot();
-    });
-
-    // Establecer volumen inicial del slider
-    document.getElementById('winamp-volume').value = 80;
-
-    /* ============================================
+        /* ============================================
        BOOT SEQUENCE
        ============================================ */
-    function initPreBoot() {
-      const bios = document.getElementById('boot-bios');
-      
-      const preBootText = `Award Modular BIOS v4.51PG, An Energy Star Ally
+        function initPreBoot() {
+          const bios = document.getElementById("boot-bios");
+
+          const preBootText = `Award Modular BIOS v4.51PG, An Energy Star Ally
 Copyright (C) 1984-1998, Award Software, Inc.
 
 PENTIUM-S CPU at 200MHz
@@ -2273,109 +3222,150 @@ Press DEL to enter SETUP
 Press ANY KEY to continue booting...
 <span class="blink-cursor">_</span>`;
 
-      bios.innerHTML = preBootText;
-      document.body.classList.add('booting');
+          bios.innerHTML = preBootText;
+          document.body.classList.add("booting");
 
-      const triggerBoot = (e) => {
-        // Remove listeners to avoid double triggers
-        document.removeEventListener('keydown', triggerBoot);
-        document.removeEventListener('click', triggerBoot);
-        
-        bios.innerHTML = ''; // clear for sequence
-        startBootSequence();
-      };
+          const triggerBoot = (e) => {
+            // Remove listeners to avoid double triggers
+            document.removeEventListener("keydown", triggerBoot);
+            document.removeEventListener("click", triggerBoot);
 
-      document.addEventListener('keydown', triggerBoot);
-      document.addEventListener('click', triggerBoot);
-    }
+            bios.innerHTML = ""; // clear for sequence
+            startBootSequence();
+          };
 
-    function startBootSequence() {
-      const overlay = document.getElementById('boot-overlay');
-      const bios = document.getElementById('boot-bios');
-      const splashStage = document.getElementById('boot-splash-stage');
-      const loadingBar = document.getElementById('boot-loading-bar');
-      const crt = document.getElementById('boot-crt');
-      
-      const biosLines = [
-        "Starting Windows 98...",
-        "Checking system memory... OK",
-        "Loading drivers...",
-        "Initializing hardware...",
-        "Detecting primary Master IDE...",
-        "Detecting primary Slave IDE... None",
-        "Detecting secondary Master IDE...",
-        "Verifying DMI Pool Data.................",
-        "Booting from hard disk..."
-      ];
-      
-      // Preload sounds
-      const startSound = new Audio('win98-sounds/The Microsoft Sound.wav');
-      const beepSound = new Audio('win98-sounds/DING.WAV'); // fallback beep
-      
-      let lineIndex = 0;
-      let biosInterval = null;
-
-      function showLine(line, callback) {
-        const lineElem = document.createElement('div');
-        lineElem.textContent = line;
-        bios.appendChild(lineElem);
-        
-        if (callback) {
-          // Add a random delay before showing the next line
-          setTimeout(callback, 200 + Math.random() * 400);
+          document.addEventListener("keydown", triggerBoot);
+          document.addEventListener("click", triggerBoot);
         }
-      }
 
-      function renderBiosLines() {
-        if (lineIndex < biosLines.length) {
-          if (lineIndex === 2) {
-             beepSound.play().catch(e => console.log('Autoplay prevented beep'));
+        function startBootSequence() {
+          const overlay = document.getElementById("boot-overlay");
+          const bios = document.getElementById("boot-bios");
+          const splashStage = document.getElementById("boot-splash-stage");
+          const loadingBar = document.getElementById("boot-loading-bar");
+          const crt = document.getElementById("boot-crt");
+
+          const biosLines = [
+            "Starting Windows 98...",
+            "Checking system memory... OK",
+            "Loading drivers...",
+            "Initializing hardware...",
+            "Detecting primary Master IDE...",
+            "Detecting primary Slave IDE... None",
+            "Detecting secondary Master IDE...",
+            "Verifying DMI Pool Data.................",
+            "Booting from hard disk...",
+          ];
+
+          // Preload sounds
+          const startSound = new Audio("win98-sounds/The Microsoft Sound.wav");
+          const beepSound = new Audio("win98-sounds/DING.WAV"); // fallback beep
+
+          let lineIndex = 0;
+          let biosInterval = null;
+
+          function showLine(line, callback) {
+            const lineElem = document.createElement("div");
+            lineElem.textContent = line;
+            bios.appendChild(lineElem);
+
+            if (callback) {
+              // Add a random delay before showing the next line
+              setTimeout(callback, 200 + Math.random() * 400);
+            }
           }
-          showLine(biosLines[lineIndex], renderBiosLines);
-          lineIndex++;
-        } else {
-          // BIOS finished, proceed to Splash
-          setTimeout(showSplash, 800);
+
+          function renderBiosLines() {
+            if (lineIndex < biosLines.length) {
+              if (lineIndex === 2) {
+                beepSound
+                  .play()
+                  .catch((e) => console.log("Autoplay prevented beep"));
+              }
+              showLine(biosLines[lineIndex], renderBiosLines);
+              lineIndex++;
+            } else {
+              // BIOS finished, proceed to Splash
+              setTimeout(showSplash, 800);
+            }
+          }
+
+          function showSplash() {
+            bios.style.display = "none";
+            splashStage.style.display = "flex";
+
+            let progress = 0;
+            const loaderInt = setInterval(() => {
+              progress += Math.random() * 5;
+              if (progress > 100) progress = 100;
+              loadingBar.style.width = progress + "%";
+              if (progress === 100) {
+                clearInterval(loaderInt);
+                setTimeout(finishBoot, 800);
+              }
+            }, 50); // fast loader
+          }
+
+          function finishBoot() {
+            overlay.style.opacity = "0";
+            // Play startup sound
+            startSound
+              .play()
+              .catch((e) => console.log("Autoplay prevented sound"));
+
+            // Wait for fade to complete
+            setTimeout(() => {
+              overlay.style.display = "none";
+              document.body.classList.remove("booting");
+              openWindow("win-welcome");
+
+              // Disable CRT overlay on desktop as requested (reduce or disable)
+              // crt will be inside the overlay which is display none, so it's gone!
+            }, 1000);
+          }
+
+          // Start the BIOS stage
+          setTimeout(renderBiosLines, 500);
         }
-      }
 
-      function showSplash() {
-        bios.style.display = 'none';
-        splashStage.style.display = 'flex';
-        
-        let progress = 0;
-        const loaderInt = setInterval(() => {
-          progress += Math.random() * 5;
-          if (progress > 100) progress = 100;
-          loadingBar.style.width = progress + '%';
-          if (progress === 100) {
-            clearInterval(loaderInt);
-            setTimeout(finishBoot, 800);
+        /* ============================================
+       MOBILE SCALING LOGIC
+       ============================================ */
+        function updateScaling() {
+          const container = document.getElementById("screen-container");
+          const isMobile =
+            window.innerWidth <= 768 ||
+            window.innerHeight <= 768 ||
+            "ontouchstart" in window;
+
+          if (isMobile) {
+            // Assume a base desktop size
+            const baseW = 1024;
+            const baseH = 768;
+
+            const scaleX = window.innerWidth / baseW;
+            const scaleY = window.innerHeight / baseH;
+
+            // Scale to fit width always
+            const scale = scaleX;
+
+            // Use a minimum scale to not make it too tiny
+            const finalScale = Math.max(scale, 0.4);
+
+            container.style.transform = `scale(${finalScale})`;
+            container.style.width = `${window.innerWidth / finalScale}px`;
+            container.style.height = `${window.innerHeight / finalScale}px`;
+          } else {
+            container.style.transform = "none";
+            container.style.width = "100vw";
+            container.style.height = "100vh";
           }
-        }, 50); // fast loader
-      }
+        }
 
-      function finishBoot() {
-        overlay.style.opacity = '0';
-        // Play startup sound
-        startSound.play().catch(e => console.log('Autoplay prevented sound'));
-        
-        // Wait for fade to complete
-        setTimeout(() => {
-          overlay.style.display = 'none';
-          document.body.classList.remove('booting');
-          openWindow('win-welcome');
-          
-          // Disable CRT overlay on desktop as requested (reduce or disable)
-          // crt will be inside the overlay which is display none, so it's gone!
-        }, 1000);
-      }
-      
-      // Start the BIOS stage
-      setTimeout(renderBiosLines, 500);
-    }
-
-  </script>
-
-</body>
+        window.addEventListener("resize", updateScaling);
+        window.addEventListener("orientationchange", updateScaling);
+        updateScaling();
+      </script>
+    </div>
+  </body>
 </html>
